@@ -1,6 +1,6 @@
 # source-inspector
 
-[![License][license-image]][license-url]
+[![License][license-image]](LICENSE)
 
 Note: This extension currently only supports desktop devices using Chrome or
 Chromium derivatives, such as Edge. We aim to support all the node types
@@ -251,4 +251,3 @@ Below are some caveats this extension has that don't have immediate fixes:
   by Freepik - Flaticon
 
 [license-image]: https://img.shields.io/npm/l/markdownlint.svg
-[license-url]: https://opensource.org/licenses/MIT
