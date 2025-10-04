@@ -10,8 +10,8 @@
     },
     "scripts": {
         "start": "npm run start:dev",
-        "start:dev": "nodemon --config config/nodemon.development.json",
-        "start:prod": "nodemon --config config/nodemon.production.json",
+        "start:dev": "nodemon --config webpack/nodemon.development.json",
+        "start:prod": "nodemon --config webpack/nodemon.production.json",
         "prettier": "prettier --write **/*.{cjs,mjs,js,jsx,ts,tsx,json,css,scss,html} --config .prettierrc --ignore-path .prettierignore",
         "test": "echo \"Error: no test specified\" && exit 1"
     },

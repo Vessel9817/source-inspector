@@ -76,7 +76,7 @@ const STATIC_FILE_EXTS = [
     'woff',
     'woff2'
 ];
-const CONFIG: webpack.Configuration = {
+const config: webpack.Configuration = {
     mode: IS_DEV_MODE ? 'development' : 'production',
     devtool: IS_DEV_MODE ? 'cheap-module-source-map' : undefined,
     optimization: IS_DEV_MODE
@@ -241,4 +241,4 @@ const CONFIG: webpack.Configuration = {
 };
 
 // Webpack >= 2.0.0 no longer allows custom properties in configuration
-export default CONFIG;
+export default config;
