@@ -12,7 +12,7 @@
     "env": {
         "NODE_ENV": "production",
         "ASSET_PATH": "/",
-        "OUTPUT_DIR": "dist",
+        "OUTPUT_DIR_NAME": "dist",
         "PACKAGE_NAME": "source-inspector",
         "PACKAGE_DESCRIPTION": "A from-scratch open-source document source inspector that aims to be invisible to websites",
         "WEBPACK_PORT": "8081"

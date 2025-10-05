@@ -8,7 +8,8 @@ import webpack, {
     Compiler,
     Configuration,
     ProgressPlugin,
-    WebpackPluginInstance
+    WebpackPluginInstance,
+    AssetInfo
 } from 'webpack';
 import {
     Source as _Source,
@@ -20,15 +21,19 @@ import {
 // Non-secret env vars are defined in nodemon config
 const NODE_ENV = process.env.NODE_ENV;
 const PROJECT_ROOT = path.join(__dirname, '..');
-const OUTPUT_REL_DIR = process.env.OUTPUT_DIR!.replaceAll('\\', '/'); // Safety
+const OUTPUT_DIR_NAME = process.env.OUTPUT_DIR_NAME!;
 const CHROME_DIR_NAME = 'chrome';
 const FIREFOX_DIR_NAME = 'firefox';
 
-const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_REL_DIR);
-const CHROME_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_REL_DIR, CHROME_DIR_NAME);
+const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR_NAME);
+const CHROME_ABS_DIR = path.join(
+    PROJECT_ROOT,
+    OUTPUT_DIR_NAME,
+    CHROME_DIR_NAME
+);
 const FIREFOX_ABS_DIR = path.join(
     PROJECT_ROOT,
-    OUTPUT_REL_DIR,
+    OUTPUT_DIR_NAME,
     FIREFOX_DIR_NAME
 );
 
@@ -56,22 +61,26 @@ class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
     private readonly filepath: string;
     private readonly source: Source;
+    private readonly assetInfo: AssetInfo | undefined;
 
-    constructor(filename: string, content: string) {
+    constructor(filename: string, content: string, assetInfo?: AssetInfo) {
         this.filepath = filename;
         this.source = new Source();
         this.source.source = () => content;
+        this.assetInfo = assetInfo;
     }
 
     public apply(compiler: Compiler) {
         compiler.hooks.compilation.tap(this.plugin, (compilation) => {
             compilation.emitAsset(this.filepath, this.source, {
+                ...this.assetInfo,
                 sourceFilename: path.basename(this.filepath)
             });
         });
         this.source.updateHash = (hash: HashLike) => {
             compiler.hooks.compilation.tap(this.plugin, (compilation) => {
                 compilation.updateAsset(this.filepath, this.source, {
+                    ...this.assetInfo,
                     contenthash: hash.digest().toString(),
                     sourceFilename: path.basename(this.filepath)
                 });
@@ -87,11 +96,13 @@ class GenerateFilePlugin implements WebpackPluginInstance {
      */
     public static generateManifestPlugin(
         filename: string,
-        manifest: chrome.runtime.Manifest
+        manifest: chrome.runtime.Manifest,
+        assetInfo?: AssetInfo
     ): GenerateFilePlugin {
         return new GenerateFilePlugin(
             filename,
-            GenerateFilePlugin.stringifyManifest(manifest)
+            GenerateFilePlugin.stringifyManifest(manifest),
+            assetInfo
         );
     }
 
@@ -189,7 +200,7 @@ const SHARED_PLUGINS: Configuration['plugins'] = [
                         'icons',
                         inputPath
                     ),
-                    to: path.join(CHROME_ABS_DIR, outputPath)
+                    to: path.join(OUTPUT_ABS_DIR, outputPath)
                 }
             ]
         });
@@ -204,7 +215,7 @@ const SHARED_PLUGINS: Configuration['plugins'] = [
             'popup',
             'index.html'
         ),
-        filename: path.join(CHROME_ABS_DIR, 'popup', 'index.html'),
+        filename: path.join('popup', 'index.html'),
         chunks: ['popup']
     })
 ];
@@ -213,25 +224,50 @@ const BROWSER_PLUGINS: Configuration['plugins'] = [
     new CopyWebpackPlugin({
         patterns: [
             {
-                from: CHROME_ABS_DIR,
-                to: FIREFOX_ABS_DIR,
+                from: OUTPUT_ABS_DIR,
+                to: CHROME_ABS_DIR,
                 noErrorOnMissing: true,
-                force: false,
                 globOptions: {
-                    ignore: ['**/manifest.json']
+                    ignore: [`**/${CHROME_DIR_NAME}`, `**/${FIREFOX_DIR_NAME}`]
                 }
             }
         ]
     }),
+    new CopyWebpackPlugin({
+        patterns: [
+            {
+                from: CHROME_ABS_DIR,
+                to: FIREFOX_ABS_DIR,
+                noErrorOnMissing: true,
+                globOptions: {
+                    ignore: [`**/${FIREFOX_DIR_NAME}`, '**/manifest.json']
+                }
+            }
+        ]
+    }),
+    // new FilemanagerWebpackPlugin({
+    //     events: {
+    //         onEnd: {
+    //             delete: [
+    //                 {
+    //                     source: path.join(OUTPUT_ABS_DIR, 'popup'),
+    //                     options: {}
+    //                 }
+    //             ]
+    //         }
+    //     }
+    // }),
 
     // Generating manifest files
     GenerateFilePlugin.generateManifestPlugin(
         path.join(CHROME_DIR_NAME, 'manifest.json'),
-        CHROME_MANIFEST
+        CHROME_MANIFEST,
+        { minimized: !IS_DEV_MODE }
     )
     // new GenerateFilePlugin.generateManifestPlugin(
     //     path.join(FIREFOX_DIR_NAME, 'manifest.json'),
-    //     FIREFOX_MANIFEST
+    //     FIREFOX_MANIFEST,
+    //     { minimized: !IS_DEV_MODE }
     // )
 ];
 
@@ -260,16 +296,14 @@ const config: webpack.Configuration = {
                     'docListener.ts'
                 )
             ],
-            filename: path.join(CHROME_DIR_NAME, 'popup', 'docListener.js')
+            filename: path.join('popup', 'docListener.js')
         },
         popup: {
             import: [
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
             ],
             // HTMLWebpackPlugin requires forward slashes
-            filename: path
-                .join(CHROME_DIR_NAME, 'popup', 'index.js')
-                .replaceAll('\\', '/')
+            filename: path.join('popup', 'index.js').replaceAll('\\', '/')
         },
 
         // Background
@@ -283,7 +317,7 @@ const config: webpack.Configuration = {
                     'index.ts'
                 )
             ],
-            filename: path.join(CHROME_DIR_NAME, 'background', 'index.js')
+            filename: path.join('background', 'index.js')
         }
     },
     output: {

@@ -2,6 +2,7 @@
 
 ## Functional Priorities
 
+- TerserPlugin and the browser-specific builds cause an infinite loop when running in production mode
 - Use `webpack.BannerPlugin` to add the license (or a reference to it) in all minified files
 - Add Firefox extension support.
   See: [signing](https://extensionworkshop.com/documentation/publish/)
