@@ -6,9 +6,10 @@
         "/coverage",
         "/.vscode",
         "/.git",
-        "/wepack",
+        "/webpack",
         "/test",
-        "/.github"
+        "/.github",
+        "/nodemon"
     ],
     "watch": [
         "./webpack/webserver.ts",
@@ -18,13 +19,13 @@
         "tsconfig.json"
     ],
     "env": {
-        "NODE_ENV": "production",
+        "NODE_ENV": "development",
         "ASSET_PATH": "/",
-        "OUTPUT_DIR": "dist/chrome/prod",
+        "OUTPUT_DIR": "dist/chrome/dev",
         "BROWSER": "chrome",
-        "PACKAGE_NAME": "source-inspector",
-        "PACKAGE_DESCRIPTION": "A from-scratch open-source document source inspector that aims to be invisible to websites",
-        "WEBPACK_PORT": "8081"
+        "PACKAGE_NAME": "(DEV BRANCH) source-inspector",
+        "PACKAGE_DESCRIPTION": "DEVELOPER USE ONLY - DO NOT PUBLISH",
+        "WEBPACK_PORT": "8080"
     },
     "ext": "json,cjs,mjs,js,ts"
 }

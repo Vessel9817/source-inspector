@@ -9,10 +9,10 @@
         "url": "https://github.com/Anonymous-Humanoid/source-inspector.git"
     },
     "scripts": {
-        "start:chrome:dev": "nodemon --config webpack/nodemon.chrome.development.json",
-        "start:firefox:dev": "nodemon --config webpack/nodemon.firefox.development.json",
-        "start:chrome:prod": "nodemon --config webpack/nodemon.chrome.production.json",
-        "start:firefox:prod": "nodemon --config webpack/nodemon.firefox.production.json",
+        "start:chrome:dev": "nodemon --config nodemon/chrome/nodemon.dev.json",
+        "start:firefox:dev": "nodemon --config nodemon/firefox/nodemon.dev.json",
+        "start:chrome:prod": "nodemon --config nodemon/chrome/nodemon.prod.json",
+        "start:firefox:prod": "nodemon --config nodemon/firefox/nodemon.prod.json",
         "prettier": "prettier --write **/*.{cjs,mjs,js,jsx,ts,tsx,json,css,scss,html} --config .prettierrc --ignore-path .prettierignore",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
