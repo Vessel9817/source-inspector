@@ -28,7 +28,7 @@
         "noErrorTruncation": true // See fully expanded types
     },
     "include": ["src"],
-    "exclude": ["build", "dist", "node_modules", "zip"],
+    "exclude": ["dist", "node_modules"],
     "ts-node": {
         "compilerOptions": {
             "module": "CommonJS"

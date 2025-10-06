@@ -5,7 +5,6 @@
 /coverage
 
 # Build outputs
-/build
 /dist
 
 # Secrets

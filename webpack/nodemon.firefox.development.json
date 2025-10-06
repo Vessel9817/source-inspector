@@ -1,7 +1,15 @@
 {
     "exec": "npx ts-node webpack/webserver.ts",
     "verbose": true,
-    "ignore": ["/dist", "/build", "/coverage", "/.vscode", "/.git", "/webpack"],
+    "ignore": [
+        "/dist",
+        "/coverage",
+        "/.vscode",
+        "/.git",
+        "/webpack",
+        "/test",
+        "/.github"
+    ],
     "watch": [
         "./webpack/webserver.ts",
         "./webpack/webpack.config.ts",
@@ -12,7 +20,7 @@
     "env": {
         "NODE_ENV": "development",
         "ASSET_PATH": "/",
-        "OUTPUT_DIR": "build",
+        "OUTPUT_DIR": "dist/firefox/dev",
         "BROWSER": "firefox",
         "PACKAGE_NAME": "(DEV BRANCH) source-inspector",
         "PACKAGE_DESCRIPTION": "DEVELOPER USE ONLY - DO NOT PUBLISH",

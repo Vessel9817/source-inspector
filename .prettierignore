@@ -5,6 +5,4 @@
 /coverage
 
 # production
-/build
 /dist
-/zip

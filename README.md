@@ -104,10 +104,10 @@ In order to use this extension, you must first build it from source.
 - To build the extension, start a development server:
   - For users, run `npm run start:<browser>:prod` to run in production mode,
     where `<browser>` is `chrome` (port 8081) or `firefox` (port 8083).
-    This will create a folder `dist` containing the built extension.
+    This will create a folder `dist/<browser>/prod` containing the built extension.
   - For developers, run `npm run start:<browser>:dev`, to run in development
     mode, where `<browser>` is `chrome` (port 8080) or `firefox` (port 8082).
-    This will create a folder `build` containing the built extension.
+    This will create a folder `dist/<browser>/dev` containing the built extension.
 - Optionally, when the server says that webpack has compiled successfully,
   you can stop the server. (Ctrl+C, or Command+C on Mac)
   It's only necessary to keep it running if you plan on making changes
@@ -115,7 +115,7 @@ In order to use this extension, you must first build it from source.
   Chromium-based browsers, you will still be required to reload the extension
   manually.
 
-You now have an installable extension.
+You should now have an installable extension.
 
 ## Installing
 

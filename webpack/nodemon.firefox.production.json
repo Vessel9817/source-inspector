@@ -1,7 +1,15 @@
 {
     "exec": "npx ts-node webpack/webserver.ts",
     "verbose": true,
-    "ignore": ["/dist", "/build", "/coverage", "/.vscode", "/.git", "/wepack"],
+    "ignore": [
+        "/dist",
+        "/coverage",
+        "/.vscode",
+        "/.git",
+        "/wepack",
+        "/test",
+        "/.github"
+    ],
     "watch": [
         "./webpack/webserver.ts",
         "./webpack/webpack.config.ts",
@@ -12,7 +20,7 @@
     "env": {
         "NODE_ENV": "production",
         "ASSET_PATH": "/",
-        "OUTPUT_DIR": "dist",
+        "OUTPUT_DIR": "dist/firefox/prod",
         "BROWSER": "firefox",
         "PACKAGE_NAME": "source-inspector",
         "PACKAGE_DESCRIPTION": "A from-scratch open-source document source inspector that aims to be invisible to websites",

@@ -21,7 +21,7 @@ import {
 const NODE_ENV = process.env.NODE_ENV;
 const PROJECT_ROOT = path.join(__dirname, '..');
 const BROWSER = process.env.BROWSER!;
-const OUTPUT_DIR = path.join(process.env.OUTPUT_DIR!, BROWSER);
+const OUTPUT_DIR = process.env.OUTPUT_DIR!;
 const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
 
 // Verifying node env
