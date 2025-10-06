@@ -4,7 +4,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import config from './webpack.config';
 
 const compiler = webpack(config);
-const OUTPUT_DIR_NAME = process.env.OUTPUT_DIR_NAME!;
+const OUTPUT_DIR = process.env.OUTPUT_DIR!;
 const WEBPACK_PORT = process.env.WEBPACK_PORT!;
 
 // Enabling server-side (and disabling client-side) hot reloading
@@ -16,7 +16,7 @@ const server = new WebpackDevServer(
         webSocketServer: false,
         bonjour: false,
         static: {
-            directory: resolve(process.cwd(), OUTPUT_DIR_NAME)
+            directory: resolve(process.cwd(), OUTPUT_DIR)
         },
         devMiddleware: {
             writeToDisk: true

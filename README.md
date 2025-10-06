@@ -102,24 +102,18 @@ In order to use this extension, you must first build it from source.
 - Open your IDE or terminal to the root of the project
 - Run `npm install` to install dependencies
 - To build the extension, start a development server:
-  - For users, run `npm run start:prod` to run in production mode (port 8081).
+  - For users, run `npm run start:<browser>:prod` to run in production mode,
+    where `<browser>` is `chrome` (port 8081) or `firefox` (port 8083).
     This will create a folder `dist` containing the built extension.
-  - For developers, run `npm run start:dev` or `npm start`
-    to run in development mode (port 8080). They are equivalent.
+  - For developers, run `npm run start:<browser>:dev`, to run in development
+    mode, where `<browser>` is `chrome` (port 8080) or `firefox` (port 8082).
     This will create a folder `build` containing the built extension.
 - Optionally, when the server says that webpack has compiled successfully,
   you can stop the server. (Ctrl+C, or Command+C on Mac)
   It's only necessary to keep it running if you plan on making changes
   to the source code and having them be patched in live. Though, in
   Chromium-based browsers, you will still be required to reload the extension
-  manually, as there is no way to perform this automatically.
-  <!-- Dev note:
-  It might be possible if the server also managed a browser process that it
-  could close and reopen, however this is far outside the scope of this
-  project, and it's only necessary for testing, not installation.
-  Too technical, too little gains. Perhaps someone could make a
-  proof-of-concept Chromium extension testing boilerplate.
-  -->
+  manually.
 
 You now have an installable extension.
 

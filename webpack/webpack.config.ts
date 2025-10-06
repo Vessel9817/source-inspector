@@ -5,11 +5,10 @@ import path from 'path';
 import { Tap } from 'tapable';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack, {
+    AssetInfo,
     Compiler,
-    Configuration,
     ProgressPlugin,
-    WebpackPluginInstance,
-    AssetInfo
+    WebpackPluginInstance
 } from 'webpack';
 import {
     Source as _Source,
@@ -21,26 +20,16 @@ import {
 // Non-secret env vars are defined in nodemon config
 const NODE_ENV = process.env.NODE_ENV;
 const PROJECT_ROOT = path.join(__dirname, '..');
-const OUTPUT_DIR_NAME = process.env.OUTPUT_DIR_NAME!;
-const CHROME_DIR_NAME = 'chrome';
-const FIREFOX_DIR_NAME = 'firefox';
-
-const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR_NAME);
-const CHROME_ABS_DIR = path.join(
-    PROJECT_ROOT,
-    OUTPUT_DIR_NAME,
-    CHROME_DIR_NAME
-);
-const FIREFOX_ABS_DIR = path.join(
-    PROJECT_ROOT,
-    OUTPUT_DIR_NAME,
-    FIREFOX_DIR_NAME
-);
+const BROWSER = process.env.BROWSER!;
+const OUTPUT_DIR = path.join(process.env.OUTPUT_DIR!, BROWSER);
+const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
 
 // Verifying node env
 if (NODE_ENV == null) {
     throw new Error('Node environment must be specified');
 }
+
+const IS_DEV_MODE = NODE_ENV !== 'production';
 
 type SourceAndMap = _SourceAndMap & { map: Object };
 
@@ -121,8 +110,6 @@ class GenerateFilePlugin implements WebpackPluginInstance {
     }
 }
 
-const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
-
 // Copying icons
 const VALID_SIZES = [16, 32, 48, 128].map((size) => size.toString());
 const RELATIVE_ICON_PATHS = [
@@ -165,6 +152,10 @@ const CHROME_MANIFEST: chrome.runtime.ManifestV3 = {
     icons: MANIFEST_ICON_PATHS
 };
 // const FIREFOX_MANIFEST: chrome.runtime.ManifestV2 = {};
+const MANIFESTS = new Map<string, chrome.runtime.Manifest>([
+    ['chrome', CHROME_MANIFEST]
+    // ['firefox', FIREFOX_MANIFEST]
+]);
 
 // Initializing webpack config
 const STATIC_FILE_EXTS = [
@@ -178,97 +169,6 @@ const STATIC_FILE_EXTS = [
     'ttf',
     'woff',
     'woff2'
-];
-
-const SHARED_PLUGINS: Configuration['plugins'] = [
-    // Setting up fresh Webpack environment
-    new CleanWebpackPlugin({
-        verbose: false,
-        protectWebpackAssets: false
-    }),
-    new ProgressPlugin(),
-
-    // Packaging icons
-    ...RELATIVE_ICON_PATHS.map(([size, [inputPath, outputPath]]) => {
-        return new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: path.join(
-                        PROJECT_ROOT,
-                        'src',
-                        'assets',
-                        'icons',
-                        inputPath
-                    ),
-                    to: path.join(OUTPUT_ABS_DIR, outputPath)
-                }
-            ]
-        });
-    }),
-
-    // Packaging popup entry point
-    new HtmlWebpackPlugin({
-        template: path.join(
-            PROJECT_ROOT,
-            'src',
-            'pages',
-            'popup',
-            'index.html'
-        ),
-        filename: path.join('popup', 'index.html'),
-        chunks: ['popup']
-    })
-];
-const BROWSER_PLUGINS: Configuration['plugins'] = [
-    // Copying shared files to each browser-specific build directory
-    new CopyWebpackPlugin({
-        patterns: [
-            {
-                from: OUTPUT_ABS_DIR,
-                to: CHROME_ABS_DIR,
-                noErrorOnMissing: true,
-                globOptions: {
-                    ignore: [`**/${CHROME_DIR_NAME}`, `**/${FIREFOX_DIR_NAME}`]
-                }
-            }
-        ]
-    }),
-    new CopyWebpackPlugin({
-        patterns: [
-            {
-                from: CHROME_ABS_DIR,
-                to: FIREFOX_ABS_DIR,
-                noErrorOnMissing: true,
-                globOptions: {
-                    ignore: [`**/${FIREFOX_DIR_NAME}`, '**/manifest.json']
-                }
-            }
-        ]
-    }),
-    // new FilemanagerWebpackPlugin({
-    //     events: {
-    //         onEnd: {
-    //             delete: [
-    //                 {
-    //                     source: path.join(OUTPUT_ABS_DIR, 'popup'),
-    //                     options: {}
-    //                 }
-    //             ]
-    //         }
-    //     }
-    // }),
-
-    // Generating manifest files
-    GenerateFilePlugin.generateManifestPlugin(
-        path.join(CHROME_DIR_NAME, 'manifest.json'),
-        CHROME_MANIFEST,
-        { minimized: !IS_DEV_MODE }
-    )
-    // new GenerateFilePlugin.generateManifestPlugin(
-    //     path.join(FIREFOX_DIR_NAME, 'manifest.json'),
-    //     FIREFOX_MANIFEST,
-    //     { minimized: !IS_DEV_MODE }
-    // )
 ];
 
 const config: webpack.Configuration = {
@@ -399,7 +299,53 @@ const config: webpack.Configuration = {
             }
         ]
     },
-    plugins: [...SHARED_PLUGINS, ...BROWSER_PLUGINS].filter(Boolean),
+    plugins: [
+        // Setting up fresh Webpack environment
+        new CleanWebpackPlugin({
+            verbose: false,
+            protectWebpackAssets: false
+        }),
+        new ProgressPlugin(),
+
+        // Packaging icons
+        ...RELATIVE_ICON_PATHS.map(([size, [inputPath, outputPath]]) => {
+            return new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: path.join(
+                            PROJECT_ROOT,
+                            'src',
+                            'assets',
+                            'icons',
+                            inputPath
+                        ),
+                        to: path.join(OUTPUT_ABS_DIR, outputPath)
+                    }
+                ]
+            });
+        }),
+
+        // Packaging popup entry point
+        new HtmlWebpackPlugin({
+            template: path.join(
+                PROJECT_ROOT,
+                'src',
+                'pages',
+                'popup',
+                'index.html'
+            ),
+            filename: path.join('popup', 'index.html'),
+            chunks: ['popup']
+        }),
+
+        // Generating manifest files
+        MANIFESTS.has(BROWSER) &&
+            GenerateFilePlugin.generateManifestPlugin(
+                'manifest.json',
+                MANIFESTS.get(BROWSER)!,
+                { minimized: !IS_DEV_MODE }
+            )
+    ].filter(Boolean),
     infrastructureLogging: {
         level: 'info'
     }

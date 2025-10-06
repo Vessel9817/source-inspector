@@ -1,0 +1,22 @@
+{
+    "exec": "npx ts-node webpack/webserver.ts",
+    "verbose": true,
+    "ignore": ["/dist", "/build", "/coverage", "/.vscode", "/.git", "/webpack"],
+    "watch": [
+        "./webpack/webserver.ts",
+        "./webpack/webpack.config.ts",
+        "./src/react-app-env.d.ts",
+        "./package-lock.json",
+        "tsconfig.json"
+    ],
+    "env": {
+        "NODE_ENV": "development",
+        "ASSET_PATH": "/",
+        "OUTPUT_DIR": "build",
+        "BROWSER": "firefox",
+        "PACKAGE_NAME": "(DEV BRANCH) source-inspector",
+        "PACKAGE_DESCRIPTION": "DEVELOPER USE ONLY - DO NOT PUBLISH",
+        "WEBPACK_PORT": "8082"
+    },
+    "ext": "json,cjs,mjs,js,ts"
+}
