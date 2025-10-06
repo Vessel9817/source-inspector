@@ -2,8 +2,6 @@
 
 ## Functional Priorities
 
-- TerserPlugin and the browser-specific builds cause an infinite loop when running in production mode
-- Use `webpack.BannerPlugin` to add the license (or a reference to it) in all minified files
 - Add Firefox extension support.
   See: [signing](https://extensionworkshop.com/documentation/publish/)
 - Write `README.md`
@@ -31,6 +29,7 @@
 
 ## Technical Priorities
 
+- Add env var validation
 - Rethink debug view (possibly a test-id field?)
 - For a11y purposes, add the ability
   to select and navigate between elements in the inspector

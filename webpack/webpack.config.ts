@@ -1,11 +1,13 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import fs from 'node:fs';
 import path from 'path';
 import { Tap } from 'tapable';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack, {
     AssetInfo,
+    BannerPlugin,
     Compiler,
     ProgressPlugin,
     WebpackPluginInstance
@@ -23,6 +25,7 @@ const PROJECT_ROOT = path.join(__dirname, '..');
 const BROWSER = process.env.BROWSER!;
 const OUTPUT_DIR = process.env.OUTPUT_DIR!;
 const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
+const LICENSE = fs.readFileSync(path.join(PROJECT_ROOT, 'LICENSE')).toString();
 
 // Verifying node env
 if (NODE_ENV == null) {
@@ -46,28 +49,34 @@ class Source extends _Source {
     }
 }
 
+type GenerateFilePluginArgs = {
+    filename: string;
+    content: string;
+    assetInfo?: AssetInfo;
+};
+
 class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
     private readonly filepath: string;
     private readonly source: Source;
     private readonly assetInfo: AssetInfo | undefined;
 
-    constructor(filename: string, content: string, assetInfo?: AssetInfo) {
-        this.filepath = filename;
+    constructor(args: GenerateFilePluginArgs) {
+        this.filepath = args.filename;
         this.source = new Source();
-        this.source.source = () => content;
-        this.assetInfo = assetInfo;
+        this.source.source = () => args.content;
+        this.assetInfo = args.assetInfo;
     }
 
     public apply(compiler: Compiler) {
-        compiler.hooks.compilation.tap(this.plugin, (compilation) => {
+        compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
             compilation.emitAsset(this.filepath, this.source, {
                 ...this.assetInfo,
                 sourceFilename: path.basename(this.filepath)
             });
         });
         this.source.updateHash = (hash: HashLike) => {
-            compiler.hooks.compilation.tap(this.plugin, (compilation) => {
+            compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
                 compilation.updateAsset(this.filepath, this.source, {
                     ...this.assetInfo,
                     contenthash: hash.digest().toString(),
@@ -88,11 +97,11 @@ class GenerateFilePlugin implements WebpackPluginInstance {
         manifest: chrome.runtime.Manifest,
         assetInfo?: AssetInfo
     ): GenerateFilePlugin {
-        return new GenerateFilePlugin(
+        return new GenerateFilePlugin({
             filename,
-            GenerateFilePlugin.stringifyManifest(manifest),
+            content: GenerateFilePlugin.stringifyManifest(manifest),
             assetInfo
-        );
+        });
     }
 
     private static stringifyManifest(
@@ -107,6 +116,45 @@ class GenerateFilePlugin implements WebpackPluginInstance {
         const space = IS_DEV_MODE ? 4 : undefined; // Setting tabbing for readability
 
         return JSON.stringify(manifest, replacer, space);
+    }
+}
+
+type HtmlBannerWebpackPluginArgs = {
+    banner: string;
+    /**
+     * If true, defers formatting to the user.
+     * Otherwise, formats the banner as a block comment.
+     * @default false
+     */
+    raw?: boolean;
+};
+
+class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
+    private readonly plugin: Tap = { name: 'html-license-webpack-plugin' };
+    private readonly banner: string;
+
+    constructor(args: HtmlBannerWebpackPluginArgs) {
+        if (args.raw === true) {
+            this.banner = args.banner;
+        } else {
+            const safeBanner = args.banner.replaceAll('-->', '--&gt;');
+            this.banner = `<!--\n${safeBanner}\n-->\n`;
+        }
+    }
+
+    apply(compiler: Compiler) {
+        compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
+            // beforeEmit needed to supersede minimization, see:
+            // https://github.com/jantimon/html-webpack-plugin?tab=readme-ov-file#events
+            HtmlWebpackPlugin.getCompilationHooks(
+                compilation
+            ).beforeEmit.tapAsync(this.plugin.name, (data, cb) => {
+                // Prepending banner
+                data.html = `${this.banner}${data.html}`;
+                // Telling Webpack to move on
+                cb(null, data);
+            });
+        });
     }
 }
 
@@ -335,7 +383,8 @@ const config: webpack.Configuration = {
                 'index.html'
             ),
             filename: path.join('popup', 'index.html'),
-            chunks: ['popup']
+            chunks: ['popup'],
+            minify: 'auto'
         }),
 
         // Generating manifest files
@@ -344,7 +393,24 @@ const config: webpack.Configuration = {
                 'manifest.json',
                 MANIFESTS.get(BROWSER)!,
                 { minimized: !IS_DEV_MODE }
-            )
+            ),
+
+        // Embedding license information
+        // ...in JS
+        new BannerPlugin({
+            include: [/\.js$/i],
+            entryOnly: false,
+            stage: Infinity, // Needed to prevent minimization
+            raw: true,
+            banner(data) {
+                const safeLicense = LICENSE.replaceAll('*/', '* /');
+                const delimitedLicense = safeLicense.replaceAll('\n', '\n * ');
+
+                return `/**\n * ${delimitedLicense}\n */`;
+            }
+        }),
+        /// ...in HTML
+        new HtmlBannerWebpackPlugin({ banner: LICENSE })
     ].filter(Boolean),
     infrastructureLogging: {
         level: 'info'
