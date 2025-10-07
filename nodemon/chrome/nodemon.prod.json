@@ -6,14 +6,11 @@
         "/coverage",
         "/.vscode",
         "/.git",
-        "/wepack",
         "/test",
         "/.github",
         "/nodemon"
     ],
     "watch": [
-        "./webpack/webserver.ts",
-        "./webpack/webpack.config.ts",
         "./src/react-app-env.d.ts",
         "./package-lock.json",
         "tsconfig.json"
