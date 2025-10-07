@@ -19,13 +19,22 @@ import {
     MapOptions
 } from 'webpack-sources';
 
+type BrowserName = 'chrome' | 'firefox';
+
+const PROJECT_ROOT = path.join(__dirname, '..');
+const LICENSE = fs.readFileSync(path.join(PROJECT_ROOT, 'LICENSE')).toString();
+
 // Non-secret env vars are defined in nodemon config
 const NODE_ENV = process.env.NODE_ENV;
-const PROJECT_ROOT = path.join(__dirname, '..');
-const BROWSER = process.env.BROWSER!;
+const BROWSER: BrowserName = process.env.BROWSER as BrowserName;
 const OUTPUT_DIR = process.env.OUTPUT_DIR!;
 const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
-const LICENSE = fs.readFileSync(path.join(PROJECT_ROOT, 'LICENSE')).toString();
+const PACKAGE_NAME = process.env.PACKAGE_NAME!;
+const PACKAGE_DESCRIPTION = process.env.PACKAGE_DESCRIPTION;
+const PACKAGE_VERSION = process.env.PACKAGE_VERSION!;
+const PACKAGE_AUTHOR = process.env.PACKAGE_AUTHOR;
+const PACKAGE_URL = process.env.PACKAGE_URL;
+const PACKAGE_AUTHOR_EMAIL = process.env.PACKAGE_AUTHOR_EMAIL;
 
 // Verifying node env
 if (NODE_ENV == null) {
@@ -33,6 +42,10 @@ if (NODE_ENV == null) {
 }
 
 const IS_DEV_MODE = NODE_ENV !== 'production';
+
+type Manifest =
+    | chrome.runtime.Manifest
+    | browser._manifest.WebExtensionManifest;
 
 type SourceAndMap = _SourceAndMap & { map: Object };
 
@@ -94,7 +107,7 @@ class GenerateFilePlugin implements WebpackPluginInstance {
      */
     public static generateManifestPlugin(
         filename: string,
-        manifest: chrome.runtime.Manifest,
+        manifest: Manifest,
         assetInfo?: AssetInfo
     ): GenerateFilePlugin {
         return new GenerateFilePlugin({
@@ -104,9 +117,7 @@ class GenerateFilePlugin implements WebpackPluginInstance {
         });
     }
 
-    private static stringifyManifest(
-        manifest: chrome.runtime.Manifest
-    ): string {
+    private static stringifyManifest(manifest: Manifest): string {
         const replacer = (key: string, value: any) => {
             // Manifest requires forward slashes
             return typeof value === 'string'
@@ -179,31 +190,64 @@ RELATIVE_ICON_PATHS.forEach(([size, [inputPath, outputPath]]) => {
     MANIFEST_ICON_PATHS[size] = outputPath;
 });
 
-const CHROME_MANIFEST: chrome.runtime.ManifestV3 = {
-    manifest_version: 3,
-    name: process.env.PACKAGE_NAME!,
-    description: process.env.PACKAGE_DESCRIPTION!,
-    version: '1.0.0',
-    homepage_url: 'https://github.com/Anonymous-Humanoid/source-inspector',
-    author: {
-        email: 'ninth-blast-royal@duck.com'
-    },
-    minimum_chrome_version: '93',
-    permissions: ['scripting', 'activeTab'],
-    incognito: 'split',
-    background: {
-        service_worker: path.join('background', 'index.js')
-    },
-    action: {
-        default_icon: MANIFEST_ICON_PATHS
-    },
-    icons: MANIFEST_ICON_PATHS
+// Chrome and Firefox disagree on the use of `author`
+const manifestBase: Omit<
+    browser._manifest.ManifestBase,
+    'manifest_version' | 'author'
+> = {
+    name: PACKAGE_NAME,
+    description: PACKAGE_DESCRIPTION,
+    version: PACKAGE_VERSION,
+    homepage_url: PACKAGE_URL
 };
-// const FIREFOX_MANIFEST: chrome.runtime.ManifestV2 = {};
-const MANIFESTS = new Map<string, chrome.runtime.Manifest>([
-    ['chrome', CHROME_MANIFEST]
-    // ['firefox', FIREFOX_MANIFEST]
-]);
+let manifest: Manifest;
+
+switch (BROWSER) {
+    case 'chrome': {
+        let _manifest: chrome.runtime.Manifest = {
+            ...manifestBase,
+            manifest_version: 3,
+            icons: MANIFEST_ICON_PATHS,
+            permissions: ['scripting', 'activeTab'],
+            incognito: 'split', // We don't store data, so this is an unnecessary security improvement
+            background: {
+                service_worker: path.join('background', 'index.js')
+            },
+            action: {
+                default_icon: MANIFEST_ICON_PATHS
+            }
+        };
+
+        if (PACKAGE_AUTHOR_EMAIL != null) {
+            _manifest.author = { email: PACKAGE_AUTHOR_EMAIL };
+        }
+
+        manifest = _manifest;
+        break;
+    }
+    case 'firefox': {
+        let _manifest: browser._manifest.WebExtensionManifest = {
+            ...manifestBase,
+            manifest_version: 2,
+            icons: MANIFEST_ICON_PATHS,
+            permissions: ['scripting', 'activeTab'],
+            incognito: 'spanning', // Split config isn't available in MV2
+            background: {
+                scripts: [path.join('background', 'index.js')],
+                persistent: false
+            },
+            browser_action: {
+                default_icon: MANIFEST_ICON_PATHS
+            },
+            developer: {
+                name: PACKAGE_AUTHOR,
+                url: PACKAGE_URL
+            }
+        };
+        manifest = _manifest;
+        break;
+    }
+}
 
 // Initializing webpack config
 const STATIC_FILE_EXTS = [
@@ -388,12 +432,9 @@ const config: webpack.Configuration = {
         }),
 
         // Generating manifest files
-        MANIFESTS.has(BROWSER) &&
-            GenerateFilePlugin.generateManifestPlugin(
-                'manifest.json',
-                MANIFESTS.get(BROWSER)!,
-                { minimized: !IS_DEV_MODE }
-            ),
+        GenerateFilePlugin.generateManifestPlugin('manifest.json', manifest, {
+            minimized: !IS_DEV_MODE
+        }),
 
         // Embedding license information
         // ...in JS

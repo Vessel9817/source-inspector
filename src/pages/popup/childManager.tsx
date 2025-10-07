@@ -38,7 +38,8 @@ function renderElement(
     node: Readonly<StoredVirtualElementProps>,
     nodes: Readonly<NodeState>
 ): ReactNode {
-    const attrs = node.attributeIds.keys().map((attrId) => {
+    // Some Firefox distros apparently don't allow map on a SetIterator
+    const attrs = Array.from(node.attributeIds.keys()).map((attrId) => {
         const attrNode = nodes[attrId] as StoredVirtualAttributeProps;
 
         return (

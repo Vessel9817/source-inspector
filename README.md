@@ -130,14 +130,12 @@ installation for quick and easy access, but it's not required.
 - Click the `Load unpacked` button
 - Select the built extension folder
 
-<!--
 ### Firefox (Firefox, Tor, etc)
 
 - In the address bar, type `about:addons` and hit enter
 - If it's not already enabled, click the `Developer mode` toggle
 - Click the `Load Temporary Add-on` button
 - Select the built extension folder
--->
 
 ## Changing Permissions
 
@@ -218,7 +216,8 @@ Below are some caveats this extension has that don't have immediate fixes:
   Because of how this extension works and the restrictions we apply to it for
   the user's sake, this will be included in the inspected source. In other
   words, if you can see it, so can this extension.
-  <!-- Not applicable to us -->
+  <!-- Presumably not applicable in general anymore.
+  And we expose no web accessible resources -->
   <!-- - If we were to publish this extension to the Chrome or Firefox web stores,
   this extension would unfortunately cease to be undetectable. Publishing would
   result in the extension being associated with a fixed extension ID, which

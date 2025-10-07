@@ -75,8 +75,11 @@ export class PopupManager {
      */
     public connect(): Promise<void> {
         chrome.runtime.onMessage.addListener(this.generateDocument);
-        console.log('Popup ready to connect!');
-        return chrome.runtime.sendMessage({} as any);
+
+        // Promise wrapping required for Firefox
+        return new Promise((resolve) => {
+            chrome.runtime.sendMessage({} as any, resolve);
+        });
     }
 
     private _connectTab(tabId: number): void {

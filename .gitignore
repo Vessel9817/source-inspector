@@ -3,6 +3,8 @@
 
 # Testing
 /coverage
+/tmp
+/temp
 
 # Build outputs
 /dist

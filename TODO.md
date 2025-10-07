@@ -2,8 +2,6 @@
 
 ## Functional Priorities
 
-- Add Firefox extension support.
-  See: [signing](https://extensionworkshop.com/documentation/publish/)
 - Write `README.md`
   - How it Works section
     - Source Inspection Flow

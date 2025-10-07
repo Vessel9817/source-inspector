@@ -23,6 +23,10 @@
         "BROWSER": "firefox",
         "PACKAGE_NAME": "(DEV BRANCH) source-inspector",
         "PACKAGE_DESCRIPTION": "DEVELOPER USE ONLY - DO NOT PUBLISH",
+        "PACKAGE_VERSION": "1.0.0",
+        "PACKAGE_URL": "https://github.com/Anonymous-Humanoid/source-inspector",
+        "PACKAGE_AUTHOR": "Anonymous-Humanoid",
+        "PACKAGE_AUTHOR_EMAIL": "ninth-blast-royal@duck.com",
         "WEBPACK_PORT": "8082"
     },
     "ext": "json,cjs,mjs,js,ts"

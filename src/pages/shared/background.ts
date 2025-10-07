@@ -1,19 +1,23 @@
 /**
- * The regex to determine if a URI belongs to a Chromium extension
- */
-export const EXTENSION_URI_REGEX = /^chrome-extension:\/\//i;
-
-/**
  * If the extension has permissions to inject into
  * the given URI, returns `true`, otherwise `false`
  * @param uri The URI to test
  * @returns
  */
 export async function testInjectionUri(uri: string): Promise<boolean> {
-    // Note: Chrome also allows injections into ftp:// URIs
+    if (chrome.extension.inIncognitoContext) {
+        // Some Firefox distros seem to return undefined instead of true
+        if (true === (await chrome.extension.isAllowedIncognitoAccess())) {
+            return false;
+        }
+    }
+
+    // Note: Chrome and Firefox also allow injections into ftp:// URIs,
+    // and Firefox into wss:// and ws:// URIs
+    // Some Firefox distros seem to return undefined instead of true
     if (
-        (await chrome.extension.isAllowedFileSchemeAccess()) &&
-        /^file:\/\//i.test(uri)
+        /^file:\/\//i.test(uri) &&
+        false !== (await chrome.extension.isAllowedFileSchemeAccess())
     ) {
         return true;
     }

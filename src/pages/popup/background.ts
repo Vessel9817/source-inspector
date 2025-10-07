@@ -79,43 +79,49 @@ class Popup {
     async #initializePopupBroker(): Promise<void> {
         const self = this;
 
-        // Waiting for popup to initialize
-        async function MSG_BROKER(
-            _msg: Readonly<any>,
-            sender: Readonly<chrome.runtime.MessageSender>
-        ): Promise<void> {
-            if (
-                sender.id === chrome.runtime.id &&
-                sender.tab?.id === POPUP_ID
-            ) {
-                chrome.runtime.onMessage.removeListener(MSG_BROKER);
-                clearTimeout(TIMEOUT);
+        function onWindowCreated(tabId: number): void {
+            // Waiting for popup to initialize
+            async function MSG_BROKER(
+                _msg: Readonly<any>,
+                sender: Readonly<chrome.runtime.MessageSender>
+            ): Promise<void> {
+                if (
+                    sender.id === chrome.runtime.id &&
+                    sender.tab?.id === tabId
+                ) {
+                    chrome.runtime.onMessage.removeListener(MSG_BROKER);
+                    clearTimeout(TIMEOUT);
 
-                console.log(`Popup ${POPUP_ID} successfully initialized`);
+                    console.log(`Popup ${tabId} successfully initialized`);
 
-                self.#popupId = POPUP_ID;
+                    self.#popupId = tabId;
 
-                self.#tryConnecting();
+                    self.#tryConnecting();
+                }
             }
+
+            chrome.runtime.onMessage.addListener(MSG_BROKER);
+
+            // Ensuring garbage collection after fixed timeout
+            const TIMEOUT = setTimeout(() => {
+                chrome.runtime.onMessage.removeListener(MSG_BROKER);
+
+                console.error(
+                    `Popup ${tabId} failed to connect within ${TIMEOUT_MS}ms`
+                );
+            }, TIMEOUT_MS);
         }
 
-        chrome.runtime.onMessage.addListener(MSG_BROKER);
-
         // Opening popup (requires extension split to run in incognito)
-        const popup = await chrome.windows.create({
-            url: chrome.runtime.getURL('popup/index.html'),
-            type: 'popup'
-        });
-        const POPUP_ID = popup.tabs![0].id!;
-
-        // Ensuring garbage collection after fixed timeout
-        const TIMEOUT = setTimeout(() => {
-            chrome.runtime.onMessage.removeListener(MSG_BROKER);
-
-            console.error(
-                `Popup ${POPUP_ID} failed to connect within ${TIMEOUT_MS}ms`
-            );
-        }, TIMEOUT_MS);
+        chrome.windows.create(
+            {
+                url: chrome.runtime.getURL('popup/index.html'),
+                type: 'popup'
+            },
+            (popup) => {
+                onWindowCreated(popup!.tabs![0].id!);
+            }
+        );
     }
 
     /**
@@ -140,7 +146,9 @@ class Popup {
      * in a new tab when the extension icon is clicked
      */
     static registerPopup(): void {
-        chrome.action.onClicked.addListener(Popup.tryCreatingPopup);
+        (chrome.action ?? browser.browserAction).onClicked.addListener(
+            Popup.tryCreatingPopup
+        );
     }
 }
 
