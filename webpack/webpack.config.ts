@@ -2,7 +2,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import fs from 'node:fs';
-import path from 'path';
+import path from 'node:path';
 import { Tap } from 'tapable';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack, {
@@ -210,6 +210,7 @@ switch (BROWSER) {
             icons: MANIFEST_ICON_PATHS,
             permissions: ['scripting', 'activeTab'],
             incognito: 'split', // We don't store data, so this is an unnecessary security improvement
+            offline_enabled: true,
             background: {
                 service_worker: path.join('background', 'index.js')
             },
