@@ -178,9 +178,7 @@ the page, such as with ad blocking.
 
 <!-- ### Source Inspection Flow -->
 
-## Issues and Contribution
-
-For a list of planned features and fixes, see the [TODOs](TODO.md)
+## Design Flaws
 
 Below are some caveats this extension has that don't have immediate fixes:
 
@@ -188,8 +186,8 @@ Below are some caveats this extension has that don't have immediate fixes:
   which makes it particularly difficult for us to support them.
   For instance, try the [entity reference test](./test/entity_reference_test.xhtml)
   in your browser. If you're using a modern browser, everything should be
-  valid HTML. But if you look at the page source, there's something weird
-  in the doctype...
+  valid HTML. But if you view the page source, the doctype differs, because
+  the page uses deprecated XHTML features.
 - [XML declarations](https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl)
   are not included in inspected output due to the lack of Firefox DOM APIs
   necessary to easily regenerate one. For more information, see the
@@ -216,14 +214,6 @@ Below are some caveats this extension has that don't have immediate fixes:
   Because of how this extension works and the restrictions we apply to it for
   the user's sake, this will be included in the inspected source. In other
   words, if you can see it, so can this extension.
-  <!-- Presumably not applicable in general anymore.
-  And we expose no web accessible resources -->
-  <!-- - If we were to publish this extension to the Chrome or Firefox web stores,
-  this extension would unfortunately cease to be undetectable. Publishing would
-  result in the extension being associated with a fixed extension ID, which
-  would then allow websites to detect the extension. There is nothing any
-  browser extension can do to cicrumvent this.
-  -->
   <!-- Not applicable to us, as we expose no web accessible resources -->
   <!-- - In Chrome, a website could send a GET request to
       `chrome-extension://<YOUR_ID_HERE>/manifest.json`. If it's successful, you
@@ -233,9 +223,13 @@ Below are some caveats this extension has that don't have immediate fixes:
   <!-- Not applicable to us, because we make zero network requests -->
   <!-- - In Firefox, by clicking the extension button and activating the inspector,
       the website can look at its
-      [origin header]()
+      [origin header](https://bugzilla.mozilla.org/show_bug.cgi?id=1405971)
       and determine that you're trying to use our extension.
   -->
+
+## Contribution
+
+For a list of planned features and fixes, see the [TODOs](TODO.md)
 
 ## Credits
 
