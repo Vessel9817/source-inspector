@@ -27,6 +27,7 @@
         "noEmit": false,
         "jsx": "react",
         "typeRoots": ["./node_modules/@types"],
+        "types": ["node"],
         "noErrorTruncation": true // See fully expanded types
     },
     "include": ["src"],
