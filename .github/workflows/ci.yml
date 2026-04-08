@@ -20,4 +20,4 @@ jobs:
       - name: Install node modules
         run: npm i
       - name: Run tsc
-        run: npx tsc --noEmit
+        run: npm run tsc
