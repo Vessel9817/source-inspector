@@ -6,7 +6,7 @@
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/Anonymous-Humanoid/source-inspector.git"
+        "url": "git+https://github.com/Anonymous-Humanoid/source-inspector.git"
     },
     "scripts": {
         "start:chrome:dev": "nodemon --config nodemon/chrome/nodemon.dev.json",
