@@ -1,3 +1,12 @@
+export {
+    UpdateAttributeMsg,
+    UpdateCdataSectionMsg,
+    UpdateCommentMsg,
+    UpdateDoctypeMsg,
+    UpdateDocumentMsg,
+    UpdateElementMsg,
+    UpdateTextMsg
+} from './components';
 import {
     UpdateAttributeMsg,
     UpdateCdataSectionMsg,
@@ -8,16 +17,6 @@ import {
     UpdateProcessingInstructionMsg,
     UpdateTextMsg
 } from './components';
-
-export {
-    UpdateAttributeMsg,
-    UpdateCdataSectionMsg,
-    UpdateCommentMsg,
-    UpdateDoctypeMsg,
-    UpdateDocumentMsg,
-    UpdateElementMsg,
-    UpdateTextMsg
-};
 
 export type PopupMsg = RemoveMsg | UpdateMsg;
 
