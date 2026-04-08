@@ -27,10 +27,10 @@
         "noEmit": false,
         "jsx": "react",
         "typeRoots": ["./node_modules/@types"],
-        "types": ["node"],
+        "types": ["node", "chrome", "firefox-webext-browser"],
         "noErrorTruncation": true // See fully expanded types
     },
-    "include": ["src"],
+    "include": ["src", "webpack"],
     "exclude": ["dist", "node_modules"],
     "ts-node": {
         "compilerOptions": {
