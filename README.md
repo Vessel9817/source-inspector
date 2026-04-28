@@ -48,7 +48,8 @@ There are also some additional security features we have implemented:
   This prevents detection while still allowing access to the DOM.
 - Code is wrapped in an IIFE to restrict external access of internal members.
 - All messages are validated to ensure that
-  [compromised renderers][compromised-renderers] have limited scope.
+  [compromised renderers][compromised-renderers] have
+  [limited scope][compromised-renderers-more].
 
 The only possible means of detecting this extension could be a timing attack
 on the inspected website, which is beyond the skill set of this repository's
@@ -211,6 +212,7 @@ For a list of planned features and fixes, see the [TODOs](TODO.md)
 [timing-attack]: https://browserleaks.com/chrome
 [use_dynamic_url]: https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
 [compromised-renderers]: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging
+[compromised-renderers-more]: https://issuetracker.google.com/issues/311491887
 [xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
 [xmlVersion]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
 [xmlEncoding]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding

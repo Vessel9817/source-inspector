@@ -11,11 +11,6 @@
 - Fix duplicate attribute names when adding a second or more attributes
   to an element using DevTool's "Edit as HTML" function
   (possible race condition)
-- For security reasons, validate all messages to ensure no compromisation
-  has occurred within any untrustworthy part of the extension
-  (see: the [issue tracker](https://issuetracker.google.com/issues/311491887)
-  and the referenced
-  [docs](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging))
 - Add documentation where it's missing or necessary (e.g, @param or @template)
 - Support character data mutations
 - Finish supporting all applicable node types
