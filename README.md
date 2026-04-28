@@ -23,13 +23,7 @@ rendered in HTML or XHTML.
 
 ## Privacy and Security
 
-This extension does not record any data. In the future, we plan to possibly add
-an options menu. This will be the extent of data collected, (i.e, yes/no), and
-it will not be sent or broadcast anywhere. We also do not collect browser
-history. We will **never** share any data with anyone, not even ourselves.
-We believe that open source comprises source transparency and user privacy.
-Your data is yours and yours alone, and we plan to keep it that way. Plus,
-this is an extension intended for offline use.
+See our [privacy policy](./PRIVACY.md)
 
 For more technical readers with a knowledge of browser extensions, the manifest
 file shows the following:
