@@ -1,6 +1,7 @@
+import assert from 'node:assert';
 import React, { ReactNode } from 'react';
 import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg } from '../msgs';
+import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 
 interface SharedValues {
     parentId: string;
@@ -11,6 +12,16 @@ interface SharedValues {
 }
 
 export type UpdateCommentMsg = BaseUpdateMsg & SharedValues;
+
+export function validateUpdateCommentMsg(
+    msg: Readonly<unknown>
+): asserts msg is UpdateCommentMsg {
+    validateBaseUpdateMsg(msg);
+    assert.ok(msg.nodeType === Node.COMMENT_NODE);
+    assert.ok(msg.nodeName === '#comment');
+    assert.ok(msg.nodeValue != null);
+    assert.ok(msg.parentId != null);
+}
 
 export type StoredVirtualCommentProps = StoredVirtualNodeProps &
     SharedValues &

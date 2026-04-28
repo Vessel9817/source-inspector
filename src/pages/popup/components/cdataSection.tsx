@@ -1,6 +1,7 @@
+import assert from 'node:assert';
 import React, { ReactNode } from 'react';
 import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg } from '../msgs';
+import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 import { VirtualInlineText } from './text';
 
 interface SharedValues {
@@ -12,6 +13,16 @@ interface SharedValues {
 }
 
 export type UpdateCdataSectionMsg = BaseUpdateMsg & SharedValues;
+
+export function validateUpdateCdataSectionMsg(
+    msg: Readonly<unknown>
+): asserts msg is UpdateCdataSectionMsg {
+    validateBaseUpdateMsg(msg);
+    assert.ok(msg.nodeType === Node.CDATA_SECTION_NODE);
+    assert.ok(msg.nodeName === '#cdata-section');
+    assert.ok(msg.nodeValue != null);
+    assert.ok(msg.parentId != null);
+}
 
 export type StoredVirtualCdataSectionProps = StoredVirtualNodeProps &
     SharedValues &

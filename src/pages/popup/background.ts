@@ -73,8 +73,6 @@ class Popup {
      * Allows the inspector popup to connect,
      * allowing document changes to be
      * communicated to the inspected tab
-     * @param popupId
-     * @param popupId
      */
     async #initializePopupBroker(): Promise<void> {
         const self = this;

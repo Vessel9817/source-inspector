@@ -2,9 +2,9 @@
 
 [![License][license-image]](LICENSE)
 
-Note: This extension currently only supports desktop devices using Chrome or
-Chromium derivatives, such as Edge. We aim to support all the node types
-currently in use and not deprecated as per [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType).
+Note: This extension currently only supports desktop devices using Chromium
+derivatives or Firefox, such as Edge or Tor. We aim to support all the
+currently stable [node types][node-types].
 
 ## Motivation
 
@@ -13,31 +13,29 @@ DevTools is probably the most popular debugger, as it's shipped with Chrome.
 It's a great resource, as are the many open-source alternatives. However, these
 debuggers all rely on the browser's native debugger. Some very smart people have
 figured out ways to detect when a debugger has been attached to their site,
-whether through [DevTools](https://developer.chrome.com/docs/devtools)
-or through [browser.debugger](https://developer.chrome.com/docs/extensions/reference/api/debugger).
+whether through [DevTools][devtools] or through [browser.debugger][debugger].
 
 Enter `source-inspector`. We attempt to circumvent detection, so that you can
 safely view the live HTML source of even the sketchiest websites. This tool is
 intended to let you inspect the source of any website live, whether it's
-rendered in HTML or XHTML.
+written in pure HTML or XHTML.
 
 ## Privacy and Security
 
-See our [privacy policy](./PRIVACY.md)
+See our [privacy policy](PRIVACY.md)
 
-For more technical readers with a knowledge of browser extensions, the manifest
-file shows the following:
+For more technical readers with a knowledge of browser extensions, the built
+manifest files show the following:
 
-  <!--
-  Note: If ever we require web accessible resources, see `use_dynamic_url`:
-  https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
-  -->
-
-- We do not have any web accessible resources.
+- We use MV3 in Chromium builds, preventing extension detection via
+  [timing attack][timing-attack].
+- We do not have any web accessible resources. If we did, we'd use
+  [`use_dynamic_url`][use_dynamic_url] to prevent extension detection.
 - Running the extension in normal or incognito mode uses separate processes and
   separate memory. This means the extension in one mode cannot communicate
   with- or access any data from- the other. In other words, our extension
-  respects incognito mode.
+  respects incognito mode. However, as MV2 doesn't support this feature,
+  this only applies to Chromium builds.
 - This extension uses minimal permissions for security purposes.
 - DevTools or any external debugger is not used. We wrote ours from scratch
   using plain JavaScript inspection and messaging.
@@ -48,17 +46,15 @@ There are also some additional security features we have implemented:
 
 - The content script is injected in an isolated world and never modifies the DOM.
   This prevents detection while still allowing access to the DOM.
-- Code is wrapped in an IIFE to restrict external access of internal members
+- Code is wrapped in an IIFE to restrict external access of internal members.
+- All messages are validated to ensure that
+  [compromised renderers][compromised-renderers] have limited scope.
 
-The only possible means of detecting this extension could be a timing attack,
-which is beyond the skill set of this repository's owner. If you're able to
-present a proof-of-concept or potential patches, please feel free to do so.
-For now, this remains only an unproven theory with no supporting evidence.
-
-<!--
-- All messages are validated to ensure that no part of the extension has been
-  [compromised](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging).
--->
+The only possible means of detecting this extension could be a timing attack
+on the inspected website, which is beyond the skill set of this repository's
+owner. If you're able to present a proof-of-concept or potential patches,
+please feel free to do so. For now, this remains only an unproven theory without
+supporting evidence.
 
 Finally, for transparency's sake, yes, the initial commit added _a lot_. That's
 because this project had been in the works for a while. This was a rich
@@ -161,13 +157,12 @@ Below are some caveats this extension has that don't have immediate fixes:
   in your browser. If you're using a modern browser, everything should be
   valid HTML. But if you view the page source, the doctype differs, because
   the page uses deprecated XHTML features.
-- [XML declarations](https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl)
+- [XML declarations][xml-declarations]
   are not included in inspected output due to the lack of Firefox DOM APIs
   necessary to easily regenerate one. For more information, see the
-  [xmlVersion](https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion),
-  [xmlEncoding](https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding)
-  and [xmlstandalone](https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone)
-  document properties.
+  [xmlVersion][xmlVersion], [xmlEncoding][xmlEncoding] and
+  [xmlstandalone][xmlstandalone] document properties. To contribute a fix, see:
+  [#43](https://github.com/Anonymous-Humanoid/source-inspector/issues/43)
 - We can't currently catch every attribute event. Because `MutationObserver`s
   run at the microtask level, and because attribute `MutationRecord`s don't
   include the new attribute value, we don't yet have a way to get the values
@@ -191,7 +186,7 @@ Below are some caveats this extension has that don't have immediate fixes:
   <!-- - In Chrome, a website could send a GET request to
       `chrome-extension://<YOUR_ID_HERE>/manifest.json`. If it's successful, you
       have our extension installed.
-      [See this working demo](https://browserleaks.com/chrome).
+      [See this working demo][timing-attack].
   -->
   <!-- Not applicable to us, because we make zero network requests -->
   <!-- - In Firefox, by clicking the extension button and activating the inspector,
@@ -210,4 +205,14 @@ For a list of planned features and fixes, see the [TODOs](TODO.md)
 - [Code review icons](https://www.flaticon.com/free-icons/code-review) created
   by Freepik - Flaticon
 
+[node-types]: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+[devtools]: https://developer.chrome.com/docs/devtools
+[debugger]: https://developer.chrome.com/docs/extensions/reference/api/debugger
+[timing-attack]: https://browserleaks.com/chrome
+[use_dynamic_url]: https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
+[compromised-renderers]: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging
+[xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
+[xmlVersion]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
+[xmlEncoding]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding
+[xmlstandalone]: https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone
 [license-image]: https://img.shields.io/npm/l/markdownlint.svg

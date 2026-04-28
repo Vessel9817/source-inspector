@@ -11,7 +11,12 @@ import {
     StoredVirtualProcessingInstructionProps,
     StoredVirtualTextProps
 } from './components';
-import { ConnectMsg, PopupMsg, UpdateMsg } from './msgs';
+import {
+    PopupMsg,
+    UpdateMsg,
+    validateConnectMsg,
+    validatePopupMsg
+} from './msgs';
 import NodeTree from './popup';
 
 export type NodeState = { [id: string]: StoredVirtualNodeProps };
@@ -93,19 +98,22 @@ export class PopupManager {
 
     /**
      * If the message is valid, initializes a connection
-     * between this popup and the inspected tab
+     * between this popup and the inspected tab.
+     * Input should be treated as untrusted.
      * @param msg The connection message
      * @param sender The message sender
      */
     private _generateDocument(
-        msg: Readonly<ConnectMsg>,
+        msg: Readonly<unknown>,
         sender: Readonly<chrome.runtime.MessageSender>
     ): void {
-        if (
-            sender.id === chrome.runtime.id &&
-            msg.type === 'connection' &&
-            msg.tabId != null
-        ) {
+        if (sender.id === chrome.runtime.id) {
+            try {
+                validateConnectMsg(msg);
+            } catch {
+                return;
+            }
+
             chrome.runtime.onMessage.removeListener(this.generateDocument);
             this.connectTab(msg.tabId);
         }
@@ -182,11 +190,18 @@ export class PopupManager {
     }
 
     /**
-     * Places the given message into a queue for processing
+     * Places the given message into a queue for processing.
+     * Input should be treated as untrusted.
      * @param msg
      * @implNote Thread safety: acquires the {@link queueLock}
      */
-    private async _queueMessage(msg: Readonly<PopupMsg>): Promise<void> {
+    private async _queueMessage(msg: Readonly<unknown>): Promise<void> {
+        try {
+            validatePopupMsg(msg);
+        } catch {
+            return;
+        }
+
         await this.queueLock.acquire();
 
         try {

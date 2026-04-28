@@ -1,6 +1,7 @@
+import assert from 'node:assert';
 import React, { ReactNode } from 'react';
 import { NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg } from '../msgs';
+import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 
 interface SharedValues {
     nodeType: Node['ELEMENT_NODE'];
@@ -12,6 +13,13 @@ export type StoredVirtualElementProps = StoredVirtualNodeProps &
     SharedValues & { attributeIds: Set<string> };
 
 export type VirtualElementProps = NonStoredProps<StoredVirtualElementProps>;
+
+export function validateUpdateElementMsg(
+    msg: Readonly<unknown>
+): asserts msg is UpdateElementMsg {
+    validateBaseUpdateMsg(msg);
+    assert.ok(msg.nodeType === Node.ELEMENT_NODE);
+}
 
 export function VirtualElement(
     props: Readonly<VirtualElementProps>

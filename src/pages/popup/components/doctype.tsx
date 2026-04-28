@@ -1,6 +1,7 @@
+import assert from 'node:assert';
 import React, { ReactNode } from 'react';
 import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg } from '../msgs';
+import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 
 interface SharedValues {
     parentId: string;
@@ -12,6 +13,19 @@ interface SharedValues {
 }
 
 export type UpdateDoctypeMsg = BaseUpdateMsg & SharedValues;
+
+export function validateUpdateDoctypeMsg(
+    msg: Readonly<unknown>
+): asserts msg is UpdateDoctypeMsg {
+    validateBaseUpdateMsg(msg);
+    assert.ok(msg.nodeType === Node.ATTRIBUTE_NODE);
+    assert.ok(msg.nodeValue === null);
+    assert.ok(msg.parentId != null);
+    assert.ok('publicId' in msg);
+    assert.ok(typeof msg.publicId === 'string');
+    assert.ok('systemId' in msg);
+    assert.ok(typeof msg.systemId === 'string');
+}
 
 export type StoredVirtualDoctypeProps = StoredVirtualNodeProps &
     SharedValues &

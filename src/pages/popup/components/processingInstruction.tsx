@@ -1,7 +1,8 @@
+import assert from 'node:assert';
 import React, { ReactNode } from 'react';
-import { BaseUpdateMsg } from '../msgs';
-import { VirtualInlineText } from './text';
 import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
+import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
+import { VirtualInlineText } from './text';
 
 export interface SharedValues {
     parentId: string;
@@ -11,6 +12,15 @@ export interface SharedValues {
 }
 
 export type UpdateProcessingInstructionMsg = BaseUpdateMsg & SharedValues;
+
+export function validateUpdateProcessingInstructionMsg(
+    msg: Readonly<unknown>
+): asserts msg is UpdateProcessingInstructionMsg {
+    validateBaseUpdateMsg(msg);
+    assert.ok(msg.nodeType === Node.PROCESSING_INSTRUCTION_NODE);
+    assert.ok(msg.nodeValue != null);
+    assert.ok(msg.parentId != null);
+}
 
 export type StoredVirtualProcessingInstructionProps = StoredVirtualNodeProps &
     SharedValues &

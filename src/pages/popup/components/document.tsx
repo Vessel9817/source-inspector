@@ -1,6 +1,7 @@
+import assert from 'node:assert';
 import React, { ReactNode } from 'react';
 import { NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg } from '../msgs';
+import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 
 interface SharedValues {
     nodeType: Node['DOCUMENT_NODE'];
@@ -11,6 +12,18 @@ interface SharedValues {
 }
 
 export type UpdateDocumentMsg = BaseUpdateMsg & SharedValues;
+
+export function validateUpdateDocumentMsg(
+    msg: Readonly<unknown>
+): asserts msg is UpdateDocumentMsg {
+    validateBaseUpdateMsg(msg);
+    assert.ok(msg.nodeType === Node.DOCUMENT_NODE);
+    assert.ok(msg.nodeName === '#document');
+    assert.ok(msg.nodeValue === null);
+    assert.ok(msg.prevSiblingId === undefined);
+    assert.ok('documentURI' in msg);
+    assert.ok(typeof msg.documentURI === 'string');
+}
 
 export type StoredVirtualDocumentProps = StoredVirtualNodeProps & SharedValues;
 
