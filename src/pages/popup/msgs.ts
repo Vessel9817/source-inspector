@@ -8,7 +8,7 @@ export {
     UpdateProcessingInstructionMsg,
     UpdateTextMsg
 } from './components';
-import assert from 'node:assert';
+import assert from 'assert';
 import {
     UpdateAttributeMsg,
     UpdateCdataSectionMsg,

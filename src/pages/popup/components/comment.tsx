@@ -1,4 +1,4 @@
-import assert from 'node:assert';
+import assert from 'assert';
 import React, { ReactNode } from 'react';
 import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
 import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';

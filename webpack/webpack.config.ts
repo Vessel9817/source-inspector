@@ -419,6 +419,12 @@ const config: webpack.Configuration = {
             });
         }),
 
+        // assert polyfill depends on process
+        // https://github.com/browserify/commonjs-assert/issues/55#issuecomment-996543717
+        new webpack.ProvidePlugin({
+            process: 'process/browser'
+        }),
+
         // Packaging popup entry point
         new HtmlWebpackPlugin({
             template: path.join(
