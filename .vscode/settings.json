@@ -12,6 +12,6 @@
         "**/*.bundle.js": true,
         "**/node_modules": true,
         "**/bower_components": true,
-        "**/package-lock.json": true
+        "dist": true
     }
 }
