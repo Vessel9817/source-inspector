@@ -34,11 +34,12 @@ this is an extension intended for offline use.
 For more technical readers with a knowledge of browser extensions, the manifest
 file shows the following:
 
-- We do not have any web accessible resources.
   <!--
   Note: If ever we require web accessible resources, see `use_dynamic_url`:
   https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
   -->
+
+- We do not have any web accessible resources.
 - Running the extension in normal or incognito mode uses separate processes and
   separate memory. This means the extension in one mode cannot communicate
   with- or access any data from- the other. In other words, our extension
@@ -51,31 +52,9 @@ file shows the following:
 
 There are also some additional security features we have implemented:
 
-- The content script are injected in an isolated world and never modify the DOM.
+- The content script is injected in an isolated world and never modifies the DOM.
   This prevents detection while still allowing access to the DOM.
-- Instead of ES6 classes, we use nested functions to create truly
-  private methods in our content script. I.e, something like the following:
-
-  <!-- Prettier is per-file, not per-language -->
-  <!-- prettier-ignore -->
-  ```ts
-  const clazzFactory = (async () => {
-      async function _privateMethod(): Promise<void> {
-          // Super secret internals
-      }
-
-      function publicMethod(): void {
-          // Public API
-      }
-
-      return {
-          publicMethod
-      };
-  });
-  const clazz = clazzFactory();
-
-  clazz.publicMethod();
-  ```
+- Code is wrapped in an IIFE to restrict external access of internal members
 
 The only possible means of detecting this extension could be a timing attack,
 which is beyond the skill set of this repository's owner. If you're able to

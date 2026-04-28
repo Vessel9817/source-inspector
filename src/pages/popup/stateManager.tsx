@@ -114,7 +114,7 @@ export class PopupManager {
     private binarySearch<T>(
         arr: Readonly<T[]>,
         e: Readonly<T>,
-        comparator: (eArr: T, e: T) => number
+        comparator: (arr: Readonly<T>, e: Readonly<T>) => number
     ): number {
         // https://stackoverflow.com/a/29018745
         let m = 0;
@@ -323,12 +323,12 @@ export class PopupManager {
         // Handling attributes
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             // Attribute should always have a parent, but just in case
-            if (parentId != null) {
+            if (parentId == null) {
+                console.warn('Removing attribute with no parent:', node);
+            } else {
                 const parent = nextNodes[parentId] as StoredVirtualElementProps;
 
                 parent.attributeIds.delete(id);
-            } else {
-                console.warn('Removing attribute with no parent:', node);
             }
 
             delete nextNodes[id];

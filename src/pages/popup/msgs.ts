@@ -5,6 +5,7 @@ export {
     UpdateDoctypeMsg,
     UpdateDocumentMsg,
     UpdateElementMsg,
+    UpdateProcessingInstructionMsg,
     UpdateTextMsg
 } from './components';
 import {

@@ -1,4 +1,3 @@
-import { UpdateProcessingInstructionMsg } from './components';
 import type {
     ConnectMsg,
     PopupMsg,
@@ -9,6 +8,7 @@ import type {
     UpdateDoctypeMsg,
     UpdateDocumentMsg,
     UpdateElementMsg,
+    UpdateProcessingInstructionMsg,
     UpdateTextMsg
 } from './msgs';
 
