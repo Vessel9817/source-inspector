@@ -35,8 +35,8 @@
         "css-loader": "^7.1.4",
         "html-loader": "^5.1.0",
         "html-webpack-plugin": "^5.6.8",
-        "nodemon": "^3.1.9",
-        "prettier": "^2.8.3",
+        "nodemon": "^3.1.14",
+        "prettier": "^3.9.6",
         "sass": "^1.102.0",
         "sass-loader": "^17.0.0",
         "source-map-loader": "^5.0.0",
@@ -48,7 +48,7 @@
         "typescript": "^6.0.3",
         "webpack": "^5.109.2",
         "webpack-cli": "^7.2.2",
-        "webpack-dev-server": "^5.0.4",
-        "webpack-sources": "^3.3.3"
+        "webpack-dev-server": "^6.0.0",
+        "webpack-sources": "^3.5.1"
     }
 }
