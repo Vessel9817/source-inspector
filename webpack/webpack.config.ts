@@ -1,4 +1,3 @@
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import fs from 'node:fs';
@@ -394,11 +393,6 @@ const config: webpack.Configuration = {
         ]
     },
     plugins: [
-        // Setting up fresh Webpack environment
-        new CleanWebpackPlugin({
-            verbose: false,
-            protectWebpackAssets: false
-        }),
         new ProgressPlugin(),
 
         // Packaging icons
