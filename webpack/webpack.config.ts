@@ -11,6 +11,7 @@ import webpack, {
     ProgressPlugin,
     WebpackPluginInstance
 } from 'webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import {
     Source as _Source,
     SourceAndMap as _SourceAndMap,
@@ -341,14 +342,26 @@ const config: webpack.Configuration = {
             },
 
             // CSS/SCSS/SASS
+            // https://www.npmjs.com/package/style-loader#recommend
             {
                 test: /\.(css|scss|sass)$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: IS_DEV_MODE
+                            ? 'style-loader'
+                            : MiniCssExtractPlugin.loader,
                     },
                     {
-                        loader: 'css-loader'
+                        loader: 'css-loader',
+                        options: {
+                            esModule: true,
+                            modules: {
+                                namedExport: true
+                            }
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader'
                     },
                     {
                         loader: 'sass-loader',
@@ -419,6 +432,9 @@ const config: webpack.Configuration = {
             process: 'process/browser'
         }),
 
+        // https://www.npmjs.com/package/style-loader#recommend
+        !IS_DEV_MODE && new MiniCssExtractPlugin(),
+
         // Packaging popup entry point
         new HtmlWebpackPlugin({
             template: path.join(
@@ -452,7 +468,7 @@ const config: webpack.Configuration = {
                 return `/**\n * ${delimitedLicense}\n */`;
             }
         }),
-        /// ...in HTML
+        // ...in HTML
         new HtmlBannerWebpackPlugin({ banner: LICENSE })
     ].filter(Boolean),
     infrastructureLogging: {
