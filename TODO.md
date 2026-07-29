@@ -42,7 +42,6 @@
 - Tell the user when a protected page cannot be inspected
 - Configure React source map generation
   (`React.createElement` statements are ugly)
-- Create and add donation medium
 - Modify ESLint config:
 
   - Currently using deprecated rules, see:
@@ -63,6 +62,7 @@
         }; // Type semi
     ```
 
+- Migrate from linters to pre-commit
 - Create Webpack aliases for background and content scripts, allowing Webpack
   to be seamlessly integrated where import and require cannot be used
   (i.e, script injection or manifest registering)

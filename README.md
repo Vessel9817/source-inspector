@@ -41,6 +41,8 @@ manifest files show the following:
   using plain JavaScript inspection and messaging.
 - We don't use any host permissions. Instead, we only perform anything on the
   active tab upon user initiation.
+- Although it would be nice, this extension does not use elevated permissions
+  that would allow it to self-inspect.
 
 There are also some additional security features we have implemented:
 

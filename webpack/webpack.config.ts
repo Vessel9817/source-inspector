@@ -62,11 +62,11 @@ class Source extends _Source {
     }
 }
 
-type GenerateFilePluginArgs = {
+interface GenerateFilePluginArgs {
     filename: string;
     content: string;
     assetInfo?: AssetInfo;
-};
+}
 
 class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
@@ -130,7 +130,7 @@ class GenerateFilePlugin implements WebpackPluginInstance {
     }
 }
 
-type HtmlBannerWebpackPluginArgs = {
+interface HtmlBannerWebpackPluginArgs {
     banner: string;
     /**
      * If true, defers formatting to the user.
@@ -138,7 +138,7 @@ type HtmlBannerWebpackPluginArgs = {
      * @default false
      */
     raw?: boolean;
-};
+}
 
 class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'html-license-webpack-plugin' };
@@ -170,7 +170,7 @@ class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
 }
 
 // Copying icons
-const VALID_SIZES = [16, 32, 48, 128].map((size) => size.toString());
+const VALID_SIZES = ['16', '32', '48', '128'];
 const RELATIVE_ICON_PATHS = [
     ...new Map<string, [string, string]>(
         VALID_SIZES.map((size) => [
