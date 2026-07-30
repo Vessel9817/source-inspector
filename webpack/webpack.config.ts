@@ -219,10 +219,6 @@ switch (BROWSER) {
             }
         };
 
-        if (PACKAGE_AUTHOR_EMAIL != null) {
-            _manifest.author = { email: PACKAGE_AUTHOR_EMAIL };
-        }
-
         manifest = _manifest;
         break;
     }
