@@ -34,7 +34,6 @@ const PACKAGE_DESCRIPTION = process.env.PACKAGE_DESCRIPTION;
 const PACKAGE_VERSION = process.env.PACKAGE_VERSION!;
 const PACKAGE_AUTHOR = process.env.PACKAGE_AUTHOR;
 const PACKAGE_URL = process.env.PACKAGE_URL;
-const PACKAGE_AUTHOR_EMAIL = process.env.PACKAGE_AUTHOR_EMAIL;
 
 // Verifying node env
 if (NODE_ENV == null) {
