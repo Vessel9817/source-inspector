@@ -346,7 +346,9 @@ const config: webpack.Configuration = {
         rules: [
             // Static files
             {
-                test: new RegExp('.(' + STATIC_FILE_EXTS.join('|') + ')$'),
+                test: new RegExp(
+                    String.raw`\.(?:${STATIC_FILE_EXTS.join('|')})$`
+                ),
                 type: 'asset/resource',
                 exclude: /node_modules/
             },
