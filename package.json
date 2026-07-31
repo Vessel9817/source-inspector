@@ -14,7 +14,6 @@
         "start:firefox:dev": "nodemon --config nodemon/firefox/nodemon.dev.json",
         "start:chrome:prod": "nodemon --config nodemon/chrome/nodemon.prod.json",
         "start:firefox:prod": "nodemon --config nodemon/firefox/nodemon.prod.json",
-        "prettier": "prettier --write **/*.{cjs,mjs,js,jsx,ts,tsx,json,css,scss,html} --config .prettierrc --ignore-path .prettierignore",
         "tsc": "tsc --noEmit"
     },
     "dependencies": {
@@ -40,7 +39,6 @@
         "nodemon": "^3.1.14",
         "postcss": "^8.5.25",
         "postcss-loader": "^8.2.1",
-        "prettier": "^3.9.6",
         "sass": "^1.102.0",
         "sass-loader": "^17.0.0",
         "source-map-loader": "^5.0.0",
