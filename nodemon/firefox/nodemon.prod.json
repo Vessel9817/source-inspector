@@ -24,8 +24,8 @@
         "PACKAGE_NAME": "source-inspector",
         "PACKAGE_DESCRIPTION": "A from-scratch open-source document source inspector that aims to be invisible to websites",
         "PACKAGE_VERSION": "1.0.0",
-        "PACKAGE_URL": "https://github.com/Anonymous-Humanoid/source-inspector",
-        "PACKAGE_AUTHOR": "Anonymous-Humanoid",
+        "PACKAGE_URL": "https://github.com/Vessel9817/source-inspector",
+        "PACKAGE_AUTHOR": "Vessel9817",
         "WEBPACK_PORT": "8083"
     },
     "ext": "json,cjs,mjs,js,ts"

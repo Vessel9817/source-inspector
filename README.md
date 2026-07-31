@@ -165,7 +165,7 @@ Below are some caveats this extension has that don't have immediate fixes:
   necessary to easily regenerate one. For more information, see the
   [xmlVersion][xmlVersion], [xmlEncoding][xmlEncoding] and
   [xmlstandalone][xmlstandalone] document properties. To contribute a fix, see:
-  [#43](https://github.com/Anonymous-Humanoid/source-inspector/issues/43)
+  [Anonymous-Humanoid/source-inspector#43][xml-issue]
 - We can't currently catch every attribute event. Because `MutationObserver`s
   run at the microtask level, and because attribute `MutationRecord`s don't
   include the new attribute value, we don't yet have a way to get the values
@@ -185,7 +185,10 @@ Below are some caveats this extension has that don't have immediate fixes:
   Because of how this extension works and the restrictions we apply to it for
   the user's sake, this will be included in the inspected source. In other
   words, if you can see it, so can this extension.
-  <!-- Not applicable to us, as we expose no web accessible resources -->
+  <!--
+  Not applicable to us, as we expose no web accessible resources.
+  May also be resolvable with `use_dynamic_url`.
+  -->
   <!-- - In Chrome, a website could send a GET request to
       `chrome-extension://<YOUR_ID_HERE>/manifest.json`. If it's successful, you
       have our extension installed.
@@ -200,13 +203,14 @@ Below are some caveats this extension has that don't have immediate fixes:
 
 ## Contribution
 
-For a list of planned features and fixes, see the [TODOs](TODO.md)
+For a list of planned features and fixes, see the [TODOs](TODO.md).
+If your planned contribution isn't included there, feel free to open
+an issue or pull request.
 
-## Credits
+## Attribution
 
-- My own [extension boilerplate](https://github.com/Anonymous-Humanoid/chromium-extension-boilerplate)
-- [Code review icons](https://www.flaticon.com/free-icons/code-review) created
-  by Freepik - Flaticon
+- [Extension boilerplate][boilerplate]
+- [Code review icons][flaticon] created by Freepik - Flaticon
 
 [node-types]: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
 [devtools]: https://developer.chrome.com/docs/devtools
@@ -219,4 +223,7 @@ For a list of planned features and fixes, see the [TODOs](TODO.md)
 [xmlVersion]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
 [xmlEncoding]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding
 [xmlstandalone]: https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone
+[xml-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/43
+[boilerplate]: https://github.com/Anonymous-Humanoid/chromium-extension-boilerplate
+[flaticon]: https://www.flaticon.com/free-icons/code-review
 [license-image]: https://img.shields.io/npm/l/markdownlint.svg
