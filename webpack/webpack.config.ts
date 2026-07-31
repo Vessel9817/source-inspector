@@ -1,5 +1,6 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Tap } from 'tapable';
@@ -11,7 +12,6 @@ import webpack, {
     ProgressPlugin,
     WebpackPluginInstance
 } from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import {
     Source as _Source,
     SourceAndMap as _SourceAndMap,
@@ -67,6 +67,11 @@ interface GenerateFilePluginArgs {
     assetInfo?: AssetInfo;
 }
 
+type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content'> & {
+    manifest: Manifest;
+    tabs?: number;
+};
+
 class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
     private readonly filepath: string;
@@ -87,6 +92,7 @@ class GenerateFilePlugin implements WebpackPluginInstance {
                 sourceFilename: path.basename(this.filepath)
             });
         });
+
         this.source.updateHash = (hash: HashLike) => {
             compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
                 compilation.updateAsset(this.filepath, this.source, {
@@ -105,27 +111,30 @@ class GenerateFilePlugin implements WebpackPluginInstance {
      * @returns A Webpack plugin to execute this function
      */
     public static generateManifestPlugin(
-        filename: string,
-        manifest: Manifest,
-        assetInfo?: AssetInfo
+        args: GenerateManifestArgs
     ): GenerateFilePlugin {
         return new GenerateFilePlugin({
-            filename,
-            content: GenerateFilePlugin.stringifyManifest(manifest),
-            assetInfo
+            filename: args.filename,
+            content: GenerateFilePlugin.stringifyManifest(
+                args.manifest,
+                args.tabs
+            ),
+            assetInfo: args.assetInfo
         });
     }
 
-    private static stringifyManifest(manifest: Manifest): string {
+    private static stringifyManifest(
+        manifest: Manifest,
+        tabs?: number
+    ): string {
         const replacer = (key: string, value: any) => {
             // Manifest requires forward slashes
             return typeof value === 'string'
                 ? value.replaceAll('\\', '/')
                 : value;
         };
-        const space = IS_DEV_MODE ? 4 : undefined; // Setting tabbing for readability
 
-        return JSON.stringify(manifest, replacer, space);
+        return JSON.stringify(manifest, replacer, tabs);
     }
 }
 
@@ -344,7 +353,7 @@ const config: webpack.Configuration = {
                     {
                         loader: IS_DEV_MODE
                             ? 'style-loader'
-                            : MiniCssExtractPlugin.loader,
+                            : MiniCssExtractPlugin.loader
                     },
                     {
                         loader: 'css-loader',
@@ -445,8 +454,10 @@ const config: webpack.Configuration = {
         }),
 
         // Generating manifest files
-        GenerateFilePlugin.generateManifestPlugin('manifest.json', manifest, {
-            minimized: !IS_DEV_MODE
+        GenerateFilePlugin.generateManifestPlugin({
+            filename: 'manifest.json',
+            manifest,
+            tabs: IS_DEV_MODE ? 2 : undefined
         }),
 
         // Embedding license information
