@@ -1,5 +1,5 @@
 import { testInjectionUri } from '../shared/background';
-import { ConnectMsg } from './msgs';
+import { type ConnectMsg } from './msgs';
 
 // Shared exports
 export const TIMEOUT_MS = 5_000;

@@ -1,4 +1,4 @@
-// Allowing React to import images
+// Allowing React to import media
 declare module '*.png';
 declare module '*.svg';
 declare module '*.jpeg';

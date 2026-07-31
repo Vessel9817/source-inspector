@@ -1,7 +1,7 @@
 import assert from 'assert';
 import React, { ReactNode } from 'react';
-import { NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
+import type { NonStoredProps, StoredVirtualNodeProps } from '../base';
+import { type BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 
 interface SharedValues {
     nodeType: Node['DOCUMENT_NODE'];

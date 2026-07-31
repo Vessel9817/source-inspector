@@ -12,6 +12,4 @@ class Background {
 }
 
 // Running background entry point
-(() => {
-    Background.register();
-})();
+Background.register();

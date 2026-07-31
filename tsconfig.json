@@ -1,28 +1,29 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "target": "ES2022",
         "lib": [
             // General JS
             "ESNext",
 
             // Web interfaces
-            "dom",
-            "dom.iterable",
+            "DOM",
+            "DOM.Iterable",
 
             // Asynchronocity and promises
             "ES2020.Promise",
-            "ESNext.asynciterable"
+            "ES2018.AsyncIterable"
         ],
+        "noImplicitAny": true,
         "allowJs": true,
-        "esModuleInterop": true,
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true,
         "allowSyntheticDefaultImports": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
+        "module": "ES2022",
+        "moduleResolution": "bundler",
         "resolveJsonModule": true,
-        "skipDefaultLibCheck": true,
         "skipLibCheck": true,
         "noEmit": false,
         "jsx": "react",

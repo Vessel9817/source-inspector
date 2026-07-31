@@ -1,7 +1,7 @@
 import assert from 'assert';
 import React, { ReactNode } from 'react';
-import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
-import { BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
+import type { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
+import { type BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
 
 interface SharedValues {
     parentId: string;

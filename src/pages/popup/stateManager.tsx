@@ -1,7 +1,7 @@
 import { Mutex, withTimeout } from 'async-mutex';
 import React, { createContext, ReactNode } from 'react';
-import { StoredVirtualNodeProps } from './base';
-import {
+import type { StoredVirtualNodeProps } from './base';
+import type {
     StoredVirtualAttributeProps,
     StoredVirtualCdataSectionProps,
     StoredVirtualCommentProps,
@@ -12,8 +12,8 @@ import {
     StoredVirtualTextProps
 } from './components';
 import {
-    PopupMsg,
-    UpdateMsg,
+    type PopupMsg,
+    type UpdateMsg,
     validateConnectMsg,
     validatePopupMsg
 } from './msgs';

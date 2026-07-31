@@ -1,14 +1,14 @@
 import React, { ReactNode, useContext } from 'react';
-import { StoredVirtualNodeProps } from './base';
+import type { StoredVirtualNodeProps } from './base';
 import {
-    StoredVirtualAttributeProps,
-    StoredVirtualCdataSectionProps,
-    StoredVirtualCommentProps,
-    StoredVirtualDoctypeProps,
-    StoredVirtualDocumentProps,
-    StoredVirtualElementProps,
-    StoredVirtualProcessingInstructionProps,
-    StoredVirtualTextProps,
+    type StoredVirtualAttributeProps,
+    type StoredVirtualCdataSectionProps,
+    type StoredVirtualCommentProps,
+    type StoredVirtualDoctypeProps,
+    type StoredVirtualDocumentProps,
+    type StoredVirtualElementProps,
+    type StoredVirtualProcessingInstructionProps,
+    type StoredVirtualTextProps,
     VirtualAttribute,
     VirtualCdataSection,
     VirtualComment,

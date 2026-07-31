@@ -28,6 +28,4 @@ const server = new WebpackDevServer(
 );
 
 // Starting server (await blocks program termination)
-(async () => {
-    await server.start();
-})();
+await server.start();

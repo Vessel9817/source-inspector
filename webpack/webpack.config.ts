@@ -1,28 +1,26 @@
+import assert from 'node:assert';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import path from 'node:path';
-import { Tap } from 'tapable';
+import { type Tap } from 'tapable';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack, {
-    AssetInfo,
-    BannerPlugin,
-    Compiler,
-    ProgressPlugin,
-    WebpackPluginInstance
+    type AssetInfo,
+    type Compiler,
+    type WebpackPluginInstance
 } from 'webpack';
-import {
-    Source as _Source,
-    SourceAndMap as _SourceAndMap,
-    HashLike,
-    MapOptions
-} from 'webpack-sources';
+import sources from 'webpack-sources';
 
 type BrowserName = 'chrome' | 'firefox';
 
+const __filename = import.meta.filename;
+const __dirname = import.meta.dirname;
+const require = createRequire(__filename);
 const PROJECT_ROOT = path.join(__dirname, '..');
-const LICENSE = fs.readFileSync(path.join(PROJECT_ROOT, 'LICENSE')).toString();
+const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString();
 
 // Non-secret env vars are defined in nodemon config
 const NODE_ENV = process.env.NODE_ENV;
@@ -36,9 +34,7 @@ const PACKAGE_AUTHOR = process.env.PACKAGE_AUTHOR;
 const PACKAGE_URL = process.env.PACKAGE_URL;
 
 // Verifying node env
-if (NODE_ENV == null) {
-    throw new Error('Node environment must be specified');
-}
+assert.ok(NODE_ENV != null, 'NODE_ENV must be specified');
 
 const IS_DEV_MODE = NODE_ENV !== 'production';
 
@@ -46,11 +42,11 @@ type Manifest =
     | chrome.runtime.Manifest
     | browser._manifest.WebExtensionManifest;
 
-type SourceAndMap = _SourceAndMap & { map: Object };
+type SourceAndMap = sources.SourceAndMap & { map: Object };
 
 // source and updateHash methods remain unimplemented
-class Source extends _Source {
-    sourceAndMap(options?: MapOptions): SourceAndMap {
+class Source extends sources.Source {
+    sourceAndMap(options?: sources.MapOptions): SourceAndMap {
         let out = {
             ...super.sourceAndMap(options)
         } as SourceAndMap;
@@ -93,7 +89,7 @@ class GenerateFilePlugin implements WebpackPluginInstance {
             });
         });
 
-        this.source.updateHash = (hash: HashLike) => {
+        this.source.updateHash = (hash: sources.HashLike) => {
             compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
                 compilation.updateAsset(this.filepath, this.source, {
                     ...this.assetInfo,
@@ -335,8 +331,6 @@ const config: webpack.Configuration = {
             ...STATIC_FILE_EXTS,
             'ts',
             'tsx', // TS/TSX must come before JS/JSX
-            'cjs',
-            'mjs', // CJS/MJS before JS
             'js',
             'jsx',
             'css'
@@ -354,6 +348,7 @@ const config: webpack.Configuration = {
             {
                 // https://www.npmjs.com/package/style-loader#recommend
                 test: /\.(css|scss|sass)$/,
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: IS_DEV_MODE
@@ -386,11 +381,12 @@ const config: webpack.Configuration = {
             },
             {
                 test: /\.(ts|tsx)$/,
+                type: 'javascript/esm',
                 exclude: /node_modules/,
                 use: [
                     {
                         // https://www.npmjs.com/package/ts-loader#devtool--sourcemaps
-                        loader: 'ts-loader',
+                        loader: require.resolve('ts-loader'),
                         options: {
                             transpileOnly: IS_DEV_MODE
                         }
@@ -405,7 +401,7 @@ const config: webpack.Configuration = {
         ]
     },
     plugins: [
-        new ProgressPlugin(),
+        new webpack.ProgressPlugin(),
 
         // Packaging icons
         ...RELATIVE_ICON_PATHS.map(([size, [inputPath, outputPath]]) => {
@@ -456,7 +452,7 @@ const config: webpack.Configuration = {
         }),
 
         // Embedding license information
-        new BannerPlugin({
+        new webpack.BannerPlugin({
             include: [/\.(?:js|css)$/i],
             entryOnly: false,
             stage: Infinity, // Needed to prevent minimization
@@ -465,7 +461,7 @@ const config: webpack.Configuration = {
         new HtmlBannerWebpackPlugin({ banner: LICENSE }),
 
         // Adding source map references
-        new BannerPlugin({
+        new webpack.BannerPlugin({
             include: [/\.(?:js|css)$/i],
             entryOnly: false,
             stage: Infinity, // Needed to prevent minimization
