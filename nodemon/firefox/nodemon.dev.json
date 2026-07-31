@@ -19,7 +19,6 @@
     ],
     "env": {
         "NODE_ENV": "development",
-        "ASSET_PATH": "/",
         "OUTPUT_DIR": "dist/firefox/dev",
         "BROWSER": "firefox",
         "PACKAGE_NAME": "(DEV BRANCH) source-inspector",

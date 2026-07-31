@@ -19,7 +19,6 @@
     ],
     "env": {
         "NODE_ENV": "production",
-        "ASSET_PATH": "/",
         "OUTPUT_DIR": "dist/chrome/prod",
         "BROWSER": "chrome",
         "PACKAGE_NAME": "source-inspector",

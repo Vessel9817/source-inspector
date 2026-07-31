@@ -327,7 +327,7 @@ const config: webpack.Configuration = {
         filename: '[name].bundle.js', // Extra clarification that paths change on build
         path: OUTPUT_ABS_DIR,
         clean: true,
-        publicPath: process.env.ASSET_PATH,
+        publicPath: '/',
         iife: true
     },
     resolve: {

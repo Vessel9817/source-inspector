@@ -19,7 +19,6 @@
     ],
     "env": {
         "NODE_ENV": "production",
-        "ASSET_PATH": "/",
         "OUTPUT_DIR": "dist/firefox/prod",
         "BROWSER": "firefox",
         "PACKAGE_NAME": "source-inspector",
