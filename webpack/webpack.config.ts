@@ -3,7 +3,6 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import fs from 'node:fs/promises';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 import { type Tap } from 'tapable';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -16,9 +15,7 @@ import sources from 'webpack-sources';
 
 type BrowserName = 'chrome' | 'firefox';
 
-const __filename = import.meta.filename;
 const __dirname = import.meta.dirname;
-const require = createRequire(__filename);
 const PROJECT_ROOT = path.join(__dirname, '..');
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString();
 
@@ -386,7 +383,7 @@ const config: webpack.Configuration = {
                 use: [
                     {
                         // https://www.npmjs.com/package/ts-loader#devtool--sourcemaps
-                        loader: require.resolve('ts-loader'),
+                        loader: 'ts-loader',
                         options: {
                             transpileOnly: IS_DEV_MODE
                         }
