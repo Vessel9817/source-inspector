@@ -18,7 +18,6 @@ import {
     HashLike,
     MapOptions
 } from 'webpack-sources';
-const MoveAssetsPlugin = require('move-assets-webpack-plugin');
 
 type BrowserName = 'chrome' | 'firefox';
 
@@ -273,7 +272,9 @@ const STATIC_FILE_EXTS = [
 const config: webpack.Configuration = {
     mode: IS_DEV_MODE ? 'development' : 'production',
     // Extensions cannot use eval
-    devtool: IS_DEV_MODE ? 'cheap-module-source-map' : 'source-map',
+    devtool: IS_DEV_MODE
+        ? 'hidden-cheap-module-source-map'
+        : 'hidden-source-map',
     optimization: IS_DEV_MODE
         ? undefined
         : {
@@ -299,14 +300,16 @@ const config: webpack.Configuration = {
                     'docListener.ts'
                 )
             ],
-            filename: path.join('popup', 'docListener.js')
+            filename: path.join('popup', 'docListener.js'),
+            publicPath: '/popup/'
         },
         popup: {
             import: [
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
             ],
             // HTMLWebpackPlugin requires forward slashes
-            filename: path.join('popup', 'index.js').replaceAll('\\', '/')
+            filename: path.join('popup', 'index.js').replaceAll('\\', '/'),
+            publicPath: '/popup/'
         },
 
         // Background
@@ -320,11 +323,11 @@ const config: webpack.Configuration = {
                     'index.ts'
                 )
             ],
-            filename: path.join('background', 'index.js')
+            filename: path.join('background', 'index.js'),
+            publicPath: '/background/'
         }
     },
     output: {
-        filename: '[name].bundle.js', // Extra clarification that paths change on build
         path: OUTPUT_ABS_DIR,
         clean: true,
         publicPath: '/',
@@ -463,37 +466,29 @@ const config: webpack.Configuration = {
         }),
 
         // Embedding license information
-        // ...in JS
         new BannerPlugin({
-            include: [/\.js$/i],
+            include: [/\.(?:js|css)$/i],
             entryOnly: false,
             stage: Infinity, // Needed to prevent minimization
             raw: true,
-            banner(data) {
+            banner(data): string {
                 const safeLicense = LICENSE.replaceAll('*/', '* /');
                 const delimitedLicense = safeLicense.replaceAll('\n', '\n * ');
 
                 return `/**\n * ${delimitedLicense}\n */`;
             }
         }),
-        // ...in HTML
         new HtmlBannerWebpackPlugin({ banner: LICENSE }),
 
-        // Moving popup CSS and source map
-        !IS_DEV_MODE &&
-            new MoveAssetsPlugin({
-                clean: true,
-                patterns: [
-                    {
-                        from: path.join(OUTPUT_DIR, 'popup.css'),
-                        to: path.join(OUTPUT_DIR, 'popup', 'index.css')
-                    },
-                    {
-                        from: path.join(OUTPUT_DIR, 'popup.css.map'),
-                        to: path.join(OUTPUT_DIR, 'popup', 'index.css.map')
-                    }
-                ]
-            })
+        // Adding source map references
+        new BannerPlugin({
+            include: [/\.(?:js|css)$/i],
+            entryOnly: false,
+            stage: Infinity, // Needed to prevent minimization
+            raw: true,
+            footer: true,
+            banner: '/*# sourceMappingURL=/[file].map */'
+        })
     ].filter(Boolean),
     infrastructureLogging: {
         level: 'info'
