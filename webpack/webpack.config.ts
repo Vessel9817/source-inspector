@@ -365,13 +365,17 @@ const config: webpack.Configuration = {
                         loader: 'css-loader',
                         options: {
                             esModule: true,
+                            sourceMap: true,
                             modules: {
                                 namedExport: true
                             }
                         }
                     },
                     {
-                        loader: 'postcss-loader'
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap: true
+                        }
                     },
                     {
                         loader: 'sass-loader',
@@ -401,13 +405,6 @@ const config: webpack.Configuration = {
                         }
                     }
                 ]
-            },
-
-            // CJS/MJS/JS/JSX
-            {
-                test: /\.(cjs|mjs|js|jsx)$/,
-                exclude: /node_modules/,
-                loader: 'source-map-loader'
             }
         ]
     },
