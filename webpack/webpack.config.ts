@@ -157,7 +157,7 @@ class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
         if (args.raw === true) {
             this.banner = args.banner;
         } else {
-            const safeBanner = args.banner.replaceAll('-->', '--&gt;');
+            const safeBanner = args.banner.replaceAll('-->', '-- >');
             this.banner = `<!--\n${safeBanner}\n-->\n`;
         }
     }
