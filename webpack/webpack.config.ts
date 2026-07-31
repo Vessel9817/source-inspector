@@ -18,6 +18,7 @@ import {
     HashLike,
     MapOptions
 } from 'webpack-sources';
+const MoveAssetsPlugin = require('move-assets-webpack-plugin');
 
 type BrowserName = 'chrome' | 'firefox';
 
@@ -140,6 +141,7 @@ class GenerateFilePlugin implements WebpackPluginInstance {
 
 interface HtmlBannerWebpackPluginArgs {
     banner: string;
+
     /**
      * If true, defers formatting to the user.
      * Otherwise, formats the banner as a block comment.
@@ -379,8 +381,8 @@ const config: webpack.Configuration = {
             // HTML
             {
                 test: /\.html$/,
-                loader: 'html-loader',
-                exclude: /node_modules/
+                exclude: /node_modules/,
+                loader: 'html-loader'
             },
 
             // TS/TSX (must come before JS/JSX)
@@ -389,7 +391,7 @@ const config: webpack.Configuration = {
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: require.resolve('ts-loader'),
+                        loader: 'ts-loader',
                         options: {
                             transpileOnly: IS_DEV_MODE
                         }
@@ -401,11 +403,7 @@ const config: webpack.Configuration = {
             {
                 test: /\.(cjs|mjs|js|jsx)$/,
                 exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'source-map-loader'
-                    }
-                ]
+                loader: 'source-map-loader'
             }
         ]
     },
@@ -449,7 +447,7 @@ const config: webpack.Configuration = {
                 'index.html'
             ),
             filename: path.join('popup', 'index.html'),
-            chunks: ['popup'],
+            chunks: 'all',
             minify: 'auto'
         }),
 
@@ -475,12 +473,27 @@ const config: webpack.Configuration = {
             }
         }),
         // ...in HTML
-        new HtmlBannerWebpackPlugin({ banner: LICENSE })
+        new HtmlBannerWebpackPlugin({ banner: LICENSE }),
+
+        // Moving popup CSS and source map
+        !IS_DEV_MODE &&
+            new MoveAssetsPlugin({
+                clean: true,
+                patterns: [
+                    {
+                        from: path.join(OUTPUT_DIR, 'popup.css'),
+                        to: path.join(OUTPUT_DIR, 'popup', 'index.css')
+                    },
+                    {
+                        from: path.join(OUTPUT_DIR, 'popup.css.map'),
+                        to: path.join(OUTPUT_DIR, 'popup', 'index.css.map')
+                    }
+                ]
+            })
     ].filter(Boolean),
     infrastructureLogging: {
         level: 'info'
     }
 };
 
-// Webpack >= 2.0.0 no longer allows custom properties in configuration
 export default config;
