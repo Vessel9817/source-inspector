@@ -22,6 +22,7 @@
 
 ## Technical Priorities
 
+- BannerPlugin is throwing source maps: line numbers need to be shifted accordingly
 - Add env var validation
 - Rethink debug view (possibly a test-id field?)
 - For a11y purposes, add the ability
