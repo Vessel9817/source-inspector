@@ -107,7 +107,7 @@ installation for quick and easy access, but it's not required.
 - In the address bar, type `about:addons` and hit enter
 - If it's not already enabled, click the `Developer mode` toggle
 - Click the `Load Temporary Add-on` button
-- Select the built extension folder
+- Select the built extension `manifest.json` file
 
 ## Changing Permissions
 
