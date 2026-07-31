@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -12,28 +11,20 @@ import webpack, {
     type WebpackPluginInstance
 } from 'webpack';
 import sources from 'webpack-sources';
+import {
+    BROWSER,
+    IS_DEV_MODE,
+    NODE_ENV,
+    OUTPUT_ABS_DIR,
+    PACKAGE_NAME,
+    PACKAGE_DESCRIPTION,
+    PACKAGE_VERSION,
+    PACKAGE_AUTHOR,
+    PACKAGE_URL,
+    PROJECT_ROOT
+} from './env';
 
-type BrowserName = 'chrome' | 'firefox';
-
-const __dirname = import.meta.dirname;
-const PROJECT_ROOT = path.join(__dirname, '..');
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString();
-
-// Non-secret env vars are defined in nodemon config
-const NODE_ENV = process.env.NODE_ENV;
-const BROWSER: BrowserName = process.env.BROWSER as BrowserName;
-const OUTPUT_DIR = process.env.OUTPUT_DIR!;
-const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
-const PACKAGE_NAME = process.env.PACKAGE_NAME!;
-const PACKAGE_DESCRIPTION = process.env.PACKAGE_DESCRIPTION;
-const PACKAGE_VERSION = process.env.PACKAGE_VERSION!;
-const PACKAGE_AUTHOR = process.env.PACKAGE_AUTHOR;
-const PACKAGE_URL = process.env.PACKAGE_URL;
-
-// Verifying node env
-assert.ok(NODE_ENV != null, 'NODE_ENV must be specified');
-
-const IS_DEV_MODE = NODE_ENV !== 'production';
 
 type Manifest =
     | chrome.runtime.Manifest
