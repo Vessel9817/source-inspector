@@ -470,13 +470,7 @@ const config: webpack.Configuration = {
             include: [/\.(?:js|css)$/i],
             entryOnly: false,
             stage: Infinity, // Needed to prevent minimization
-            raw: true,
-            banner(data): string {
-                const safeLicense = LICENSE.replaceAll('*/', '* /');
-                const delimitedLicense = safeLicense.replaceAll('\n', '\n * ');
-
-                return `/**\n * ${delimitedLicense}\n */`;
-            }
+            banner: LICENSE
         }),
         new HtmlBannerWebpackPlugin({ banner: LICENSE }),
 
