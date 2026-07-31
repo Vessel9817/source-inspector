@@ -31,10 +31,5 @@
         "noErrorTruncation": true // See fully expanded types
     },
     "include": ["src", "webpack"],
-    "exclude": ["dist", "node_modules"],
-    "ts-node": {
-        "compilerOptions": {
-            "module": "CommonJS"
-        }
-    }
+    "exclude": ["dist", "node_modules"]
 }

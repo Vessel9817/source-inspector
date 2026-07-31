@@ -1,5 +1,5 @@
 {
-    "exec": "npx ts-node webpack/webserver.ts",
+    "exec": "npx tsx webpack/webserver.ts",
     "verbose": true,
     "ignore": [
         "/dist",
