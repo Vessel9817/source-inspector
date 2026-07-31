@@ -2,6 +2,8 @@
 
 ## Functional Priorities
 
+- [Include XML declarations in source](https://github.com/Anonymous-Humanoid/source-inspector/issues/43)
+- [Add void element support](https://github.com/Anonymous-Humanoid/source-inspector/issues/44)
 - Write `README.md`
   - How it Works section
     - Source Inspection Flow
@@ -22,8 +24,10 @@
 
 ## Technical Priorities
 
+- CSS is broken, likely due to CSS plugin changes
 - BannerPlugin is throwing source maps: line numbers need to be shifted accordingly
 - Add env var validation
+- [Encrypt messages](https://github.com/Anonymous-Humanoid/source-inspector/issues/45)
 - Rethink debug view (possibly a test-id field?)
 - For a11y purposes, add the ability
   to select and navigate between elements in the inspector

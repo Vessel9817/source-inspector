@@ -164,8 +164,7 @@ Below are some caveats this extension has that don't have immediate fixes:
   are not included in inspected output due to the lack of Firefox DOM APIs
   necessary to easily regenerate one. For more information, see the
   [xmlVersion][xmlVersion], [xmlEncoding][xmlEncoding] and
-  [xmlstandalone][xmlstandalone] document properties. To contribute a fix, see:
-  [Anonymous-Humanoid/source-inspector#43][xml-issue]
+  [xmlstandalone][xmlstandalone] document properties.
 - We can't currently catch every attribute event. Because `MutationObserver`s
   run at the microtask level, and because attribute `MutationRecord`s don't
   include the new attribute value, we don't yet have a way to get the values
@@ -223,7 +222,6 @@ an issue or pull request.
 [xmlVersion]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
 [xmlEncoding]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding
 [xmlstandalone]: https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone
-[xml-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/43
 [boilerplate]: https://github.com/Anonymous-Humanoid/chromium-extension-boilerplate
 [flaticon]: https://www.flaticon.com/free-icons/code-review
 [license-image]: https://img.shields.io/npm/l/markdownlint.svg
