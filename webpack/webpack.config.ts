@@ -3,161 +3,23 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { type Tap } from 'tapable';
 import TerserPlugin from 'terser-webpack-plugin';
-import webpack, {
-    type AssetInfo,
-    type Compiler,
-    type WebpackPluginInstance
-} from 'webpack';
-import sources from 'webpack-sources';
+import webpack from 'webpack';
 import {
     IS_DEV_MODE,
     OUTPUT_ABS_DIR,
     PROJECT_ROOT
 } from './env';
 import {
-    type Manifest,
     MANIFEST,
     ICON_PATH_MAPPINGS
 } from './manifest';
+import {
+    HtmlBannerWebpackPlugin,
+    GenerateFilePlugin
+} from './plugins';
 
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString();
-
-type SourceAndMap = sources.SourceAndMap & { map: Object };
-
-// source and updateHash methods remain unimplemented
-class Source extends sources.Source {
-    sourceAndMap(options?: sources.MapOptions): SourceAndMap {
-        let out = {
-            ...super.sourceAndMap(options)
-        } as SourceAndMap;
-
-        out.map = out.map ?? {};
-
-        return out;
-    }
-}
-
-interface GenerateFilePluginArgs {
-    filename: string;
-    content: string;
-    assetInfo?: AssetInfo;
-}
-
-type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content'> & {
-    manifest: Manifest;
-    tabs?: number;
-};
-
-class GenerateFilePlugin implements WebpackPluginInstance {
-    private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
-    private readonly filepath: string;
-    private readonly source: Source;
-    private readonly assetInfo: AssetInfo | undefined;
-
-    constructor(args: GenerateFilePluginArgs) {
-        this.filepath = args.filename;
-        this.source = new Source();
-        this.source.source = () => args.content;
-        this.assetInfo = args.assetInfo;
-    }
-
-    public apply(compiler: Compiler) {
-        compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
-            compilation.emitAsset(this.filepath, this.source, {
-                ...this.assetInfo,
-                sourceFilename: path.basename(this.filepath)
-            });
-        });
-
-        this.source.updateHash = (hash: sources.HashLike) => {
-            compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
-                compilation.updateAsset(this.filepath, this.source, {
-                    ...this.assetInfo,
-                    contenthash: hash.digest().toString(),
-                    sourceFilename: path.basename(this.filepath)
-                });
-            });
-        };
-    }
-
-    /**
-     * Creates a Webpack plugin to generate a manifest file
-     * @param relBuildDirPath The path to the manifest file to generate
-     * @param manifest The JSON object which with to populate the manifest file
-     * @returns A Webpack plugin to execute this function
-     */
-    public static generateManifestPlugin(
-        args: GenerateManifestArgs
-    ): GenerateFilePlugin {
-        return new GenerateFilePlugin({
-            filename: args.filename,
-            content: GenerateFilePlugin.stringifyManifest(
-                args.manifest,
-                args.tabs
-            ),
-            assetInfo: args.assetInfo
-        });
-    }
-
-    private static stringifyManifest(
-        manifest: Manifest,
-        tabs?: number
-    ): string {
-        const replacer = (key: string, value: any) => {
-            // Manifest requires forward slashes
-            return typeof value === 'string'
-                ? value.replaceAll('\\', '/')
-                : value;
-        };
-
-        return JSON.stringify(manifest, replacer, tabs);
-    }
-}
-
-interface HtmlBannerWebpackPluginArgs {
-    /**
-     * Specifies the banner
-     */
-    banner: string;
-
-    /**
-     * If true, defers formatting to the user.
-     * Otherwise, formats the banner as a block comment.
-     * @default false
-     */
-    raw?: boolean;
-}
-
-class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
-    private readonly plugin: Tap = { name: 'html-license-webpack-plugin' };
-    private readonly banner: string;
-
-    constructor(args: HtmlBannerWebpackPluginArgs) {
-        if (args.raw === true) {
-            this.banner = args.banner;
-        } else {
-            const safeBanner = args.banner.replaceAll('-->', '-- >');
-            this.banner = `<!--\n${safeBanner}\n-->\n`;
-        }
-    }
-
-    apply(compiler: Compiler) {
-        compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
-            // beforeEmit needed to supersede minimization, see:
-            // https://github.com/jantimon/html-webpack-plugin?tab=readme-ov-file#events
-            HtmlWebpackPlugin.getCompilationHooks(
-                compilation
-            ).beforeEmit.tapAsync(this.plugin.name, (data, cb) => {
-                // Prepending banner
-                data.html = `${this.banner}${data.html}`;
-                // Telling Webpack to move on
-                cb(null, data);
-            });
-        });
-    }
-}
 
 // Initializing webpack config
 const STATIC_FILE_EXTS = [
