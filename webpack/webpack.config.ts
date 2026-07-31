@@ -451,7 +451,7 @@ const config: webpack.Configuration = {
                 'index.html'
             ),
             filename: path.join('popup', 'index.html'),
-            chunks: 'all',
+            chunks: ['popup'],
             minify: 'auto'
         }),
 
