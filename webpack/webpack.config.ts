@@ -300,16 +300,14 @@ const config: webpack.Configuration = {
                     'docListener.ts'
                 )
             ],
-            filename: path.join('popup', 'docListener.js'),
-            publicPath: '/popup/'
+            filename: path.join('popup', 'docListener.js')
         },
         popup: {
             import: [
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
             ],
             // HTMLWebpackPlugin requires forward slashes
-            filename: path.join('popup', 'index.js').replaceAll('\\', '/'),
-            publicPath: '/popup/'
+            filename: path.join('popup', 'index.js').replaceAll('\\', '/')
         },
 
         // Background
@@ -323,8 +321,7 @@ const config: webpack.Configuration = {
                     'index.ts'
                 )
             ],
-            filename: path.join('background', 'index.js'),
-            publicPath: '/background/'
+            filename: path.join('background', 'index.js')
         }
     },
     output: {
@@ -481,7 +478,12 @@ const config: webpack.Configuration = {
             stage: Infinity, // Needed to prevent minimization
             raw: true,
             footer: true,
-            banner: '/*# sourceMappingURL=/[file].map */'
+            banner(data): string {
+                // Webpack seems inconsistent with forward and backward slashes in paths
+                const relPath = data.filename.replaceAll('\\', '/');
+
+                return `/*# sourceMappingURL=/${relPath}.map */`;
+            }
         })
     ].filter(Boolean),
     infrastructureLogging: {
