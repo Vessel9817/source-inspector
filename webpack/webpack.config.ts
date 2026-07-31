@@ -344,7 +344,6 @@ const config: webpack.Configuration = {
     },
     module: {
         rules: [
-            // Static files
             {
                 test: new RegExp(
                     String.raw`\.(?:${STATIC_FILE_EXTS.join('|')})$`
@@ -352,10 +351,8 @@ const config: webpack.Configuration = {
                 type: 'asset/resource',
                 exclude: /node_modules/
             },
-
-            // CSS/SCSS/SASS
-            // https://www.npmjs.com/package/style-loader#recommend
             {
+                // https://www.npmjs.com/package/style-loader#recommend
                 test: /\.(css|scss|sass)$/,
                 use: [
                     {
@@ -387,26 +384,23 @@ const config: webpack.Configuration = {
                     }
                 ]
             },
-
-            // HTML
-            {
-                test: /\.html$/,
-                exclude: /node_modules/,
-                loader: 'html-loader'
-            },
-
-            // TS/TSX (must come before JS/JSX)
             {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
                 use: [
                     {
+                        // https://www.npmjs.com/package/ts-loader#devtool--sourcemaps
                         loader: 'ts-loader',
                         options: {
                             transpileOnly: IS_DEV_MODE
                         }
                     }
                 ]
+            },
+            {
+                test: /\.html$/,
+                exclude: /node_modules/,
+                loader: 'html-loader'
             }
         ]
     },
