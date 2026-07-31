@@ -272,14 +272,18 @@ const STATIC_FILE_EXTS = [
 
 const config: webpack.Configuration = {
     mode: IS_DEV_MODE ? 'development' : 'production',
-    devtool: IS_DEV_MODE ? 'cheap-module-source-map' : undefined,
+    // Extensions cannot use eval
+    devtool: IS_DEV_MODE ? 'cheap-module-source-map' : 'source-map',
     optimization: IS_DEV_MODE
         ? undefined
         : {
               minimize: true,
               minimizer: [
                   new TerserPlugin({
-                      extractComments: false
+                      extractComments: false,
+                      minimizerOptions: {
+                          sourceMap: true
+                      }
                   })
               ]
           },
