@@ -174,16 +174,7 @@ const config: webpack.Configuration = {
         new webpack.ProgressPlugin(),
 
         // Packaging icons
-        ...ICON_PATH_MAPPINGS.map(([inputPath, outputPath]) => {
-            return new CopyWebpackPlugin({
-                patterns: [
-                    {
-                        from: inputPath,
-                        to: outputPath
-                    }
-                ]
-            });
-        }),
+        new CopyWebpackPlugin({ patterns: ICON_PATH_MAPPINGS }),
 
         // assert polyfill depends on process
         // https://github.com/browserify/commonjs-assert/issues/55#issuecomment-996543717

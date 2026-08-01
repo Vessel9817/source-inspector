@@ -1,3 +1,4 @@
+import { type Pattern } from 'copy-webpack-plugin';
 import path from 'node:path';
 import {
     BROWSER,
@@ -93,15 +94,17 @@ switch (BROWSER) {
 }
 
 export const MANIFEST = manifest;
-export const ICON_PATH_MAPPINGS = RELATIVE_ICON_PATHS.map(
-    ([k, [inputPath, outputPath]]) => [
-        path.join(
-            PROJECT_ROOT,
-            'src',
-            'assets',
-            'icons',
-            inputPath
-        ),
-        path.join(OUTPUT_ABS_DIR, outputPath)
-    ]
+export const ICON_PATH_MAPPINGS: Pattern[] = RELATIVE_ICON_PATHS.map(
+    ([k, [inputPath, outputPath]]) => {
+        return {
+            from: path.join(
+                PROJECT_ROOT,
+                'src',
+                'assets',
+                'icons',
+                inputPath
+            ),
+            to: path.join(OUTPUT_ABS_DIR, outputPath)
+        };
+}
 );
