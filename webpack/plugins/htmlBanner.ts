@@ -4,12 +4,18 @@ import type { Compiler, WebpackPluginInstance } from 'webpack';
 
 interface HtmlBannerWebpackPluginArgs {
     /**
-     * Specifies the banner
+     * The text to be appended to the file
      */
     banner: string;
 
     /**
-     * If true, defers formatting to the user.
+     * If `true`, banner will be placed at the end of the output.
+     * @default false
+     */
+    footer?: boolean;
+
+    /**
+     * If `true`, defers formatting to the user.
      * Otherwise, formats the banner as a block comment.
      * @default false
      */
@@ -19,13 +25,16 @@ interface HtmlBannerWebpackPluginArgs {
 export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'html-banner-webpack-plugin' };
     private readonly banner: string;
+    private readonly footer: boolean;
 
-    constructor(args: HtmlBannerWebpackPluginArgs) {
-        if (args.raw === true) {
-            this.banner = args.banner;
+    constructor(options: HtmlBannerWebpackPluginArgs) {
+        this.footer = options.footer ?? false;
+
+        if (options.raw === true) {
+            this.banner = options.banner;
         } else {
-            const safeBanner = args.banner.replaceAll('-->', '-- >');
-            this.banner = `<!--\n${safeBanner}\n-->\n`;
+            const safeBanner = options.banner.replaceAll('-->', '-- >');
+            this.banner = `<!--\n${safeBanner}\n-->`;
         }
     }
 
@@ -36,8 +45,13 @@ export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
             HtmlWebpackPlugin.getCompilationHooks(
                 compilation
             ).beforeEmit.tapAsync(this.plugin.name, (data, cb) => {
-                // Prepending banner
-                data.html = `${this.banner}${data.html}`;
+                if (this.footer) {
+                    data.html += '\n' + this.banner;
+                }
+                else {
+                    data.html = `${this.banner}\n${data.html}`;
+                }
+
                 // Telling Webpack to move on
                 cb(null, data);
             });
