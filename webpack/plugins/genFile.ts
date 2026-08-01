@@ -1,73 +1,90 @@
-import path from 'node:path';
-import sources from 'webpack-sources';
 import { type Tap } from 'tapable';
 import type {
     AssetInfo,
     Compiler,
     WebpackPluginInstance
 } from 'webpack';
+import sources from 'webpack-sources';
 import { type Manifest } from '../manifest';
 import { Source } from './sources';
 
 interface GenerateFilePluginArgs {
-    filename: string;
+    target: string;
     content: string;
     assetInfo?: AssetInfo;
 }
 
-type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content'> & {
+interface InternalGenerateFilePluginArgs extends GenerateFilePluginArgs {
+    source: Source;
+}
+
+type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content' | 'target'> & {
+    /**
+     * The manifest, in JSON
+     */
     manifest: Manifest;
-    tabs?: number;
+
+    /**
+     * How much to indent the manifest
+     */
+    indents?: number;
+
+    /**
+     * @default 'manifest.json'
+     */
+    target?: string;
 };
 
 export default class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
-    private readonly filepath: string;
-    private readonly source: Source;
-    private readonly assetInfo: AssetInfo | undefined;
+    private readonly options: InternalGenerateFilePluginArgs;
 
-    constructor(args: GenerateFilePluginArgs) {
-        this.filepath = args.filename;
-        this.source = new Source();
-        this.source.source = () => args.content;
-        this.assetInfo = args.assetInfo;
+    constructor(options: GenerateFilePluginArgs) {
+        this.options = {
+            ...options,
+            source: new Source()
+        };
+        this.options.source.source = () => options.content;
     }
 
     public apply(compiler: Compiler) {
-        compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
-            compilation.emitAsset(this.filepath, this.source, {
-                ...this.assetInfo,
-                sourceFilename: path.basename(this.filepath)
-            });
+        compiler.hooks.compilation.tap(this.plugin, (compilation) => {
+            compilation.emitAsset(
+                this.options.target,
+                this.options.source,
+                this.options.assetInfo
+            );
         });
 
-        this.source.updateHash = (hash: sources.HashLike) => {
-            compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
-                compilation.updateAsset(this.filepath, this.source, {
-                    ...this.assetInfo,
-                    contenthash: hash.digest().toString(),
-                    sourceFilename: path.basename(this.filepath)
-                });
+        this.options.source.updateHash = (hash: sources.HashLike) => {
+            compiler.hooks.compilation.tap(this.plugin, (compilation) => {
+                compilation.updateAsset(
+                    this.options.target,
+                    this.options.source,
+                    {
+                        contenthash: hash.digest().toString(),
+                        ...this.options.assetInfo
+                    }
+                );
             });
         };
     }
 
     /**
      * Creates a Webpack plugin to generate a manifest file
-     * @param relBuildDirPath The path to the manifest file to generate
-     * @param manifest The JSON object which with to populate the manifest file
+     * @param options Plugin configuration options
      * @returns A Webpack plugin to execute this function
      */
     public static generateManifestPlugin(
-        args: GenerateManifestArgs
+        options: GenerateManifestArgs
     ): GenerateFilePlugin {
         return new GenerateFilePlugin({
-            filename: args.filename,
+            target: options.target ?? 'manifest.json',
             content: GenerateFilePlugin.stringifyManifest(
-                args.manifest,
-                args.tabs
+                options.manifest,
+                options.indents
             ),
-            assetInfo: args.assetInfo
+            assetInfo: options.assetInfo
         });
     }
 

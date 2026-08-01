@@ -11,12 +11,12 @@ import {
     PROJECT_ROOT
 } from './env';
 import {
-    MANIFEST,
-    ICON_PATH_MAPPINGS
+    ICON_PATH_MAPPINGS,
+    MANIFEST
 } from './manifest';
 import {
-    HtmlBannerWebpackPlugin,
-    GenerateFilePlugin
+    GenerateFilePlugin,
+    HtmlBannerWebpackPlugin
 } from './plugins';
 
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString();
@@ -201,9 +201,8 @@ const config: webpack.Configuration = {
 
         // Generating manifest files
         GenerateFilePlugin.generateManifestPlugin({
-            filename: 'manifest.json',
             manifest: MANIFEST,
-            tabs: IS_DEV_MODE ? 2 : undefined
+            indents: IS_DEV_MODE ? 2 : undefined
         }),
 
         // Embedding license information
