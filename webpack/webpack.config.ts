@@ -13,7 +13,7 @@ import {
 import {
     ICON_PATH_MAPPINGS,
     MANIFEST
-} from './manifest';
+} from './assets/manifest';
 import {
     GenerateFilePlugin,
     HtmlBannerWebpackPlugin

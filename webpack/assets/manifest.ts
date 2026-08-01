@@ -10,7 +10,7 @@ import {
     PACKAGE_URL,
     PACKAGE_VERSION,
     PROJECT_ROOT
-} from './env';
+} from '../env';
 
 export type Manifest =
     | chrome.runtime.Manifest

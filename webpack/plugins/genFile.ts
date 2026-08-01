@@ -5,7 +5,7 @@ import type {
     WebpackPluginInstance
 } from 'webpack';
 import sources from 'webpack-sources';
-import { type Manifest } from '../manifest';
+import { type Manifest } from '../assets/manifest';
 import { Source } from './sources';
 
 interface GenerateFilePluginArgs {
