@@ -39,12 +39,12 @@ export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
     }
 
     apply(compiler: Compiler) {
-        compiler.hooks.compilation.tap(this.plugin.name, (compilation) => {
+        compiler.hooks.compilation.tap(this.plugin, (compilation) => {
             // beforeEmit needed to supersede minimization, see:
             // https://github.com/jantimon/html-webpack-plugin?tab=readme-ov-file#events
             HtmlWebpackPlugin.getCompilationHooks(
                 compilation
-            ).beforeEmit.tapAsync(this.plugin.name, (data, cb) => {
+            ).beforeEmit.tapAsync(this.plugin, (data, cb) => {
                 if (this.footer) {
                     data.html += '\n' + this.banner;
                 }
