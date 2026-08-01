@@ -19,7 +19,7 @@ import {
     HtmlBannerWebpackPlugin
 } from './plugins';
 
-const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString();
+const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString().trim();
 
 // Initializing webpack config
 const STATIC_FILE_EXTS = [
@@ -150,7 +150,7 @@ const config: webpack.Configuration = {
                 ]
             },
             {
-                test: /\.(ts|tsx)$/,
+                test: /\.tsx?$/,
                 type: 'javascript/esm',
                 exclude: /node_modules/,
                 use: [
@@ -160,7 +160,8 @@ const config: webpack.Configuration = {
                         options: {
                             transpileOnly: IS_DEV_MODE
                         }
-                    }
+                    },
+                    'source-map-loader'
                 ]
             },
             {
@@ -205,20 +206,18 @@ const config: webpack.Configuration = {
             indents: IS_DEV_MODE ? 2 : undefined
         }),
 
-        // Embedding license information
+        // Embedding license information after minimization
         new webpack.BannerPlugin({
             include: [/\.(?:js|css)$/i],
-            entryOnly: false,
-            stage: Infinity, // Needed to prevent minimization
+            stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
             banner: LICENSE
         }),
         new HtmlBannerWebpackPlugin({ banner: LICENSE }),
 
-        // Adding source map references
+        // Adding source map references after minimization
         new webpack.BannerPlugin({
             include: [/\.(?:js|css)$/i],
-            entryOnly: false,
-            stage: Infinity, // Needed to prevent minimization
+            stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
             raw: true,
             footer: true,
             banner(data): string {
