@@ -17,7 +17,7 @@ interface HtmlBannerWebpackPluginArgs {
 }
 
 export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
-    private readonly plugin: Tap = { name: 'html-license-webpack-plugin' };
+    private readonly plugin: Tap = { name: 'html-banner-webpack-plugin' };
     private readonly banner: string;
 
     constructor(args: HtmlBannerWebpackPluginArgs) {
