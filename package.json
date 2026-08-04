@@ -4,6 +4,7 @@
     "description": "A from-scratch open-source document source inspector that aims to be invisible to websites",
     "license": "MIT",
     "type": "module",
+    "sideEffects": true,
     "private": true,
     "repository": {
         "type": "git",
