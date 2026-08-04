@@ -7,6 +7,7 @@ import type {
 } from 'webpack';
 import sources, { type RawSourceMap } from 'webpack-sources';
 import { type Manifest } from '../assets/manifest';
+import { normalize } from '../utils';
 
 interface GenerateFilePluginArgs {
     target: string;
@@ -186,7 +187,7 @@ export default class GenerateFilePlugin implements WebpackPluginInstance {
         const replacer = (key: string, value: any) => {
             // Manifest requires forward slashes
             return typeof value === 'string'
-                ? value.replaceAll('\\', '/')
+                ? normalize(value)
                 : value;
         };
 

@@ -19,6 +19,7 @@ import {
     HtmlBannerWebpackPlugin,
     CreateHtmlSourceMapWebpackPlugin
 } from './plugins';
+import { normalize } from './utils';
 
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString().trim();
 
@@ -74,7 +75,7 @@ const config: webpack.Configuration = {
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
             ],
             // HTMLWebpackPlugin requires forward slashes
-            filename: path.join('popup', 'index.js').replaceAll('\\', '/')
+            filename: normalize(path.join('popup', 'index.js'))
         },
 
         // Background
@@ -234,8 +235,7 @@ const config: webpack.Configuration = {
             raw: true,
             footer: true,
             banner(data): string {
-                // Webpack seems inconsistent with forward and backward slashes in paths
-                const relPath = data.filename.replaceAll('\\', '/');
+                const relPath = normalize(data.filename);
 
                 return `/*# sourceMappingURL=/${relPath}.map */`;
             }
