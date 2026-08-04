@@ -7,7 +7,7 @@ class Background {
     static register() {
         registerPopup();
 
-        console.log('Registering complete!');
+        console.log(chrome.i18n.getMessage('bg_registered'));
     }
 }
 

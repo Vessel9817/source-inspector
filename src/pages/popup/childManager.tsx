@@ -222,7 +222,10 @@ export function ChildManager({ id }: { readonly id: string }): ReactNode {
     const node = nodes[id];
 
     if (node == null) {
-        console.error(`Couldn't render unknown node of id: ${id}`);
+        console.error(
+            chrome.i18n.getMessage('renderer_unknown')
+                .replaceAll('{0}', id)
+        );
         return;
     }
 

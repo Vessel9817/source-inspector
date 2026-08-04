@@ -93,7 +93,10 @@ export class PopupManager {
         this.newConnection.onDisconnect.addListener(this.onDisconnect);
         this.newConnection.onMessage.addListener(this.queueMessage);
 
-        console.log(`Successfully connected to tab ${tabId}!`);
+        console.log(
+            chrome.i18n.getMessage('popup_connected')
+                .replaceAll('{0}', tabId.toString())
+        );
     }
 
     /**
@@ -182,7 +185,8 @@ export class PopupManager {
 
         if (!prevSiblingFound) {
             console.warn(
-                `Anomalous update: sibling ID ${prevSiblingId} not found`
+                chrome.i18n.getMessage('popup_sibling_missing')
+                    .replaceAll('{0}', prevSiblingId)
             );
         }
 
@@ -243,7 +247,10 @@ export class PopupManager {
                     break;
                 }
                 default: {
-                    console.error('Invalid message received:', msg);
+                    console.error(
+                        chrome.i18n.getMessage('popup_invalid_msg'),
+                        msg
+                    );
                 }
             }
         } finally {
@@ -268,13 +275,15 @@ export class PopupManager {
         // Handling root node
         if (parentId == null) {
             if (this._rootId != null) {
-                const rootMsg = [`Anomalous root node update on id:`, id];
+                const rootMsg = chrome.i18n.getMessage('popup_root_missing')
+                    .replaceAll('{0}', id);
                 const siblingMsg =
                     prevSiblingId == null
-                        ? []
-                        : ['\nUnexpected prevSiblingId:', prevSiblingId];
+                        ? ''
+                        : '\n' + chrome.i18n.getMessage('popup_root_sibling_missing')
+                            .replaceAll('{0}', prevSiblingId);
 
-                console.error(...rootMsg, ...siblingMsg);
+                console.error(rootMsg, siblingMsg);
                 return;
             }
 
@@ -327,7 +336,10 @@ export class PopupManager {
      */
     private removeNode(id: Readonly<string>): void {
         if (id == null || !(id in this._nodes)) {
-            console.error(`Anomalous node removal:`, id);
+            console.error(
+                chrome.i18n.getMessage('popup_missing_node')
+                    .replaceAll('{0}', id)
+            );
             return;
         }
 
@@ -339,7 +351,7 @@ export class PopupManager {
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             // Attribute should always have a parent, but just in case
             if (parentId == null) {
-                console.warn('Removing attribute with no parent:', node);
+                console.warn(chrome.i18n.getMessage('popup_hanging_attr'), node);
             } else {
                 const parent = nextNodes[parentId] as StoredVirtualElementProps;
 
@@ -368,7 +380,8 @@ export class PopupManager {
 
             if (currentNode == null) {
                 console.warn(
-                    `Node of id ${currentId} already removed from ancestor node:`,
+                    chrome.i18n.getMessage('popup_node_removed')
+                        .replaceAll('{0}', currentId),
                     node
                 );
                 continue;
@@ -402,7 +415,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(`Anomalous node parent update:`, msg);
+                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
                     return;
                 }
 
@@ -419,7 +432,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(`Anomalous node parent update:`, msg);
+                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
                     return;
                 }
 
@@ -444,7 +457,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(`Anomalous node parent update:`, msg);
+                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
                     return;
                 }
 
@@ -472,7 +485,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(`Anomalous node parent update:`, msg);
+                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
                     return;
                 }
 
@@ -494,7 +507,8 @@ export class PopupManager {
             case Node.NOTATION_NODE:
             default: {
                 console.error(
-                    `Unsupported node type ${msg.nodeType} updated:`,
+                    chrome.i18n.getMessage('popup_unsupported_node')
+                        .replaceAll('{0}', msg.nodeType.toString()),
                     msg
                 );
                 break;
@@ -513,7 +527,7 @@ export class PopupManager {
      * Callback function for when we lose connection with the inspected tab
      */
     private _onDisconnect(): void {
-        console.log('Disconnected from tab!');
+        console.log(chrome.i18n.getMessage('script_disconnected'));
     }
 
     /**

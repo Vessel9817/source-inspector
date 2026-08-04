@@ -2,11 +2,9 @@ import { type Pattern } from 'copy-webpack-plugin';
 import path from 'node:path';
 import {
     BROWSER,
+    DEFAULT_LOCALE,
     NODE_ENV,
     OUTPUT_ABS_DIR,
-    PACKAGE_AUTHOR,
-    PACKAGE_DESCRIPTION,
-    PACKAGE_NAME,
     PACKAGE_URL,
     PACKAGE_VERSION,
     PROJECT_ROOT
@@ -15,6 +13,17 @@ import {
 export type Manifest =
     | chrome.runtime.Manifest
     | browser._manifest.WebExtensionManifest;
+
+type Optional<T> = {
+    [P in keyof T]?: undefined extends T[P] ? T[P] : never;
+}
+
+// Chrome and Firefox disagree on the use of certain properties
+type SharedManifestProps = Optional<Omit<
+    chrome.runtime.ManifestV3 & browser._manifest.WebExtensionManifest,
+        | 'author'
+        | 'content_security_policy'
+>>
 
 // Collecting icons
 const VALID_SIZES = ['16', '32', '48', '128'];
@@ -30,7 +39,6 @@ const RELATIVE_ICON_PATHS = [
     ).entries()
 ];
 
-// Generating manifest file
 const MANIFEST_ICON_PATHS: { [size: string]: string } = {};
 
 RELATIVE_ICON_PATHS.forEach(([size, [inputPath, outputPath]]) => {
@@ -42,20 +50,26 @@ const manifestBase: Omit<
     browser._manifest.ManifestBase,
     'manifest_version' | 'author'
 > = {
-    name: PACKAGE_NAME,
-    description: PACKAGE_DESCRIPTION,
+    name: '__MSG_ext_name__',
+    description: '__MSG_ext_description__',
     version: PACKAGE_VERSION,
     homepage_url: PACKAGE_URL
 };
+const shared: SharedManifestProps = {
+    icons: MANIFEST_ICON_PATHS,
+    default_locale: DEFAULT_LOCALE,
+    permissions: ['scripting', 'activeTab']
+};
+
+// Generating manifest file
 let manifest: Manifest;
 
 switch (BROWSER) {
     case 'chrome': {
         let _manifest: chrome.runtime.Manifest = {
             ...manifestBase,
+            ...shared,
             manifest_version: 3,
-            icons: MANIFEST_ICON_PATHS,
-            permissions: ['scripting', 'activeTab'],
             incognito: 'split', // We don't store data, so this is an unnecessary security improvement
             offline_enabled: true,
             background: {
@@ -72,9 +86,8 @@ switch (BROWSER) {
     case 'firefox': {
         let _manifest: browser._manifest.WebExtensionManifest = {
             ...manifestBase,
+            ...shared,
             manifest_version: 2,
-            icons: MANIFEST_ICON_PATHS,
-            permissions: ['scripting', 'activeTab'],
             incognito: 'spanning', // Split config isn't available in MV2
             background: {
                 scripts: [path.join('background', 'index.js')],
@@ -84,9 +97,9 @@ switch (BROWSER) {
                 default_icon: MANIFEST_ICON_PATHS
             },
             developer: {
-                name: PACKAGE_AUTHOR,
+                name: '__MSG_ext_author__',
                 url: PACKAGE_URL
-            }
+            },
         };
         manifest = _manifest;
         break;

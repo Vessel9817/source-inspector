@@ -10,7 +10,7 @@ class Popup {
 
     #tryConnecting(): void {
         if (this.#popupId != null && this.#tabId != null) {
-            console.log('Connecting popup to tab');
+            console.log(chrome.i18n.getMessage('bg_connecting'));
 
             const msg: ConnectMsg = {
                 type: 'connection',
@@ -39,7 +39,10 @@ class Popup {
                 chrome.runtime.onMessage.removeListener(MSG_BROKER);
                 clearTimeout(TIMEOUT);
 
-                console.log(`Tab ${tabId} successfully initialized`);
+                console.log(
+                    chrome.i18n.getMessage('bg_script_initialized')
+                        .replaceAll('{0}', tabId.toString())
+                );
 
                 self.#tabId = tabId;
 
@@ -52,7 +55,9 @@ class Popup {
             chrome.runtime.onMessage.removeListener(MSG_BROKER);
 
             console.error(
-                `Tab ${tabId} failed to connect within ${TIMEOUT_MS}ms`
+                chrome.i18n.getMessage('bg_script_timeout')
+                    .replaceAll('{0}', tabId.toString())
+                    .replaceAll('{1}', TIMEOUT_MS.toString())
             );
         }, TIMEOUT_MS);
 
@@ -90,7 +95,10 @@ class Popup {
                     chrome.runtime.onMessage.removeListener(MSG_BROKER);
                     clearTimeout(TIMEOUT);
 
-                    console.log(`Popup ${tabId} successfully initialized`);
+                    console.log(
+                        chrome.i18n.getMessage('bg_script_initialized')
+                            .replaceAll('{0}', tabId.toString())
+                    );
 
                     self.#popupId = tabId;
 
@@ -105,7 +113,9 @@ class Popup {
                 chrome.runtime.onMessage.removeListener(MSG_BROKER);
 
                 console.error(
-                    `Popup ${tabId} failed to connect within ${TIMEOUT_MS}ms`
+                    chrome.i18n.getMessage('bg_popup_timeout')
+                        .replaceAll('{0}', tabId.toString())
+                        .replaceAll('{1}', TIMEOUT_MS.toString())
                 );
             }, TIMEOUT_MS);
         }

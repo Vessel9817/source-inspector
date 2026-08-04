@@ -174,7 +174,10 @@ function _characterDataHandler(
 ): void {
     const id = _getId(mutation.target);
 
-    console.error(`Character data mutation on node ${id}:`, mutation);
+    console.error(
+        chrome.i18n.getMessage('script_char_mutation').replaceAll('{0}', id),
+        mutation
+    );
 }
 
 function _attributesHandler(
@@ -186,7 +189,8 @@ function _attributesHandler(
 
     if (ownerNode.nodeType !== Node.ELEMENT_NODE) {
         console.error(
-            `Invalid attribute mutation on node of id ${parentId}:`,
+            chrome.i18n.getMessage('script_invalid_attr')
+                .replaceAll('{0}', parentId),
             ownerNode
         );
         return;
@@ -217,9 +221,9 @@ function _removedNodesHandler(
             const attr = node as Attr;
 
             console.warn(
-                'Encountered attribute in node removal method:',
+                chrome.i18n.getMessage('script_missing_attr'),
                 attr,
-                'Proceed with caution.'
+                chrome.i18n.getMessage('script_caution')
             );
 
             if (attr.ownerElement != null) {
@@ -242,7 +246,7 @@ function _removedNodesHandler(
 
             _sendMessage(msg);
         } else {
-            console.info('Ignoring anomalous node removal:', node);
+            console.info(chrome.i18n.getMessage('script_missing_node'), node);
         }
     }
 }
@@ -255,9 +259,9 @@ function _addNode(
 
     if (!ADD_NODE_SUPPORTED_TYPES.has(node.nodeType)) {
         console.error(
-            `Unimplemented node type ${node.nodeType} not added; ` +
-                `any anomalous parent updates associated with id ` +
-                `${id} are a result of this.`,
+            chrome.i18n.getMessage('script_unsupported_node')
+                .replaceAll('{0}', node.nodeType.toString())
+                .replaceAll('{1}', id),
             node
         );
         return;
@@ -349,10 +353,9 @@ function _addNode(
         default: {
             // Should never happen
             console.error(
-                `Skipping addition of unimplemented node ` +
-                    `of type ${node.nodeType}; ` +
-                    `any anomalous parent updates associated with id ` +
-                    `${id} are a result of this.`
+                chrome.i18n.getMessage('script_unimplemented_node')
+                    .replaceAll('{0}', node.nodeType.toString())
+                    .replaceAll('{1}', id)
             );
         }
     }
@@ -462,7 +465,7 @@ function _disconnect(): void {
     _disconnectObserver();
     _disconnectConnection();
 
-    console.log('Disconnected from popup!');
+    console.log(chrome.i18n.getMessage('popup_disconnected'));
 }
 
 /**
@@ -478,7 +481,7 @@ function _disconnectBackground(): void {
  * @param connection
  */
 function _onConnect(connection: chrome.runtime.Port): void {
-    console.log(`Successfully connected to popup!`);
+    console.log(chrome.i18n.getMessage('script_connected'));
 
     // Completing connection initialization
     _connection = connection;
@@ -512,7 +515,7 @@ function _connect(): void {
     // Notifying background we're ready to connect
     chrome.runtime.onConnect.addListener(_onConnect);
     chrome.runtime.sendMessage({} as any);
-    console.log('Tab ready to connect!');
+    console.log(chrome.i18n.getMessage('script_ready'));
 
     // Removing listener after fixed timeout
     setTimeout(_disconnectBackground, TIMEOUT_MS);

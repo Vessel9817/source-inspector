@@ -1,0 +1,130 @@
+{
+    "ext_name": {
+        "description": "The extension name",
+        "message": "Source Inspector"
+    },
+    "ext_description": {
+        "description": "The extension description",
+        "message": "An open-source document source inspector that aims to be invisible to websites"
+    },
+    "ext_author": {
+        "description": "The extension author's name",
+        "message": "Vessel9817"
+    },
+    "script_disconnected": {
+        "description": "Called by the popup when the content script connection severs",
+        "message": "Disconnected from tab!"
+    },
+    "script_connected": {
+        "description": "Called by the content script",
+        "message": "Successfully connected to popup!"
+    },
+    "popup_disconnected": {
+        "description": "Called by the content script when the connection severs",
+        "message": "Disconnected from popup!"
+    },
+    "bg_connecting": {
+        "description": "Called by the background script",
+        "message": "Connecting popup to tab..."
+    },
+    "bg_registered": {
+        "description": "Called by the background script after initialization",
+        "message": "Registering complete!"
+    },
+    "bg_script_initialized": {
+        "description": "Called by the background script",
+        "message": "Tab {0} successfully initialized!"
+    },
+    "bg_popup_initialized": {
+        "description": "Called by the background script",
+        "message": "Popup {0} successfully initialized!"
+    },
+    "bg_script_timeout": {
+        "description": "Called by the background script",
+        "message": "Tab {0} failed to connect within {1}ms"
+    },
+    "bg_popup_timeout": {
+        "description": "Called by the background script",
+        "message": "Popup {0} failed to connect within {1}ms"
+    },
+    "renderer_unknown": {
+        "description": "Called by the popup",
+        "message": "Couldn't render unknown node of id: {0}"
+    },
+    "script_char_mutation": {
+        "description": "Debug message from the content script",
+        "message": "Character data mutation on node {0}:"
+    },
+    "script_invalid_attr": {
+        "description": "Called by the content script",
+        "message": "Invalid attribute mutation on node of id {0}:"
+    },
+    "script_missing_attr": {
+        "description": "Called by the content script",
+        "message": "Encountered attribute in node removal method:"
+    },
+    "script_caution": {
+        "description": "Called by the content script in the event of a recoverable error",
+        "message": "Proceed with caution."
+    },
+    "script_missing_node": {
+        "description": "Called by the content script",
+        "message": "Ignoring anomalous node removal:"
+    },
+    "script_unsupported_node": {
+        "description": "Called by the content script",
+        "message": "Unimplemented node type {0} not added. Any anomalous parent updates associated with id {1} are the result of this."
+    },
+    "script_unimplemented_node": {
+        "description": "Called by the content script in the event of developer error",
+        "message": "Node of type {0} is marked as supported, but no implementation exists. Skipping addition of node. Any anomalous parent updates associated with id {1} are the result of this."
+    },
+    "script_ready": {
+        "description": "Called by the content script",
+        "message": "Tab ready to connect!"
+    },
+    "renderer_timeout": {
+        "description": "Called by the popup",
+        "message": "Render skipped on account of lock timeout"
+    },
+    "popup_connected": {
+        "description": "Called by the popup",
+        "message": "Successfully connected to tab {0}!"
+    },
+    "popup_sibling_missing": {
+        "description": "Called by the popup",
+        "message": "Anomalous update: sibling id {0} not found"
+    },
+    "popup_invalid_msg": {
+        "description": "Called by the popup",
+        "message": "Invalid message received:"
+    },
+    "popup_root_missing": {
+        "description": "Called by the popup",
+        "message": "Anomalous root node update on id: {0}"
+    },
+    "popup_root_sibling_missing": {
+        "description": "Called by the popup when the root node is missing",
+        "message": "Unexpected previous sibling id: {0}"
+    },
+    "popup_missing_node": {
+        "description": "Called by the popup",
+        "message": "Anomalous node removal: {0}"
+    },
+    "popup_hanging_attr": {
+        "description": "Called by the popup",
+        "message": "Removing attribute with no parent:"
+    },
+    "popup_node_removed": {
+        "description": "Called by the popup",
+        "message": "Node of id {0} already removed from ancestor node:"
+    },
+    "popup_unsupported_node": {
+        "description": "Called by the popup",
+        "message": "Unsupported node type {0} updated:"
+    },
+    "popup_invalid_update": {
+        "description": "Called by the popup",
+        "message": "Anomalous node parent update:"
+    }
+}

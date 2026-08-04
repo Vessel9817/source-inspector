@@ -29,7 +29,7 @@ if (container != null) {
             );
         } catch (err) {
             if (err === E_TIMEOUT) {
-                console.warn('Render skipped on account of lock timeout');
+                console.warn(chrome.i18n.getMessage('renderer_timeout'));
             } else {
                 throw err;
             }

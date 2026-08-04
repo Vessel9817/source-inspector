@@ -10,11 +10,9 @@ export const PROJECT_ROOT = path.join(__dirname, '..');
 const OUTPUT_DIR = process.env.OUTPUT_DIR!;
 export const NODE_ENV = process.env.NODE_ENV;
 export const BROWSER: BrowserName = process.env.BROWSER as BrowserName;
+export const DEFAULT_LOCALE = process.env.DEFAULT_LOCALE!;
 export const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
-export const PACKAGE_NAME = process.env.PACKAGE_NAME!;
-export const PACKAGE_DESCRIPTION = process.env.PACKAGE_DESCRIPTION;
 export const PACKAGE_VERSION = process.env.PACKAGE_VERSION!;
-export const PACKAGE_AUTHOR = process.env.PACKAGE_AUTHOR;
 export const PACKAGE_URL = process.env.PACKAGE_URL;
 
 // Verifying node env
