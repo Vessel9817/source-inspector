@@ -3,10 +3,6 @@
 [![License][license-image]](LICENSE)
 [![CI][ci-badge]][ci-workflow]
 
-Note: This extension currently only supports desktop devices using Chromium
-or Firefox and derivatives, such as Edge or Tor. We aim to support all the
-currently stable [node types][node-types].
-
 ## Motivation
 
 If you're a developer who ever needs to debug something within their browser,
@@ -20,6 +16,13 @@ Enter `source-inspector`. We attempt to circumvent detection, so that you can
 safely view the live HTML source of even the sketchiest websites. This tool is
 intended to let you inspect the source of any website live, whether it's
 written in pure HTML or XHTML.
+
+## Support
+
+This extension currently only supports desktop devices using Chromium
+or Firefox and derivatives, such as Edge or Tor. We aim to support all the
+currently stable [node types][node-types]. The remaining node types are a
+secondary priority, as their obsoletion from modern browsers impedes testing.
 
 ## Privacy and Security
 
