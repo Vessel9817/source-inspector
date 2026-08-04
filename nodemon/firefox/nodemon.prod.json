@@ -1,4 +1,5 @@
 {
+    "$schema": "https://www.schemastore.org/nodemon.json",
     "exec": "node --run=build",
     "verbose": true,
     "ignore": [
