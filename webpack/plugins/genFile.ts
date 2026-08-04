@@ -5,7 +5,7 @@ import type {
     Compiler,
     WebpackPluginInstance
 } from 'webpack';
-import sources from 'webpack-sources';
+import sources, { type RawSourceMap } from 'webpack-sources';
 import { type Manifest } from '../assets/manifest';
 
 interface GenerateFilePluginArgs {
@@ -41,17 +41,32 @@ type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content' | 'target'> &
     target?: string;
 };
 
-interface CreateSourceMapArgs {
+type CreateSourceMapArgs = {
+    /**
+     * The source file path
+     */
+    target: string;
+} & ({
     /**
      * The source file's contents
      */
     content: string;
 
     /**
-     * The source file path
+     * If provided, wraps the given source map
      */
-    target: string;
-}
+    sourceMap?: string | RawSourceMap;
+} | {
+    /**
+     * The source file's contents
+     */
+    content?: string;
+
+    /**
+     * If provided, wraps the given source map
+     */
+    sourceMap: string | RawSourceMap;
+});
 
 /**
  * Creates a source map for use in Webpack
@@ -59,8 +74,8 @@ interface CreateSourceMapArgs {
  * @see {@link https://tc39.es/ecma426/2024/#source-map-format Specification}
  */
 export function createSourceMap(
-    options: CreateSourceMapArgs
-): sources.RawSourceMap {
+    options: CreateSourceMapArgs & { content: string; }
+): RawSourceMap {
     const map = new SourceMapGenerator({
         file: `${options.target}.map`
     });
@@ -95,12 +110,14 @@ export function createSourceMap(
 export function createSourceMapSource(
     options: CreateSourceMapArgs
 ): sources.SourceMapSource {
-    const sourceMap = createSourceMap(options);
+    options.sourceMap ??= createSourceMap(options as CreateSourceMapArgs & { sourceMap: undefined; });
 
     return new sources.SourceMapSource(
-        JSON.stringify(sourceMap),
+        typeof options.sourceMap === 'string'
+            ? options.sourceMap
+            : JSON.stringify(options.sourceMap),
         options.target,
-        sourceMap,
+        options.sourceMap,
         options.content
     );
 }
@@ -113,7 +130,10 @@ export default class GenerateFilePlugin implements WebpackPluginInstance {
         this.options = {
             ...options,
             source: options.sourceMap === true
-                ? createSourceMapSource(options)
+                ? createSourceMapSource({
+                    target: options.target,
+                    content: options.content
+                })
                 : new sources.RawSource(options.content)
         };
     }

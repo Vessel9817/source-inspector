@@ -214,7 +214,10 @@ const config: webpack.Configuration = {
             stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
             banner: LICENSE
         }),
-        new HtmlBannerWebpackPlugin({ banner: LICENSE }),
+        new HtmlBannerWebpackPlugin({
+            banner: LICENSE,
+            sourceMap: true
+        }),
 
         // Adding source map references after minimization
         new webpack.BannerPlugin({
