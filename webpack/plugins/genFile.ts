@@ -66,6 +66,10 @@ export function createSourceMap(
     });
     const lines = options.content.split('\n').length;
 
+    // Adding original source
+    map.setSourceContent(options.target, options.content);
+
+    // Adding generated source mappings
     for (let i = 1; i <= lines; i++) {
         map.addMapping({
             source: options.target,
