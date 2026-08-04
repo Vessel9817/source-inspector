@@ -36,9 +36,6 @@
 - Migrate ChildManager to a
   [reducer](https://react.dev/learn/extracting-state-logic-into-a-reducer)
   for increased maintainability
-- Configure ESLint:
-  - Ensure ESLint config file path is correctly recognized and interpreted
-  - Replace Prettier formatting with ESLint to resolve rule conflicts
 - Add a light mode toggle
 
 ## Backlog Priorities
@@ -46,27 +43,7 @@
 - Tell the user when a protected page cannot be inspected
 - Configure React source map generation
   (`React.createElement` statements are ugly)
-- Modify ESLint config:
-
-  - Currently using deprecated rules, see:
-    [no-extra-semi](https://eslint.org/docs/latest/rules/no-extra-semi) and
-    [default](https://eslint.style/packages/default)
-  - Force semicolons in interfaces and types. I.e:
-
-    ```ts
-    interface StaticTest {
-      id: 'Number'; // Interface member semis
-      x: number;
-    }
-    type DynamicTest =
-      | StaticTest
-      | {
-          id: 'String'; // Type member semis
-          x: string;
-        }; // Type semi
-    ```
-
-- Migrate from linters to pre-commit
+- Integrate pre-commit
 - Create Webpack aliases for background and content scripts, allowing Webpack
   to be seamlessly integrated where import and require cannot be used
   (i.e, script injection or manifest registering)
