@@ -44,14 +44,8 @@
 - Configure React source map generation
   (`React.createElement` statements are ugly)
 - Integrate pre-commit
-- Create Webpack aliases for background and content scripts, allowing Webpack
-  to be seamlessly integrated where import and require cannot be used
-  (i.e, script injection or manifest registering)
 - Support Webpack chunking
 - Add unit tests and end-to-end tests
 - [Internationalize](https://developer.chrome.com/docs/extensions/reference/api/i18n)
 - If project scope allows it, add an options page to allow the content script
   to be automatically reinjected on page or tab (re)load
-- If project scope allows it, add a network request viewer
-- If the project scope allows it, install the dependencies necessary
-  for Webhint and its .hintrc config file and resolve any vulnerabilities
