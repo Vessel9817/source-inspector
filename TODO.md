@@ -2,8 +2,11 @@
 
 ## Functional Priorities
 
-- [Include XML declarations in source](https://github.com/Anonymous-Humanoid/source-inspector/issues/43)
-- [Add void element support](https://github.com/Anonymous-Humanoid/source-inspector/issues/44)
+- [Include XML declarations in source][xml-declarations-issue]. See the
+  [xmlVersion][xmlVersion], [xmlEncoding][xmlEncoding] and
+  [xmlstandalone][xmlstandalone] document properties,
+  as well as the [spec][xml-declarations].
+- [Add void element support][void-element-issue]
 - Write `README.md`
   - How it Works section
     - Source Inspection Flow
@@ -49,3 +52,10 @@
 - [Internationalize](https://developer.chrome.com/docs/extensions/reference/api/i18n)
 - If project scope allows it, add an options page to allow the content script
   to be automatically reinjected on page or tab (re)load
+
+[void-element-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/44
+[xml-declarations-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/43
+[xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
+[xmlVersion]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
+[xmlEncoding]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding
+[xmlstandalone]: https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone
