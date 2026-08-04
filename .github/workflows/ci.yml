@@ -21,3 +21,22 @@ jobs:
         run: npm i
       - name: Run tsc
         run: npm run tsc
+  build:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.x]
+        browser: ['chrome', 'firefox']
+        mode: ['dev', 'prod']
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install node modules
+        run: npm i
+      - name: Build extension
+        run: node --run=build -- ${{ matrix.browser }} ${{ matrix.mode }}

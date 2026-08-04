@@ -1,6 +1,6 @@
 {
     "$schema": "https://www.schemastore.org/nodemon.json",
-    "exec": "node --run=build",
+    "exec": "node --run=start-helper",
     "verbose": true,
     "ignore": [
         "/dist",

@@ -1,9 +1,10 @@
 # source-inspector
 
 [![License][license-image]](LICENSE)
+[![CI][ci-badge]][ci-workflow]
 
 Note: This extension currently only supports desktop devices using Chromium
-derivatives or Firefox, such as Edge or Tor. We aim to support all the
+or Firefox and derivatives, such as Edge or Tor. We aim to support all the
 currently stable [node types][node-types].
 
 ## Motivation
@@ -211,6 +212,8 @@ an issue or pull request.
 - [Extension boilerplate][boilerplate]
 - [Code review icons][flaticon] created by Freepik - Flaticon
 
+[ci-badge]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml/badge.svg
+[ci-workflow]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml
 [node-types]: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
 [devtools]: https://developer.chrome.com/docs/devtools
 [debugger]: https://developer.chrome.com/docs/extensions/reference/api/debugger
