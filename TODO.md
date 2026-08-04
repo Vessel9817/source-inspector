@@ -25,7 +25,6 @@
 ## Technical Priorities
 
 - CSS is broken, likely due to CSS plugin changes
-- BannerPlugin is throwing source maps: line numbers need to be shifted accordingly
 - Add env var validation
 - [Encrypt messages](https://github.com/Anonymous-Humanoid/source-inspector/issues/45)
 - Rethink debug view (possibly a test-id field?)
