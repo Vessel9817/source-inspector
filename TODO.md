@@ -7,9 +7,6 @@
   [xmlstandalone][xmlstandalone] document properties,
   as well as the [spec][xml-declarations].
 - [Add void element support][void-element-issue]
-- Write `README.md`
-  - How it Works section
-    - Source Inspection Flow
 - Add dropdown functionality to all nodes with children
 - When elements are added (e.g, through script or DevTools),
   children and text should be processed
@@ -17,16 +14,18 @@
   to an element using DevTool's "Edit as HTML" function
   (possible race condition)
 - Add documentation where it's missing or necessary (e.g, @param or @template)
-- Support character data mutations
 - Finish supporting all applicable node types
-  - Test nested document nodes (see: [SO](https://stackoverflow.com/questions/26010355/is-there-a-way-to-uniquely-identify-an-iframe-that-the-content-script-runs-in-fo))
-  - Shadow roots can be accessed using
+  - Character data mutations
+  - Nested document nodes (see: [SO](https://stackoverflow.com/questions/26010355/is-there-a-way-to-uniquely-identify-an-iframe-that-the-content-script-runs-in-fo))
+  - Shadow roots, see:
     [`chrome.dom.openOrClosedShadowRoot`](https://developer.chrome.com/docs/extensions/reference/api/dom?hl=en#method-openOrClosedShadowRoot)
-- [Validate](https://validator.w3.org) sample inspector pages
   conform to a11y standards
 
 ## Technical Priorities
 
+- Write `README.md`
+  - How it Works section
+    - Source Inspection Flow
 - CSS is broken, likely due to CSS plugin changes
 - Add env var validation
 - [Encrypt messages](https://github.com/Anonymous-Humanoid/source-inspector/issues/45)
@@ -40,15 +39,16 @@
   [reducer](https://react.dev/learn/extracting-state-logic-into-a-reducer)
   for increased maintainability
 - Add a light mode toggle
+- Tell the user when a protected page cannot be inspected
+- Adhere to recommended Webpack chunk size limits
 
 ## Backlog Priorities
 
-- Tell the user when a protected page cannot be inspected
+- [Validate](https://validator.w3.org) sample inspector pages
 - Configure React source map generation
   (`React.createElement` statements are ugly)
 - Integrate pre-commit
-- Support Webpack chunking
-- Add unit tests and end-to-end tests
+- Add tests
 - If project scope allows it, add an options page to allow the content script
   to be automatically reinjected on page or tab (re)load
 

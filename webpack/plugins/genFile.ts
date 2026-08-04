@@ -185,7 +185,7 @@ export default class GenerateFilePlugin implements WebpackPluginInstance {
         tabs?: number
     ): string {
         const replacer = (key: string, value: any) => {
-            // Manifest requires forward slashes
+            // Manifest requires forward slashes in paths
             return typeof value === 'string'
                 ? value.replaceAll('\\', '/')
                 : value;
