@@ -24,17 +24,17 @@ interface HtmlBannerWebpackPluginArgs {
 
 export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'html-banner-webpack-plugin' };
-    private readonly banner: string;
-    private readonly footer: boolean;
+    private readonly options: HtmlBannerWebpackPluginArgs;
 
     constructor(options: HtmlBannerWebpackPluginArgs) {
-        this.footer = options.footer ?? false;
+        this.options = {
+            ...options,
+            footer: options.footer ?? false
+        };
 
-        if (options.raw === true) {
-            this.banner = options.banner;
-        } else {
+        if (!options.raw) {
             const safeBanner = options.banner.replaceAll('-->', '-- >');
-            this.banner = `<!--\n${safeBanner}\n-->`;
+            this.options.banner = `<!--\n${safeBanner}\n-->`;
         }
     }
 
@@ -45,11 +45,13 @@ export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
             HtmlWebpackPlugin.getCompilationHooks(
                 compilation
             ).beforeEmit.tapAsync(this.plugin, (data, cb) => {
-                if (this.footer) {
-                    data.html += '\n' + this.banner;
+                if (this.options.footer) {
+                    const banner = '\n' + this.options.banner;
+
+                    data.html += banner;
                 }
                 else {
-                    data.html = `${this.banner}\n${data.html}`;
+                    data.html = `${this.options.banner}\n${data.html}`;
                 }
 
                 // Telling Webpack to move on

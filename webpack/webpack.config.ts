@@ -16,7 +16,8 @@ import {
 } from './assets/manifest';
 import {
     GenerateFilePlugin,
-    HtmlBannerWebpackPlugin
+    HtmlBannerWebpackPlugin,
+    CreateHtmlSourceMapWebpackPlugin
 } from './plugins';
 
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString().trim();
@@ -199,7 +200,8 @@ const config: webpack.Configuration = {
             chunks: ['popup'],
             minify: 'auto'
         }),
-
+        new CreateHtmlSourceMapWebpackPlugin(),
+        
         // Generating manifest files
         GenerateFilePlugin.generateManifestPlugin({
             manifest: MANIFEST,

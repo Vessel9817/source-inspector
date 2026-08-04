@@ -1,3 +1,4 @@
+import { SourceMapGenerator } from 'source-map';
 import { type Tap } from 'tapable';
 import type {
     AssetInfo,
@@ -6,16 +7,21 @@ import type {
 } from 'webpack';
 import sources from 'webpack-sources';
 import { type Manifest } from '../assets/manifest';
-import { Source } from './sources';
 
 interface GenerateFilePluginArgs {
     target: string;
     content: string;
     assetInfo?: AssetInfo;
+
+    /**
+     * If `true`, will generate a source map alongside the file
+     * @default false
+     */
+    sourceMap?: boolean;
 }
 
 interface InternalGenerateFilePluginArgs extends GenerateFilePluginArgs {
-    source: Source;
+    source: sources.Source;
 }
 
 type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content' | 'target'> & {
@@ -35,6 +41,66 @@ type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content' | 'target'> &
     target?: string;
 };
 
+interface CreateSourceMapArgs {
+    /**
+     * The source file's contents
+     */
+    content: string;
+
+    /**
+     * The source file path
+     */
+    target: string;
+}
+
+/**
+ * Creates a source map for use in Webpack
+ * @param options Source map configuration options
+ * @see {@link https://tc39.es/ecma426/2024/#source-map-format Specification}
+ */
+export function createSourceMap(
+    options: CreateSourceMapArgs
+): sources.RawSourceMap {
+    const map = new SourceMapGenerator({
+        file: `${options.target}.map`
+    });
+    const lines = options.content.split('\n').length;
+
+    for (let i = 1; i <= lines; i++) {
+        map.addMapping({
+            source: options.target,
+            generated: {
+                line: i,
+                column: 0,
+            },
+            original: {
+                line: i,
+                column: 0,
+            }
+        });
+    }
+
+    return map.toJSON();
+}
+
+/**
+ * Creates a source that wraps a source map for use in Webpack
+ * @param options Source map configuration options
+ * @see {@link createSourceMap}
+ */
+export function createSourceMapSource(
+    options: CreateSourceMapArgs
+): sources.SourceMapSource {
+    const sourceMap = createSourceMap(options);
+
+    return new sources.SourceMapSource(
+        JSON.stringify(sourceMap),
+        options.target,
+        sourceMap,
+        options.content
+    );
+}
+
 export default class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
     private readonly options: InternalGenerateFilePluginArgs;
@@ -42,9 +108,10 @@ export default class GenerateFilePlugin implements WebpackPluginInstance {
     constructor(options: GenerateFilePluginArgs) {
         this.options = {
             ...options,
-            source: new Source()
+            source: options.sourceMap === true
+                ? createSourceMapSource(options)
+                : new sources.RawSource(options.content)
         };
-        this.options.source.source = () => options.content;
     }
 
     public apply(compiler: Compiler) {
