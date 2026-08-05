@@ -131,9 +131,7 @@ const config: webpack.Configuration = {
                         options: {
                             esModule: true,
                             sourceMap: true,
-                            modules: {
-                                namedExport: true
-                            }
+                            modules: 'global'
                         }
                     },
                     {

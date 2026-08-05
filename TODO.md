@@ -26,7 +26,6 @@
 - Write `README.md`
   - How it Works section
     - Source Inspection Flow
-- CSS is broken, likely due to CSS plugin changes
 - Add env var validation
 - [Encrypt messages](https://github.com/Anonymous-Humanoid/source-inspector/issues/45)
 - Rethink debug view (possibly a test-id field?)
