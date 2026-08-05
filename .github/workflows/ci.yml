@@ -4,6 +4,7 @@ on:
   push:
 
 jobs:
+  # Runs a TypeScript type check
   tsc:
     permissions:
       contents: read
@@ -18,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install node modules
-        run: npm i
+        run: npm ci
       - name: Run tsc
         run: npm run tsc
   build:
@@ -37,6 +38,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install node modules
-        run: npm i
+        run: npm ci
       - name: Build extension
         run: node --run=build -- ${{ matrix.browser }} ${{ matrix.mode }}
