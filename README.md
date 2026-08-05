@@ -31,9 +31,7 @@ See our [privacy policy](PRIVACY.md)
 For more technical readers with a knowledge of browser extensions, the built
 manifest files show the following:
 
-- We use MV3 in Chromium builds, preventing extension detection via
-  [timing attack][timing-attack].
-- We do not have any web accessible resources. If we did, we'd use
+- We do not have any web accessible resources. If we did, we'd incorporate
   [`use_dynamic_url`][use_dynamic_url] to prevent extension detection.
 - Running the extension in normal or incognito mode uses separate processes and
   separate memory. This means the extension in one mode cannot communicate
@@ -56,40 +54,26 @@ There are also some additional security features we have implemented:
 - All messages are validated to ensure that
   [compromised renderers][compromised-renderers] have
   [limited scope][compromised-renderers-more].
+- We make zero network requests, superseding an [origin header][origin-bug]
+  bug in Firefox that could allow for detection.
 
-The only possible means of detecting this extension could be a timing attack
-on the inspected website, which is beyond the skill set of this repository's
-owner. If you're able to present a proof-of-concept or potential patches,
-please feel free to do so. For now, this remains only an unproven theory without
-supporting evidence.
+## Known issues
 
-Finally, for transparency's sake, yes, the initial commit added _a lot_. That's
-because this project had been in the works for a while. This was a rich
-opportunity to learn about React and more technical (X)HTML.
-And in learning about React through this project, there were a few migrations
-to get the nesting of diverse component states functional and implemented to
-reasonable and modern coding standards.
+- All Chromium builds except Brave are vulnerable to a
+  [timing attack][timing-attack]. This is an issue with Chromium itself, not our
+  extension. This mitigated by installing the extension from source, as a unique
+  ID will be generated for the extension.
 
 ## Building
 
 In order to use this extension, you must first build it from source.
 
-- Download the source code
+- Clone this repository
 - Open your IDE or terminal to the root of the project
-- Run `npm install` to install dependencies
-- To build the extension, start a development server:
-  - For users, run `npm run start:<browser>:prod` to run in production mode,
-    where `<browser>` is `chrome` (port 8081) or `firefox` (port 8083).
-    This will create a folder `dist/<browser>/prod` containing the built extension.
-  - For developers, run `npm run start:<browser>:dev`, to run in development
-    mode, where `<browser>` is `chrome` (port 8080) or `firefox` (port 8082).
-    This will create a folder `dist/<browser>/dev` containing the built extension.
-- Optionally, when the server says that webpack has compiled successfully,
-  you can stop the server. (Ctrl+C, or Command+C on Mac)
-  It's only necessary to keep it running if you plan on making changes
-  to the source code and having them be patched in live. Though, in
-  Chromium-based browsers, you will still be required to reload the extension
-  manually.
+- Run `npm i` to install dependencies
+- Run `npm run build -- <browser> <mode>`, where:
+  - `<browser>` is `chrome` or `firefox`
+  - `<mode>` is `dev` or `prod`
 
 You should now have an installable extension.
 
@@ -172,42 +156,30 @@ Below are some caveats this extension has that don't have immediate fixes:
   run at the microtask level, and because attribute `MutationRecord`s don't
   include the new attribute value, we don't yet have a way to get the values
   of attributes every time they're updated, only most times.
-  <!--
-  This could potentially be fixed by polling existing elements,
-  but that gets expensive quickly
-  -->
 - This extension is subject to the same restrictions as any extension. That
   means that protected URLs, such as `chrome://`, `edge://`,
   `chrome-extension://` and `about://`, cannot be inspected. Ironically, this
-  means that you can't inspect the extension's own source code.
-- Due to how browsers render XML documents that don't have attached stylesheets,
-  XML is only partially supported. If the XML document is styled, then it
-  should be fully supported. However, many modern browsers may add some
-  boilerplate to the rendered document to say that there's no stylesheet.
-  Because of how this extension works and the restrictions we apply to it for
-  the user's sake, this will be included in the inspected source. In other
-  words, if you can see it, so can this extension.
-  <!--
-  Not applicable to us, as we expose no web accessible resources.
-  May also be resolvable with `use_dynamic_url`.
-  -->
-  <!-- - In Chrome, a website could send a GET request to
-      `chrome-extension://<YOUR_ID_HERE>/manifest.json`. If it's successful, you
-      have our extension installed.
-      [See this working demo][timing-attack].
-  -->
-  <!-- Not applicable to us, because we make zero network requests -->
-  <!-- - In Firefox, by clicking the extension button and activating the inspector,
-      the website can look at its
-      [origin header](https://bugzilla.mozilla.org/show_bug.cgi?id=1405971)
-      and determine that you're trying to use our extension.
-  -->
+  means that this extension can't inspect its own inspector.
+- This extension is unable to view the original source, as it reconstructs the
+  source from what's visible. Browsers render non-(X)HTML documents and XML
+  documents without attached stylesheets as (X)HTML. In other words, this
+  extension sees what you see.
 
 ## Contribution
 
 For a list of planned features and fixes, see the [TODOs](TODO.md).
 If your planned contribution isn't included there, feel free to open
-an issue or pull request.
+an issue or pull request. If anything doesn't follow W3 standards,
+WHATWG standards or the HTML Living Standard, please let us know how we can
+better adhere to code.
+
+Similar to the `build` script, we offer a web server for iterative development
+via hot-reloading. It can be started by running
+`npm run start:<browser>:<mode>`. Though it will attempt to reload on changes it
+can't hot-reload, you can trigger manual reloading by typing `rs` and hitting
+enter in the terminal. It will not reload the underlying Nodemon process, so
+stopping and starting the process will be necessary to update Nodemon
+and its dependencies.
 
 ## Attribution
 
@@ -220,8 +192,9 @@ an issue or pull request.
 [node-types]: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
 [devtools]: https://developer.chrome.com/docs/devtools
 [debugger]: https://developer.chrome.com/docs/extensions/reference/api/debugger
-[timing-attack]: https://browserleaks.com/chrome
+[timing-attack]: https://browserleaks.com/chrome#timing-attack-for-web-accessible-resources
 [use_dynamic_url]: https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
+[origin-bug]: https://bugzilla.mozilla.org/show_bug.cgi?id=1405971
 [compromised-renderers]: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging
 [compromised-renderers-more]: https://issuetracker.google.com/issues/311491887
 [xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
