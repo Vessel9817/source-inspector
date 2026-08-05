@@ -209,6 +209,7 @@ an issue or pull request.
 
 - [Extension boilerplate][boilerplate]
 - [Code review icons][flaticon] created by Freepik - Flaticon
+- The community members involved in contribution and translation
 
 [ci-badge]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml/badge.svg
 [ci-workflow]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml
