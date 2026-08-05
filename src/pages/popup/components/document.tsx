@@ -2,6 +2,7 @@ import assert from 'assert';
 import React, { ReactNode } from 'react';
 import type { NonStoredProps, StoredVirtualNodeProps } from '../base';
 import { type BaseUpdateMsg, validateBaseUpdateMsg } from '../msgs';
+import { VirtualXmlDeclaration } from './xmlDeclaration';
 
 interface SharedValues {
     nodeType: Node['DOCUMENT_NODE'];
@@ -9,6 +10,12 @@ interface SharedValues {
     nodeValue: null;
     prevSiblingId?: undefined;
     documentURI: string;
+    contentType: string;
+
+    // Not supported in Firefox; deprecated
+    xmlVersion: string;
+    xmlEncoding?: string;
+    xmlStandalone?: boolean;
 }
 
 export type UpdateDocumentMsg = BaseUpdateMsg & SharedValues;
@@ -23,6 +30,17 @@ export function validateUpdateDocumentMsg(
     assert.ok(msg.prevSiblingId === undefined);
     assert.ok('documentURI' in msg);
     assert.ok(typeof msg.documentURI === 'string');
+    assert.ok('contentType' in msg);
+    assert.ok(typeof msg.contentType === 'string');
+    assert.ok('xmlVersion' in msg);
+    assert.ok(typeof msg.xmlVersion === 'string');
+
+    if ('xmlEncoding' in msg) {
+        assert.ok(['undefined', 'string'].includes(typeof msg.xmlEncoding));
+    }
+    if ('xmlStandalone' in msg) {
+        assert.ok(['undefined', 'boolean'].includes(typeof msg.xmlStandalone));
+    }
 }
 
 export type StoredVirtualDocumentProps = StoredVirtualNodeProps & SharedValues;
@@ -30,6 +48,22 @@ export type StoredVirtualDocumentProps = StoredVirtualNodeProps & SharedValues;
 export type VirtualDocumentProps = NonStoredProps<StoredVirtualDocumentProps>;
 
 export function VirtualDocument(props: VirtualDocumentProps): ReactNode {
+    let xmlDecl: ReactNode = undefined;
+
+    if (props.contentType === 'application/xhtml+xml') {
+        xmlDecl = (
+            <VirtualXmlDeclaration
+                id={`${props.id}-xmldecl`}
+                nodeType={props.nodeType}
+                nodeName={props.nodeName}
+                nodeValue={props.nodeValue}
+                xmlVersion={props.xmlVersion}
+                xmlEncoding={props.xmlEncoding}
+                xmlStandalone={props.xmlStandalone}
+            />
+        );
+    }
+
     // For security, don't change the rel attribute
     // See: https://stackoverflow.com/a/17711167/8387760
     return (
@@ -43,7 +77,10 @@ export function VirtualDocument(props: VirtualDocumentProps): ReactNode {
                 {props.documentURI}
             </a>
             {`)`}
-            <ul>{props.children}</ul>
+            <ul>
+                {xmlDecl}
+                {props.children}
+            </ul>
         </div>
     );
 }

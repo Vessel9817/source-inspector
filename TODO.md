@@ -2,10 +2,7 @@
 
 ## Functional Priorities
 
-- [Include XML declarations in source][xml-declarations-issue]. See the
-  [xmlVersion][xmlVersion], [xmlEncoding][xmlEncoding] and
-  [xmlstandalone][xmlstandalone] document properties,
-  as well as the [spec][xml-declarations].
+- Support [boolean attributes][bool-attrs]
 - [Add void element support][void-element-issue]
 - Add dropdown functionality to all nodes with children
 - When elements are added (e.g, through script or DevTools),
@@ -51,9 +48,5 @@
 - If project scope allows it, add an options page to allow the content script
   to be automatically reinjected on page or tab (re)load
 
+[bool-attrs]: https://developer.mozilla.org/en-US/docs/Glossary/Boolean/HTML
 [void-element-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/44
-[xml-declarations-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/43
-[xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
-[xmlVersion]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
-[xmlEncoding]: https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlEncoding
-[xmlstandalone]: https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone

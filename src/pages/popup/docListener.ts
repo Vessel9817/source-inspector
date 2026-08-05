@@ -301,7 +301,16 @@ function _addNode(
                 nodeType: cNode.nodeType,
                 nodeName: cNode.nodeName,
                 nodeValue: cNode.nodeValue,
-                documentURI: cNode.documentURI
+                documentURI: cNode.documentURI,
+                contentType: cNode.contentType,
+                // Firefox always returns '1.0', and the spec assumes '1.0' if not present
+                // https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
+                // @ts-expect-error Deprecated property may not exist in the browser (which would also make it writable)
+                xmlVersion: cNode?.xmlVersion ?? '1.0',
+                // @ts-expect-error Deprecated property may not exist in the browser (which would also make it writable)
+                xmlEncoding: cNode?.xmlEncoding,
+                // @ts-expect-error Deprecated property may not exist in the browser (which would also make it writable)
+                xmlStandalone: cNode?.xmlStandalone
             };
 
             _sendMessage(msg);

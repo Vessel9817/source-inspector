@@ -190,6 +190,10 @@ function renderDocument(
                 nodeName={node.nodeName}
                 nodeValue={node.nodeValue}
                 documentURI={node.documentURI}
+                contentType={node.contentType}
+                xmlVersion={node.xmlVersion}
+                xmlEncoding={node.xmlEncoding}
+                xmlStandalone={node.xmlStandalone}
             >
                 {renderChildren(node)}
             </VirtualDocument>
