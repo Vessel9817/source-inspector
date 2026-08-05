@@ -7,7 +7,6 @@ import type {
 } from 'webpack';
 import sources, { type RawSourceMap } from 'webpack-sources';
 import { type Manifest } from '../assets/manifest';
-import { normalize } from '../utils';
 
 interface GenerateFilePluginArgs {
     target: string;
