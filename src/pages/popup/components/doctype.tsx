@@ -18,7 +18,7 @@ export function validateUpdateDoctypeMsg(
     msg: Readonly<unknown>
 ): asserts msg is UpdateDoctypeMsg {
     validateBaseUpdateMsg(msg);
-    assert.ok(msg.nodeType === Node.ATTRIBUTE_NODE);
+    assert.ok(msg.nodeType === Node.DOCUMENT_TYPE_NODE);
     assert.ok(msg.nodeValue === null);
     assert.ok(msg.parentId != null);
     assert.ok('publicId' in msg);
