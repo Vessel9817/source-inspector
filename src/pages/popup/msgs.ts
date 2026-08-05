@@ -208,10 +208,7 @@ function validateUpdateMsg(msg: Readonly<unknown>): asserts msg is UpdateMsg {
         validateUpdateDocFragmentMsg(msg);
         return;
     } catch {}
-    try {
-        validateUpdateNotationMsg(msg);
-        return;
-    } catch {}
+    validateUpdateNotationMsg(msg);
 }
 
 export type PopupMsg = RemoveMsg | UpdateMsg;
