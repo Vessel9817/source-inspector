@@ -22,6 +22,24 @@ jobs:
         run: npm ci
       - name: Run tsc
         run: npm run tsc
+  # Checks for dependency conflicts that `npm ci` would miss
+  npm:
+    permissions:
+      contents: read
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [24.x]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Check dependency tree
+        run: npm i --package-lock-only --dry-run
+  # Builds extension
   build:
     permissions:
       contents: read
