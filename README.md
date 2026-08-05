@@ -56,13 +56,8 @@ There are also some additional security features we have implemented:
   [limited scope][compromised-renderers-more].
 - We make zero network requests, superseding an [origin header][origin-bug]
   bug in Firefox that could allow for detection.
-
-## Known issues
-
-- All Chromium builds except Brave are vulnerable to a
-  [timing attack][timing-attack]. This is an issue with Chromium itself, not our
-  extension. This mitigated by installing the extension from source, as a unique
-  ID will be generated for the extension.
+- We use MV3, superseding a [timing attack][timing-attack] with Chromium
+  (excluding Brave) that would allow extension detection
 
 ## Building
 
