@@ -126,5 +126,9 @@
     "popup_invalid_update": {
         "description": "Called by the popup",
         "message": "Anomalous node parent update:"
+    },
+    "popup_validation_failed": {
+        "description": "Called by the popup",
+        "message": "Message failed validation:"
     }
 }

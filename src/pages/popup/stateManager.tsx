@@ -203,6 +203,10 @@ export class PopupManager {
         try {
             validatePopupMsg(msg);
         } catch {
+            console.error(
+                chrome.i18n.getMessage('popup_validation_failed'),
+                msg
+            );
             return;
         }
 
