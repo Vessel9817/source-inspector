@@ -44,7 +44,7 @@
         "html-webpack-plugin": "^5.6.8",
         "mini-css-extract-plugin": "^2.10.2",
         "nodemon": "^3.1.14",
-        "postcss": "^8.5.25",
+        "postcss": "^8.5.26",
         "postcss-loader": "^8.2.1",
         "sanitize-filename": "^1.6.4",
         "sass": "^1.102.0",
