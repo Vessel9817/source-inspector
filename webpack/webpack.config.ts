@@ -1,43 +1,15 @@
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-import {
-    ICON_PATH_MAPPINGS,
-    MANIFEST
-} from './assets/manifest';
+import * as config from './config';
 import {
     IS_DEV_MODE,
     OUTPUT_ABS_DIR,
     PROJECT_ROOT
 } from './env';
-import {
-    CreateHtmlSourceMapWebpackPlugin,
-    GenerateFilePlugin,
-    HtmlBannerWebpackPlugin
-} from './plugins';
-
-const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString().trim();
 
 // Initializing webpack config
-const STATIC_FILE_EXTS = [
-    'jpg',
-    'jpeg',
-    'png',
-    'gif',
-    'eot',
-    'otf',
-    'svg',
-    'ttf',
-    'woff',
-    'woff2'
-];
-
-const config: webpack.Configuration = {
+const webpackConfig: webpack.Configuration = {
     context: PROJECT_ROOT,
     mode: IS_DEV_MODE ? 'development' : 'production',
     // Extensions cannot use eval
@@ -101,157 +73,29 @@ const config: webpack.Configuration = {
     },
     resolve: {
         extensions: [
-            ...STATIC_FILE_EXTS,
-            'ts',
-            'tsx', // TS/TSX must come before JS/JSX
-            'js',
-            'jsx',
-            'css'
-        ].map((extension) => `.${extension}`)
+            ...config.assets.resolveExts,
+            ...config.js.resolveExts,
+            ...config.css.resolveExts
+        ]
     },
     module: {
         rules: [
-            {
-                test: new RegExp(
-                    String.raw`\.(?:${STATIC_FILE_EXTS.join('|')})$`
-                ),
-                type: 'asset/resource',
-                exclude: /node_modules/
-            },
-            {
-                // https://www.npmjs.com/package/style-loader#recommend
-                test: /\.(css|scss|sass)$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: IS_DEV_MODE
-                            ? 'style-loader'
-                            : MiniCssExtractPlugin.loader
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            esModule: true,
-                            sourceMap: true,
-                            modules: 'global'
-                        }
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            sourceMap: true
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.tsx?$/,
-                type: 'javascript/esm',
-                exclude: /node_modules/,
-                use: [
-                    {
-                        // https://www.npmjs.com/package/ts-loader#devtool--sourcemaps
-                        // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
-                        loader: 'ts-loader',
-                        options: {
-                            configFile: path.join(PROJECT_ROOT, 'tsconfig.json'),
-                            compilerOptions: {
-                                emitDeclarationOnly: false,
-                                noEmit: false
-                            }
-                        }
-                    },
-                    'source-map-loader'
-                ]
-            },
-            {
-                test: /\.html$/,
-                exclude: /node_modules/,
-                loader: 'html-loader'
-            }
+            ...config.assets.moduleRules,
+            ...config.css.moduleRules,
+            ...config.js.moduleRules,
+            ...config.html.moduleRules
         ]
     },
     plugins: [
         new webpack.ProgressPlugin(),
-
-        // Packaging icons and translations
-        new CopyWebpackPlugin({
-            patterns: [
-                ...ICON_PATH_MAPPINGS,
-                {
-                    from: path.join(PROJECT_ROOT, '_locales'),
-                    to: path.join(OUTPUT_ABS_DIR, '_locales')
-                }
-            ]
-        }),
-
-        // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
-        new ForkTsCheckerWebpackPlugin(),
-
-        // assert polyfill depends on process
-        // https://github.com/browserify/commonjs-assert/issues/55#issuecomment-996543717
-        new webpack.ProvidePlugin({
-            process: 'process/browser'
-        }),
-
-        // https://www.npmjs.com/package/style-loader#recommend
-        !IS_DEV_MODE && new MiniCssExtractPlugin(),
-
-        // Packaging popup entry point
-        new HtmlWebpackPlugin({
-            template: path.join(
-                PROJECT_ROOT,
-                'src',
-                'pages',
-                'popup',
-                'index.html'
-            ),
-            filename: path.join('popup', 'index.html'),
-            chunks: ['popup'],
-            minify: 'auto'
-        }),
-        new CreateHtmlSourceMapWebpackPlugin(),
-        
-        // Generating manifest files
-        GenerateFilePlugin.generateManifestPlugin({
-            manifest: MANIFEST,
-            indents: IS_DEV_MODE ? 2 : undefined
-        }),
-
-        // Embedding license information after minimization
-        new webpack.BannerPlugin({
-            include: [/\.(?:js|css)$/i],
-            stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
-            banner: LICENSE
-        }),
-        new HtmlBannerWebpackPlugin({
-            banner: LICENSE,
-            sourceMap: true
-        }),
-
-        // Adding source map references after minimization
-        new webpack.BannerPlugin({
-            include: [/\.(?:js|css)$/i],
-            stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
-            raw: true,
-            footer: true,
-            banner(data): string {
-                // Webpack seems inconsistent with forward and backward slashes in Windows paths
-                const relPath = data.filename.replaceAll('\\', '/');
-
-                return `/*# sourceMappingURL=/${relPath}.map */`;
-            }
-        })
-    ].filter(Boolean),
+        ...config.assets.plugins,
+        ...config.js.plugins,
+        ...config.css.plugins,
+        ...config.html.plugins
+    ],
     watchOptions: {
         // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
-        ignored: /node_modules/
+        ignored: ['node_modules']
     },
     infrastructureLogging: {
         level: 'info'
@@ -259,4 +103,4 @@ const config: webpack.Configuration = {
     stats: 'errors-warnings'
 };
 
-export default config;
+export default webpackConfig;
