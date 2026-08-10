@@ -1,5 +1,5 @@
 import { program } from 'commander';
-import './commands';
+import './build';
 
 program
     .name('Extension developer CLI')
