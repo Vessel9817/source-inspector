@@ -25,11 +25,13 @@
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "noEmit": false,
+        "noEmit": true,
         "jsx": "react",
         "typeRoots": ["./node_modules/@types"],
         "types": ["chrome", "firefox-webext-browser", "node"],
-        "noErrorTruncation": true // See fully expanded types
+        "noErrorTruncation": true, // See fully expanded types
+        "rootDir": ".",
+        "outDir": "dist/tsc" // See also: https://stackoverflow.com/a/48798945
     },
     "include": ["src", "webpack"],
     "exclude": ["dist", "node_modules"]

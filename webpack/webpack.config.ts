@@ -1,4 +1,5 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import fs from 'node:fs/promises';
@@ -6,18 +7,18 @@ import path from 'node:path';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 import {
+    ICON_PATH_MAPPINGS,
+    MANIFEST
+} from './assets/manifest';
+import {
     IS_DEV_MODE,
     OUTPUT_ABS_DIR,
     PROJECT_ROOT
 } from './env';
 import {
-    ICON_PATH_MAPPINGS,
-    MANIFEST
-} from './assets/manifest';
-import {
+    CreateHtmlSourceMapWebpackPlugin,
     GenerateFilePlugin,
-    HtmlBannerWebpackPlugin,
-    CreateHtmlSourceMapWebpackPlugin
+    HtmlBannerWebpackPlugin
 } from './plugins';
 
 const LICENSE = (await fs.readFile(path.join(PROJECT_ROOT, 'LICENSE'))).toString().trim();
@@ -37,6 +38,7 @@ const STATIC_FILE_EXTS = [
 ];
 
 const config: webpack.Configuration = {
+    context: PROJECT_ROOT,
     mode: IS_DEV_MODE ? 'development' : 'production',
     // Extensions cannot use eval
     devtool: IS_DEV_MODE
@@ -155,9 +157,14 @@ const config: webpack.Configuration = {
                 use: [
                     {
                         // https://www.npmjs.com/package/ts-loader#devtool--sourcemaps
+                        // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
                         loader: 'ts-loader',
                         options: {
-                            transpileOnly: IS_DEV_MODE
+                            configFile: path.join(PROJECT_ROOT, 'tsconfig.json'),
+                            compilerOptions: {
+                                emitDeclarationOnly: false,
+                                noEmit: false
+                            }
                         }
                     },
                     'source-map-loader'
@@ -183,6 +190,9 @@ const config: webpack.Configuration = {
                 }
             ]
         }),
+
+        // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
+        new ForkTsCheckerWebpackPlugin(),
 
         // assert polyfill depends on process
         // https://github.com/browserify/commonjs-assert/issues/55#issuecomment-996543717
@@ -239,6 +249,10 @@ const config: webpack.Configuration = {
             }
         })
     ].filter(Boolean),
+    watchOptions: {
+        // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
+        ignored: /node_modules/
+    },
     infrastructureLogging: {
         level: 'info'
     }
