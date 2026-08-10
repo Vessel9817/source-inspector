@@ -13,7 +13,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "tsx webpack/cli.ts build",
-        "start-helper": "tsx webpack/webserver.ts",
+        "start-helper": "tsx webpack/server/index.ts",
         "start:chrome:dev": "nodemon --config nodemon/chrome/nodemon.dev.json",
         "start:firefox:dev": "nodemon --config nodemon/firefox/nodemon.dev.json",
         "start:chrome:prod": "nodemon --config nodemon/chrome/nodemon.prod.json",

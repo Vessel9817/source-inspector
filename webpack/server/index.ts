@@ -1,10 +1,8 @@
 import path from 'node:path';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
-import config from './webpack.config';
-
-const OUTPUT_DIR = process.env.OUTPUT_DIR!;
-const WEBPACK_PORT = process.env.WEBPACK_PORT!;
+import config from '../webpack.config';
+import { OUTPUT_DIR, WEBPACK_PORT } from './env';
 
 const compiler = webpack(config);
 
