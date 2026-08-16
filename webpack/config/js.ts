@@ -2,7 +2,7 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'node:path';
 import webpack from 'webpack';
 import { LICENSE } from '../assets/license';
-import { PROJECT_ROOT } from '../env';
+import { BROWSER, NODE_ENV, PROJECT_ROOT } from '../env';
 
 // TS/TSX must come before JS/JSX
 export const resolveExts = ['.ts', '.tsx', '.js', '.jsx'];
@@ -38,6 +38,12 @@ export const plugins = [
     // https://github.com/browserify/commonjs-assert/issues/55#issuecomment-996543717
     new webpack.ProvidePlugin({
         process: 'process/browser'
+    }),
+
+    // Defining environment variables in the bundle
+    new webpack.EnvironmentPlugin({
+        BROWSER,
+        NODE_ENV
     }),
 
     // Embedding license information after minimization

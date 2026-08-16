@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import path from 'node:path';
 
-type BrowserName = 'chrome' | 'firefox';
+export type BrowserName = 'chrome' | 'firefox';
 
 const __dirname = import.meta.dirname;
 export const PROJECT_ROOT = path.join(__dirname, '..');
