@@ -16,9 +16,9 @@ import type {
     UpdateElementMsg,
     UpdateProcessingInstructionMsg,
     UpdateTextMsg
-} from './msgs';
+} from '../popup/msgs';
 import { v4 as uuid } from 'uuid';
-import { TIMEOUT_MS } from './background';
+import { TIMEOUT_MS } from '../popup/background';
 import { BROWSER } from '../shared';
 
 interface PartialNodeMutationRecord {

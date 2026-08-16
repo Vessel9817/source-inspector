@@ -69,7 +69,7 @@ class Popup {
                 tabId
                 // allFrames: true
             },
-            files: ['popup/docListener.js'],
+            files: ['content/docListener.js'],
             world: 'ISOLATED'
         });
     }

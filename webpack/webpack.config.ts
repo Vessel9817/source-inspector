@@ -30,19 +30,21 @@ const webpackConfig: webpack.Configuration = {
               ]
           },
     entry: {
-        // Popup
-        docListener: {
+        // Content script
+        content: {
             import: [
                 path.join(
                     PROJECT_ROOT,
                     'src',
                     'pages',
-                    'popup',
+                    'content',
                     'docListener.ts'
                 )
             ],
-            filename: path.join('popup', 'docListener.js')
+            filename: path.join('content', 'docListener.js')
         },
+
+        // Popup
         popup: {
             import: [
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
