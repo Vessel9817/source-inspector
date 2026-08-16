@@ -9,7 +9,6 @@ declare global {
     interface Attr {
         nodeType: Node['ATTRIBUTE_NODE'];
         nodeValue: string;
-        previousSibling: null;
     }
 
     // Extends existing type
@@ -53,7 +52,13 @@ declare global {
         nodeType: Node['DOCUMENT_NODE'];
         nodeName: '#document';
         nodeValue: null;
-        previousSibling: null;
+
+        /** @deprecated Not supported in Firefox */
+        xmlVersion?: string;
+        /** @deprecated Not supported in Firefox */
+        xmlEncoding?: string;
+        /** @deprecated Not supported in Firefox */
+        xmlStandalone?: boolean;
     }
 
     // Extends existing type

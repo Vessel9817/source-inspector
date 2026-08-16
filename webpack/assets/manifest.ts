@@ -104,6 +104,10 @@ switch (BROWSER) {
         manifest = _manifest;
         break;
     }
+    default: {
+        // Shouldn't happen
+        throw new Error(`Unsupported browser: ${BROWSER}`);
+    }
 }
 
 export const MANIFEST = manifest;
@@ -119,5 +123,5 @@ export const ICON_PATH_MAPPINGS: Pattern[] = RELATIVE_ICON_PATHS.map(
             ),
             to: path.join(OUTPUT_ABS_DIR, outputPath)
         };
-}
+    }
 );

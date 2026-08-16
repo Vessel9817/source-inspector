@@ -12,9 +12,11 @@ interface SharedValues {
     documentURI: string;
     contentType: string;
 
-    // Not supported in Firefox; deprecated
+    /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlVersion: string;
+    /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlEncoding?: string;
+    /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlStandalone?: boolean;
 }
 

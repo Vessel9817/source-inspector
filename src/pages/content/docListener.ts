@@ -307,15 +307,12 @@ function _addNode(
                 // Firefox always returns '1.0', and the spec assumes '1.0' if not present
                 // https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
                 xmlVersion: BROWSER === 'chrome'
-                    // @ts-expect-error Deprecated property may not exist in the browser (which would also make it writable)
                     ? cNode?.xmlVersion ?? '1.0'
                     : '1.0',
                 xmlEncoding: BROWSER === 'chrome'
-                    // @ts-expect-error Deprecated property may not exist in the browser (which would also make it writable)
                     ? cNode?.xmlEncoding
                     : undefined,
                 xmlStandalone: BROWSER === 'chrome'
-                    // @ts-expect-error Deprecated property may not exist in the browser (which would also make it writable)
                     ? cNode?.xmlStandalone
                     : undefined
             };
