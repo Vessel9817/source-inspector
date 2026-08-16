@@ -47,7 +47,7 @@ const webpackConfig: webpack.Configuration = {
             import: [
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
             ],
-            // HTMLWebpackPlugin will escape backslashes in paths
+            // HTMLWebpackPlugin will escape backslashes, which leads to invalid paths
             filename: path.join('popup', 'index.js').replaceAll('\\', '/')
         },
 
