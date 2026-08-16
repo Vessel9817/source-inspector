@@ -18,6 +18,7 @@ import {
     validatePopupMsg
 } from './msgs';
 import NodeTree from './popup';
+import { BROWSER } from '../shared';
 
 export type NodeState = { [id: string]: StoredVirtualNodeProps };
 
@@ -38,7 +39,7 @@ export class PopupManager {
     private readonly generateDocument;
     private readonly queueMessage;
     private readonly onDisconnect;
-    private newConnection: chrome.runtime.Port | undefined;
+    private newConnection: browser.runtime.Port | undefined;
 
     private readonly queueLock: Mutex;
     /**
@@ -81,10 +82,15 @@ export class PopupManager {
     public connect(): Promise<void> {
         chrome.runtime.onMessage.addListener(this.generateDocument);
 
-        // Promise wrapping required for Firefox
-        return new Promise((resolve) => {
-            chrome.runtime.sendMessage({} as any, resolve);
-        });
+        const msg: any = {};
+
+        // Firefox can only have one async sender/receiver,
+        // so we wrap a syncronous sender and use an async receiver
+        return BROWSER == 'chrome'
+            ? chrome.runtime.sendMessage(msg)
+            : new Promise((resolve) => {
+                browser.runtime.sendMessage(msg, resolve)
+            });
     }
 
     private _connectTab(tabId: number): void {
@@ -108,7 +114,7 @@ export class PopupManager {
      */
     private _generateDocument(
         msg: Readonly<unknown>,
-        sender: Readonly<chrome.runtime.MessageSender>
+        sender: Readonly<browser.runtime.MessageSender>
     ): void {
         if (sender.id === chrome.runtime.id) {
             try {

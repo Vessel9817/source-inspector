@@ -76,7 +76,7 @@ const ADD_NODE_SUPPORTED_TYPES = new Set<Readonly<number>>([
     // ,Node['ENTITY_NODE']
     // ,Node['NOTATION_NODE']
 ]);
-let _connection: chrome.runtime.Port | undefined;
+let _connection: browser.runtime.Port | undefined;
 let _observer: MutationObserver | undefined;
 const _elementMap = new WeakMap<Node, string>();
 const _attrMap = new WeakMap<
@@ -496,7 +496,7 @@ function _disconnectBackground(): void {
  * The connection handler. Posts document updates to the popup.
  * @param connection
  */
-function _onConnect(connection: chrome.runtime.Port): void {
+function _onConnect(connection: browser.runtime.Port): void {
     console.log(chrome.i18n.getMessage('script_connected'));
 
     // Completing connection initialization

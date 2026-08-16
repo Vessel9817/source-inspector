@@ -1,3 +1,4 @@
+import { BROWSER } from '../shared';
 import { testInjectionUri } from '../shared/background';
 import { type ConnectMsg } from './msgs';
 
@@ -33,7 +34,7 @@ class Popup {
         // Waiting for document listener to initialize
         async function MSG_BROKER(
             _msg: Readonly<any>,
-            sender: Readonly<chrome.runtime.MessageSender>
+            sender: Readonly<browser.runtime.MessageSender>
         ): Promise<void> {
             if (sender.id === chrome.runtime.id && sender.tab?.id === tabId) {
                 chrome.runtime.onMessage.removeListener(MSG_BROKER);
@@ -86,7 +87,7 @@ class Popup {
             // Waiting for popup to initialize
             async function MSG_BROKER(
                 _msg: Readonly<any>,
-                sender: Readonly<chrome.runtime.MessageSender>
+                sender: Readonly<browser.runtime.MessageSender>
             ): Promise<void> {
                 if (
                     sender.id === chrome.runtime.id &&
@@ -136,7 +137,7 @@ class Popup {
      * Initializes the popup to inspect the given tab's document source
      * @param tab
      */
-    static async tryCreatingPopup(tab: chrome.tabs.Tab): Promise<void> {
+    static async tryCreatingPopup(tab: browser.tabs.Tab): Promise<void> {
         if (
             tab.id != null &&
             tab.url != null &&
@@ -154,9 +155,11 @@ class Popup {
      * in a new tab when the extension icon is clicked
      */
     static registerPopup(): void {
-        (chrome.action ?? browser.browserAction).onClicked.addListener(
-            Popup.tryCreatingPopup
-        );
+        const action = BROWSER === 'chrome'
+            ? chrome.action
+            : browser.browserAction;
+
+        action.onClicked.addListener(Popup.tryCreatingPopup);
     }
 }
 
