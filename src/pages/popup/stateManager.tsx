@@ -84,7 +84,7 @@ export class PopupManager {
 
         const msg: any = {};
 
-        // Firefox can only have one async sender/receiver,
+        // `browser` can only have one async sender/receiver,
         // so we wrap a syncronous sender and use an async receiver
         return BROWSER == 'chrome'
             ? chrome.runtime.sendMessage(msg)

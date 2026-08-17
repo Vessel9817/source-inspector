@@ -5,7 +5,7 @@
  */
 export async function testInjectionUri(uri: string): Promise<boolean> {
     if (chrome.extension.inIncognitoContext) {
-        if (await chrome.extension.isAllowedIncognitoAccess()) {
+        if (!await browser.extension.isAllowedIncognitoAccess()) {
             return false;
         }
     }
@@ -14,7 +14,7 @@ export async function testInjectionUri(uri: string): Promise<boolean> {
     // and Firefox into wss:// and ws:// URIs
     if (
         /^file:\/\//i.test(uri) &&
-        await chrome.extension.isAllowedFileSchemeAccess()
+        await browser.extension.isAllowedFileSchemeAccess()
     ) {
         return true;
     }
