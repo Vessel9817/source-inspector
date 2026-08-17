@@ -2,3 +2,11 @@
     background-color: black;
     color: white;
 }
+
+label {
+    display: block;
+}
+
+p {
+    display: inline-block;
+}

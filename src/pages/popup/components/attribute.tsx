@@ -38,7 +38,7 @@ export function VirtualAttribute(
     return (
         <>
             <div className='attr'>{' ' + props.nodeName}</div>
-            {props.nodeValue == null ? undefined : (
+            {['', null].includes(props.nodeValue) ? undefined : (
                 <>
                     ="
                     <div className='string'>{props.nodeValue}</div>"

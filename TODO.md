@@ -2,7 +2,6 @@
 
 ## Functional Priorities
 
-- Support [boolean attributes][bool-attrs]
 - [Add void element support][void-element-issue]
 - Add dropdown functionality to all nodes with children
 - When elements are added (e.g, through script or DevTools),
@@ -48,7 +47,6 @@
 - If project scope allows it, add an options page to allow the content script
   to be automatically reinjected on page or tab (re)load
 
-[bool-attrs]: https://developer.mozilla.org/en-US/docs/Glossary/Boolean/HTML
 [void-element-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/44
 [getFrameId]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getFrameId
 [getDocumentId]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getDocumentId
