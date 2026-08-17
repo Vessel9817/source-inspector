@@ -26,7 +26,7 @@
         "PACKAGE_VERSION": "1.0.0",
         "PACKAGE_URL": "https://github.com/Vessel9817/source-inspector",
         "PACKAGE_AUTHOR": "Vessel9817",
-        "WEBPACK_PORT": "8081"
+        "WEBPACK_PORT": "0"
     },
     "ext": "json,cjs,mjs,js,ts"
 }
