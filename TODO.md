@@ -32,19 +32,18 @@
   - Add a light mode toggle
 - Add an [error boundary][error-boundary]
   for improved debugging UX. See also: [createRoot options][createRoot]
-- Migrate `ChildManager` to a [reducer][reducer] for increased maintainability
 - Tell the user when a protected page cannot be inspected
 - Adhere to recommended Webpack chunk size limits (see production build output)
 
 ## Backlog Priorities
 
-- [Validate][validate-a11y] sample inspector pages
 - Configure React source map generation
   (`React.createElement` statements are ugly)
 - Integrate pre-commit
-- Add tests
+- Add tests to replace sample test pages
 - If project scope allows it, add an options page to allow the content script
   to be automatically reinjected on page or tab (re)load
+- Use `react-dom/server` to send React components to the popup
 
 [getFrameId]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getFrameId
 [getDocumentId]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getDocumentId
@@ -54,5 +53,3 @@
 [encrypt-msgs]: https://github.com/Anonymous-Humanoid/source-inspector/issues/45
 [error-boundary]: https://react.dev/link/error-boundaries
 [createRoot]: https://react.dev/reference/react-dom/client/createRoot#parameters
-[reducer]: https://react.dev/learn/extracting-state-logic-into-a-reducer
-[validate-a11y]: https://validator.w3.org
