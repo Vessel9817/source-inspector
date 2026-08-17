@@ -16,7 +16,6 @@ if (container != null) {
     await popupManager.connect();
 
     // Creating asynchronous rendering loop
-    const Popup = PopupManager.Popup;
     const RENDER_INTERVAL_MS = 250;
     const render = async () => {
         try {
@@ -25,9 +24,10 @@ if (container != null) {
             );
 
             root.render(
-                <Popup rootId={states.rootId} nodes={states.nodes} />
+                <PopupManager.Popup rootId={states.rootId} nodes={states.nodes} />
             );
-        } catch (err) {
+        }
+        catch (err) {
             if (err === E_TIMEOUT) {
                 console.warn(chrome.i18n.getMessage('renderer_timeout'));
             } else {
@@ -38,11 +38,11 @@ if (container != null) {
     const renderIntervalId = setInterval(render, RENDER_INTERVAL_MS);
 
     // Defining destructor
-    const UNMOUNT = root.unmount.bind(root);
+    const unmount = root.unmount.bind(root);
 
     root.unmount = () => {
         clearInterval(renderIntervalId);
-        UNMOUNT();
+        unmount();
     };
 
     await render();
