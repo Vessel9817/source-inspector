@@ -1,4 +1,6 @@
-import type { BrowserName } from '../../../webpack/env';
+// Don't import anything except types from webpack directory,
+// IT WILL BREAK THE BUNDLE
+import type { BrowserName } from '../../../webpack/validators';
 
 /**
  * `true` when the extension is run in production mode, `false` otherwise

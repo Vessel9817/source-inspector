@@ -1,7 +1,7 @@
 import { program } from 'commander';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import sanitize from 'sanitize-filename';
+import sanitizeFilename from 'sanitize-filename';
 import webpack from 'webpack';
 import { showError } from './utils';
 
@@ -12,8 +12,8 @@ async function build(
     mode: string
 ): Promise<webpack.Stats | undefined> {
     // Loading env vars
-    browser = sanitize(browser);
-    mode = sanitize(mode);
+    browser = sanitizeFilename(browser);
+    mode = sanitizeFilename(mode);
 
     const file = path.join(
         PROJECT_ROOT,

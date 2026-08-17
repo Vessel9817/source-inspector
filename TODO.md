@@ -23,7 +23,6 @@
 - Write `README.md`
   - How it Works section
     - Source Inspection Flow
-- Add env var validation
 - [Encrypt messages][encrypt-msgs]
 - Rethink debug view (possibly a test-id field?)
 - Conform to a11y standards

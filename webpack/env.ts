@@ -1,21 +1,30 @@
-import assert from 'node:assert';
 import path from 'node:path';
+import * as validators from './validators';
+import sanitizePath from 'path-sanitizer';
 
-export type BrowserName = 'chrome' | 'firefox';
+export const PROJECT_ROOT = path.join(import.meta.dirname, '..');
 
-const __dirname = import.meta.dirname;
-export const PROJECT_ROOT = path.join(__dirname, '..');
+/* Non-secret env vars, defined in nodemon config */
 
-// Non-secret env vars are defined in nodemon config
-const OUTPUT_DIR = process.env.OUTPUT_DIR!;
+let outputDir = process.env.OUTPUT_DIR!;
+validators.string(outputDir);
+outputDir = sanitizePath(outputDir);
+export const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, outputDir);
+
 export const NODE_ENV = process.env.NODE_ENV;
-export const BROWSER: BrowserName = process.env.BROWSER as BrowserName;
-export const DEFAULT_LOCALE = process.env.DEFAULT_LOCALE!;
-export const OUTPUT_ABS_DIR = path.join(PROJECT_ROOT, OUTPUT_DIR);
-export const PACKAGE_VERSION = process.env.PACKAGE_VERSION!;
-export const PACKAGE_URL = process.env.PACKAGE_URL;
+validators.nodeEnv(NODE_ENV);
 
-// Verifying node env
-assert.ok(NODE_ENV != null, 'NODE_ENV must be specified');
+// Required when _locales folder is bundled
+export const DEFAULT_LOCALE = process.env.DEFAULT_LOCALE!;
+validators.string(DEFAULT_LOCALE);
+
+export const PACKAGE_VERSION = process.env.PACKAGE_VERSION!;
+validators.version(PACKAGE_VERSION);
+
+export const PACKAGE_URL = process.env.PACKAGE_URL;
+validators.optional(PACKAGE_URL, validators.string); // No-op
+
+export const BROWSER = process.env.BROWSER;
+validators.browser(BROWSER);
 
 export const IS_DEV_MODE = NODE_ENV !== 'production';
