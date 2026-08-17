@@ -13,7 +13,11 @@
 - Add documentation where it's missing or necessary (e.g, @param or @template)
 - Finish supporting all applicable node types
   - Character data mutations
-  - Nested document nodes (see: [SO][nested-iframes])
+  - Nested document nodes:
+    - Correlate elements with frames via the [`frameId`][getFrameId]
+    - Correlate frames with documents via the [`documentId`][getDocumentId]
+      (i.e, if a new page loads, a new document will replace the old in the frame)
+    - As a fallback, see: [window.parent][nested-iframes]
   - Shadow roots, see:
     [`chrome.dom.openOrClosedShadowRoot`][openOrClosedShadowRoot]
     and [WhatWG/DOM#1287][shadow-root-observing]
@@ -46,6 +50,8 @@
 
 [bool-attrs]: https://developer.mozilla.org/en-US/docs/Glossary/Boolean/HTML
 [void-element-issue]: https://github.com/Anonymous-Humanoid/source-inspector/issues/44
+[getFrameId]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getFrameId
+[getDocumentId]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getDocumentId
 [nested-iframes]: https://stackoverflow.com/questions/26010355/is-there-a-way-to-uniquely-identify-an-iframe-that-the-content-script-runs-in-fo
 [openOrClosedShadowRoot]: https://developer.chrome.com/docs/extensions/reference/api/dom?hl=en#method-openOrClosedShadowRoot
 [shadow-root-observing]: https://github.com/whatwg/dom/issues/1287
