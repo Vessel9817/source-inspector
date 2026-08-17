@@ -2,7 +2,6 @@
 
 ## Functional Priorities
 
-- [Add void element support][void-element-issue]
 - Add dropdown functionality to all nodes with children
 - When elements are added (e.g, through script or DevTools),
   children and text should be processed

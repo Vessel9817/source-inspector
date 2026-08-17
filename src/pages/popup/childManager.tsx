@@ -21,6 +21,24 @@ import {
 } from './components';
 import { NodeContext, NodeState } from './stateManager';
 
+// From: https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+const VOID_ELEMENTS: Readonly<Set<string>> = new Set([
+    'AREA',
+    'BASE',
+    'BR',
+    'COL',
+    'EMBED',
+    'HR',
+    'IMG',
+    'INPUT',
+    'LINK',
+    'META',
+    'PARAM',
+    'SOURCE',
+    'TRACK',
+    'WBR'
+]);
+
 function renderDebug(id: Readonly<string>): ReactNode {
     return (
         process.env.NODE_ENV !== 'production' && (
@@ -38,7 +56,8 @@ function renderElement(
     node: Readonly<StoredVirtualElementProps>,
     nodes: Readonly<NodeState>
 ): ReactNode {
-    // Some Firefox distros apparently don't allow map on a SetIterator
+    // `map` on a `SetIterator` isn't standard yet:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/map
     const attrs = Array.from(node.attributeIds.keys()).map((attrId) => {
         const attrNode = nodes[attrId] as StoredVirtualAttributeProps;
 
@@ -56,7 +75,11 @@ function renderElement(
 
     let renderingChildren: ReactNode[];
 
-    if (node.childNodeIds.length < 1 && node.nodeValue == null) {
+    // https://github.com/Anonymous-Humanoid/source-inspector/issues/44#issuecomment-5315806605
+    const isVoidElement = VOID_ELEMENTS.has(node.nodeName);
+    const hasNoSubNodes = node.childNodeIds.length < 1 && node.nodeValue == null;
+
+    if (isVoidElement && hasNoSubNodes) {
         renderingChildren = [...attrs, ' />'];
     } else {
         renderingChildren = [
