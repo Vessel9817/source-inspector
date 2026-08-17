@@ -310,8 +310,8 @@ function _addNode(
                     ? cNode?.xmlVersion ?? '1.0'
                     : '1.0',
                 xmlEncoding: BROWSER === 'chrome'
-                    ? cNode?.xmlEncoding
-                    : undefined,
+                    ? cNode?.xmlEncoding ?? null
+                    : null,
                 xmlStandalone: BROWSER === 'chrome'
                     ? cNode?.xmlStandalone
                     : undefined

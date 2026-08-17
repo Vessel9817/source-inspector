@@ -56,7 +56,7 @@ declare global {
         /** @deprecated Not supported in Firefox */
         xmlVersion?: string;
         /** @deprecated Not supported in Firefox */
-        xmlEncoding?: string;
+        xmlEncoding: string | null;
         /** @deprecated Not supported in Firefox */
         xmlStandalone?: boolean;
     }

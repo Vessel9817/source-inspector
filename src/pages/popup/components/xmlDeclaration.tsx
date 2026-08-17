@@ -4,7 +4,7 @@ import { VirtualAttribute } from './attribute';
 
 export interface SharedValues {
     xmlVersion: string;
-    xmlEncoding?: string;
+    xmlEncoding: string | null;
     xmlStandalone?: boolean;
 }
 
@@ -28,7 +28,7 @@ export function VirtualXmlDeclaration(
                 nodeValue={props.xmlVersion}
             />
             {
-                props.xmlEncoding === undefined
+                props.xmlEncoding === null
                     ? undefined
                     : <VirtualAttribute
                         parentId={props.id}
