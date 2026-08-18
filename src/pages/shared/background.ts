@@ -24,16 +24,3 @@ export async function testInjectionUri(uri: string): Promise<boolean> {
     // Manifest requirements: "optional_permissions": [ "tabs", "management" ]
     return /^https?:\/\//i.test(uri);
 }
-
-/**
- * Returns the active tab ID, or `undefined` if none
- * @returns The last active tab ID
- */
-export async function getActiveTabId(): Promise<number | undefined> {
-    const [tab] = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true
-    });
-
-    return tab.id;
-}
