@@ -1,4 +1,5 @@
 import React, { ReactNode, useContext } from 'react';
+import { IS_PRODUCTION } from '../shared';
 import type { StoredVirtualNodeProps } from './base';
 import {
     type StoredVirtualAttributeProps,
@@ -41,7 +42,7 @@ const VOID_ELEMENTS: Readonly<Set<string>> = new Set([
 
 function renderDebug(id: Readonly<string>): ReactNode {
     return (
-        process.env.NODE_ENV !== 'production' && (
+        !IS_PRODUCTION && (
             <p className='debug node'>{id}</p>
         )
     );

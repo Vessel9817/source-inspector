@@ -3,9 +3,14 @@
 import type { BrowserName } from '../../../webpack/validators';
 
 /**
+ * Used to differentiate between multi-environment configurations
+ */
+export const NODE_ENV = process.env.NODE_ENV;
+
+/**
  * `true` when the extension is run in production mode, `false` otherwise
  */
-export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+export const IS_PRODUCTION = NODE_ENV === 'production';
 
 /**
  * The browser name this extension was built for.
