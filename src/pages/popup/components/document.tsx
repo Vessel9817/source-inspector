@@ -11,7 +11,7 @@ interface SharedValues {
     prevSiblingId?: undefined;
     documentURI: string;
     contentType: string;
-
+    isXML: boolean;
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlEncoding: string | null;
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
@@ -32,6 +32,8 @@ export function validateUpdateDocumentMsg(
     assert.ok(typeof msg.documentURI === 'string');
     assert.ok('contentType' in msg);
     assert.ok(typeof msg.contentType === 'string');
+    assert.ok('isXML' in msg);
+    assert.ok(typeof msg.isXML === 'boolean');
     assert.ok('xmlStandalone' in msg);
     assert.ok(typeof msg.xmlStandalone === 'boolean');
 
@@ -54,6 +56,7 @@ export function VirtualDocument(props: VirtualDocumentProps): ReactNode {
                 nodeType={props.nodeType}
                 nodeName={props.nodeName}
                 nodeValue={props.nodeValue}
+                isXML={props.isXML}
                 xmlEncoding={props.xmlEncoding}
                 xmlStandalone={props.xmlStandalone}
             />

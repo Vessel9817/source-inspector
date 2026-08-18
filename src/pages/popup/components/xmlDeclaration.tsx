@@ -3,7 +3,10 @@ import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
 import { VirtualAttribute } from './attribute';
 
 export interface SharedValues {
+    isXML: boolean;
+    /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlEncoding: string | null;
+    /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlStandalone: boolean;
 }
 

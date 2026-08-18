@@ -52,7 +52,7 @@ declare global {
         nodeType: Node['DOCUMENT_NODE'];
         nodeName: '#document';
         nodeValue: null;
-
+        isXML: boolean;
         /** @deprecated Not supported in Firefox */
         xmlEncoding: string | null;
         /** @deprecated Not supported in Firefox */
