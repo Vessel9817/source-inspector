@@ -10,7 +10,6 @@ interface SharedValues {
     nodeValue: null;
     prevSiblingId?: undefined;
     documentURI: string;
-    contentType: string;
     isXML: boolean;
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlEncoding: string | null;
@@ -30,8 +29,6 @@ export function validateUpdateDocumentMsg(
     assert.ok(msg.prevSiblingId === undefined);
     assert.ok('documentURI' in msg);
     assert.ok(typeof msg.documentURI === 'string');
-    assert.ok('contentType' in msg);
-    assert.ok(typeof msg.contentType === 'string');
     assert.ok('isXML' in msg);
     assert.ok(typeof msg.isXML === 'boolean');
     assert.ok('xmlStandalone' in msg);
@@ -47,21 +44,17 @@ export type StoredVirtualDocumentProps = StoredVirtualNodeProps & SharedValues;
 export type VirtualDocumentProps = NonStoredProps<StoredVirtualDocumentProps>;
 
 export function VirtualDocument(props: VirtualDocumentProps): ReactNode {
-    let xmlDecl: ReactNode = undefined;
-
-    if (props.contentType === 'application/xhtml+xml') {
-        xmlDecl = (
-            <VirtualXmlDeclaration
-                id={`${props.id}-xmldecl`}
-                nodeType={props.nodeType}
-                nodeName={props.nodeName}
-                nodeValue={props.nodeValue}
-                isXML={props.isXML}
-                xmlEncoding={props.xmlEncoding}
-                xmlStandalone={props.xmlStandalone}
-            />
-        );
-    }
+    const xmlDecl = props.isXML
+        ? <VirtualXmlDeclaration
+            id={`${props.id}-xmldecl`}
+            nodeType={props.nodeType}
+            nodeName={props.nodeName}
+            nodeValue={props.nodeValue}
+            isXML={props.isXML}
+            xmlEncoding={props.xmlEncoding}
+            xmlStandalone={props.xmlStandalone}
+        />
+        : undefined;
 
     // For security, don't change the rel attribute
     // See: https://stackoverflow.com/a/17711167/8387760

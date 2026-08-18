@@ -214,7 +214,6 @@ function renderDocument(
                 nodeName={node.nodeName}
                 nodeValue={node.nodeValue}
                 documentURI={node.documentURI}
-                contentType={node.contentType}
                 isXML={node.isXML}
                 xmlEncoding={node.xmlEncoding}
                 xmlStandalone={node.xmlStandalone}
