@@ -294,6 +294,10 @@ function _addNode(
         case Node.DOCUMENT_NODE: {
             const parentId =
                 parentNode == null ? undefined : _getId(parentNode);
+            const standaloneSupported = BROWSER === 'chrome'
+                // In case deprecated property is removed
+                && 'xmlStandalone' in cNode
+                && typeof cNode.xmlStandalone === 'boolean';
             const msg: UpdateDocumentMsg = {
                 type: 'update',
                 msgIndex: _msgIndex++,
@@ -305,7 +309,7 @@ function _addNode(
                 documentURI: cNode.documentURI,
                 isXML: document.createElement('foo').tagName !== 'FOO',
                 characterSet: cNode.characterSet,
-                xmlStandalone: BROWSER === 'chrome'
+                xmlStandalone: standaloneSupported
                     ? cNode?.xmlStandalone ?? false
                     : false
             };
