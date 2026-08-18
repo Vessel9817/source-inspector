@@ -15,7 +15,7 @@ interface SharedValues {
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlEncoding: string | null;
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
-    xmlStandalone?: boolean;
+    xmlStandalone: boolean;
 }
 
 export type UpdateDocumentMsg = BaseUpdateMsg & SharedValues;
@@ -32,12 +32,11 @@ export function validateUpdateDocumentMsg(
     assert.ok(typeof msg.documentURI === 'string');
     assert.ok('contentType' in msg);
     assert.ok(typeof msg.contentType === 'string');
+    assert.ok('xmlStandalone' in msg);
+    assert.ok(typeof msg.xmlStandalone === 'boolean');
 
     if ('xmlEncoding' in msg && msg.xmlEncoding !== null) {
         assert.ok(typeof msg.xmlEncoding === 'string');
-    }
-    if ('xmlStandalone' in msg) {
-        assert.ok(['undefined', 'boolean'].includes(typeof msg.xmlStandalone));
     }
 }
 

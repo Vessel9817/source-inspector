@@ -308,8 +308,8 @@ function _addNode(
                     ? cNode?.xmlEncoding ?? null
                     : null,
                 xmlStandalone: BROWSER === 'chrome'
-                    ? cNode?.xmlStandalone
-                    : undefined
+                    ? cNode?.xmlStandalone ?? false
+                    : false
             };
 
             _sendMessage(msg);

@@ -4,7 +4,7 @@ import { VirtualAttribute } from './attribute';
 
 export interface SharedValues {
     xmlEncoding: string | null;
-    xmlStandalone?: boolean;
+    xmlStandalone: boolean;
 }
 
 export type StoredVirtualXmlDeclarationProps = StoredVirtualNodeProps
@@ -26,6 +26,13 @@ export function VirtualXmlDeclaration(
                 nodeName={'xmlVersion'}
                 nodeValue={'1.0'}
             />
+            <VirtualAttribute
+                parentId={props.id}
+                id={`${props.id}-xmlStandalone`}
+                nodeType={Node.ATTRIBUTE_NODE}
+                nodeName={'xmlStandalone'}
+                nodeValue={props.xmlStandalone ? 'yes' : 'no'}
+            />
             {
                 props.xmlEncoding === null
                     ? undefined
@@ -35,19 +42,6 @@ export function VirtualXmlDeclaration(
                         nodeType={Node.ATTRIBUTE_NODE}
                         nodeName={'xmlEncoding'}
                         nodeValue={props.xmlEncoding}
-                    />
-            }
-            {
-                props.xmlStandalone === undefined
-                    ? undefined
-                    : <VirtualAttribute
-                        parentId={props.id}
-                        id={`${props.id}-xmlStandalone`}
-                        nodeType={Node.ATTRIBUTE_NODE}
-                        nodeName={'xmlStandalone'}
-                        // Should be a boolean, but is technically acceptable as a string
-                        // https://developer.mozilla.org/en-US/docs/Glossary/Boolean/HTML
-                        nodeValue={props.xmlStandalone.toString()}
                     />
             }
             {' ?>'}

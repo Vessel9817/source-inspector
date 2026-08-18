@@ -56,7 +56,7 @@ declare global {
         /** @deprecated Not supported in Firefox */
         xmlEncoding: string | null;
         /** @deprecated Not supported in Firefox */
-        xmlStandalone?: boolean;
+        xmlStandalone: boolean;
     }
 
     // Extends existing type
