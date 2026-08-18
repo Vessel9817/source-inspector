@@ -304,9 +304,7 @@ function _addNode(
                 nodeValue: cNode.nodeValue,
                 documentURI: cNode.documentURI,
                 isXML: document.createElement('foo').tagName !== 'FOO',
-                xmlEncoding: BROWSER === 'chrome'
-                    ? cNode?.xmlEncoding ?? null
-                    : null,
+                characterSet: cNode.characterSet,
                 xmlStandalone: BROWSER === 'chrome'
                     ? cNode?.xmlStandalone ?? false
                     : false

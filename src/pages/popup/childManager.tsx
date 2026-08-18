@@ -215,7 +215,7 @@ function renderDocument(
                 nodeValue={node.nodeValue}
                 documentURI={node.documentURI}
                 isXML={node.isXML}
-                xmlEncoding={node.xmlEncoding}
+                characterSet={node.characterSet}
                 xmlStandalone={node.xmlStandalone}
             >
                 {renderChildren(node)}

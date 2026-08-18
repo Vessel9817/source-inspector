@@ -53,8 +53,6 @@ declare global {
         nodeName: '#document';
         nodeValue: null;
         /** @deprecated Not supported in Firefox */
-        xmlEncoding: string | null;
-        /** @deprecated Not supported in Firefox */
         xmlStandalone: boolean;
     }
 
