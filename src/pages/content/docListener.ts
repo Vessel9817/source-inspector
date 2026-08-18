@@ -304,11 +304,6 @@ function _addNode(
                 nodeValue: cNode.nodeValue,
                 documentURI: cNode.documentURI,
                 contentType: cNode.contentType,
-                // Firefox always returns '1.0', and the spec assumes '1.0' if not present
-                // https://developer.mozilla.org/en-US/docs/Web/API/Document/xmlVersion
-                xmlVersion: BROWSER === 'chrome'
-                    ? cNode?.xmlVersion ?? '1.0'
-                    : '1.0',
                 xmlEncoding: BROWSER === 'chrome'
                     ? cNode?.xmlEncoding ?? null
                     : null,

@@ -13,8 +13,6 @@ interface SharedValues {
     contentType: string;
 
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
-    xmlVersion: string;
-    /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlEncoding: string | null;
     /** @deprecated Not supported in Firefox; deprecated in Chrome */
     xmlStandalone?: boolean;
@@ -34,8 +32,6 @@ export function validateUpdateDocumentMsg(
     assert.ok(typeof msg.documentURI === 'string');
     assert.ok('contentType' in msg);
     assert.ok(typeof msg.contentType === 'string');
-    assert.ok('xmlVersion' in msg);
-    assert.ok(typeof msg.xmlVersion === 'string');
 
     if ('xmlEncoding' in msg && msg.xmlEncoding !== null) {
         assert.ok(typeof msg.xmlEncoding === 'string');
@@ -59,7 +55,6 @@ export function VirtualDocument(props: VirtualDocumentProps): ReactNode {
                 nodeType={props.nodeType}
                 nodeName={props.nodeName}
                 nodeValue={props.nodeValue}
-                xmlVersion={props.xmlVersion}
                 xmlEncoding={props.xmlEncoding}
                 xmlStandalone={props.xmlStandalone}
             />

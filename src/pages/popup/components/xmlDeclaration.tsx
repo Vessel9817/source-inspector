@@ -3,7 +3,6 @@ import { NoChildren, NonStoredProps, StoredVirtualNodeProps } from '../base';
 import { VirtualAttribute } from './attribute';
 
 export interface SharedValues {
-    xmlVersion: string;
     xmlEncoding: string | null;
     xmlStandalone?: boolean;
 }
@@ -25,7 +24,7 @@ export function VirtualXmlDeclaration(
                 id={`${props.id}-xmlVersion`}
                 nodeType={Node.ATTRIBUTE_NODE}
                 nodeName={'xmlVersion'}
-                nodeValue={props.xmlVersion}
+                nodeValue={'1.0'}
             />
             {
                 props.xmlEncoding === null
