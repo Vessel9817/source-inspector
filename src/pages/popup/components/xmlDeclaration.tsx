@@ -29,13 +29,6 @@ export function VirtualXmlDeclaration(
                 nodeName={'xmlVersion'}
                 nodeValue={'1.0'}
             />
-            <VirtualAttribute
-                parentId={props.id}
-                id={`${props.id}-xmlStandalone`}
-                nodeType={Node.ATTRIBUTE_NODE}
-                nodeName={'xmlStandalone'}
-                nodeValue={props.xmlStandalone ? 'yes' : 'no'}
-            />
             {
                 props.xmlEncoding === null
                     ? undefined
@@ -47,6 +40,13 @@ export function VirtualXmlDeclaration(
                         nodeValue={props.xmlEncoding}
                     />
             }
+            <VirtualAttribute
+                parentId={props.id}
+                id={`${props.id}-xmlStandalone`}
+                nodeType={Node.ATTRIBUTE_NODE}
+                nodeName={'xmlStandalone'}
+                nodeValue={props.xmlStandalone ? 'yes' : 'no'}
+            />
             {' ?>'}
         </div>
     );
