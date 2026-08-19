@@ -33,6 +33,6 @@
         "rootDir": ".",
         "outDir": "dist/tsc" // See also: https://stackoverflow.com/a/48798945
     },
-    "include": ["src", "webpack"],
+    "include": ["src", "test", "webpack"],
     "exclude": ["dist", "node_modules"]
 }

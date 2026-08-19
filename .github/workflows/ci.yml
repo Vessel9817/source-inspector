@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install node modules
-        run: npm ci
+        run: npm ci --no-fund
       - name: Run tsc
         run: npm run tsc
   # Checks for dependency conflicts that `npm ci` would miss
@@ -56,6 +56,24 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install node modules
-        run: npm ci
+        run: npm ci --no-fund
       - name: Build extension
         run: node --run=build -- ${{ matrix.browser }} ${{ matrix.mode }}
+  # Runs tests
+  test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.x]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install node modules
+        run: npm ci --no-fund
+      - name: Run tests
+        run: npm test

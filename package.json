@@ -11,7 +11,7 @@
         "url": "git+https://github.com/Vessel9817/source-inspector.git"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "tsx --test \"test/**/*.spec.ts\"",
         "build": "tsx webpack/cli/index.ts build",
         "start-helper": "tsx webpack/server/index.ts",
         "start:chrome:dev": "nodemon --config nodemon/chrome/nodemon.dev.json",
