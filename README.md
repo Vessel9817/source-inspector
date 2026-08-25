@@ -131,8 +131,6 @@ Basically, it's run alongside the page and has access to the page's source.
 If our extension wasn't trying to be undetectable, we could use this to modify
 the page, such as with ad blocking.
 
-<!-- ### Source Inspection Flow -->
-
 ## Design Flaws
 
 Below are some caveats this extension has that don't have immediate fixes:
