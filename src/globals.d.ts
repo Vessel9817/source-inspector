@@ -52,8 +52,6 @@ declare global {
         nodeType: Node['DOCUMENT_NODE'];
         nodeName: '#document';
         nodeValue: null;
-        /** @deprecated Not supported in Firefox */
-        xmlStandalone: boolean;
     }
 
     // Extends existing type

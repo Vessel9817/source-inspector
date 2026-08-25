@@ -146,9 +146,7 @@ Below are some caveats this extension has that don't have immediate fixes:
 - [XML declarations][xml-declarations] aren't completely accurate, as in order
   to use properties that aren't deprecated or obsolete, we estimate some values
   based on similar, standardized properties.
-- Deprecated HTML properties make certain information not cross-browser compatible.
-  For instance, [Document.xmlStandalone][xmlStandalone], which we use for
-  [XML declarations][xml-declarations], is unavailable in Firefox.
+<!-- - Deprecated HTML properties make certain information not cross-browser compatible. -->
 - We can't currently catch every attribute event. Because `MutationObserver`s
   run at the microtask level, and because attribute `MutationRecord`s don't
   include the new attribute value, we don't yet have a way to get the values
@@ -195,7 +193,6 @@ and its dependencies.
 [compromised-renderers]: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging
 [compromised-renderers-more]: https://issuetracker.google.com/issues/311491887
 [xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
-[xmlstandalone]: https://developer.mozilla.org/en-US/docs/Web/API/Document#document.xmlstandalone
 [boilerplate]: https://github.com/Anonymous-Humanoid/chromium-extension-boilerplate
 [flaticon]: https://www.flaticon.com/free-icons/code-review
 [license-image]: https://img.shields.io/npm/l/markdownlint.svg

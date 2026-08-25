@@ -5,8 +5,6 @@ import { VirtualAttribute } from './attribute';
 export interface SharedValues {
     isXML: boolean;
     xmlEncoding: string | null;
-    /** @deprecated Not supported in Firefox; deprecated in Chrome */
-    xmlStandalone: boolean;
 }
 
 export type StoredVirtualXmlDeclarationProps = StoredVirtualNodeProps
@@ -39,13 +37,6 @@ export function VirtualXmlDeclaration(
                         nodeValue={props.xmlEncoding}
                     />
             }
-            <VirtualAttribute
-                parentId={props.id}
-                id={`${props.id}-xmlStandalone`}
-                nodeType={Node.ATTRIBUTE_NODE}
-                nodeName={'xmlStandalone'}
-                nodeValue={props.xmlStandalone ? 'yes' : 'no'}
-            />
             {' ?>'}
         </div>
     );

@@ -216,7 +216,6 @@ function renderDocument(
                 documentURI={node.documentURI}
                 isXML={node.isXML}
                 characterSet={node.characterSet}
-                xmlStandalone={node.xmlStandalone}
             >
                 {renderChildren(node)}
             </VirtualDocument>

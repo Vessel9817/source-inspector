@@ -12,8 +12,6 @@ interface SharedValues {
     documentURI: string;
     isXML: boolean;
     characterSet: string;
-    /** @deprecated Not supported in Firefox; deprecated in Chrome */
-    xmlStandalone: boolean;
 }
 
 export type UpdateDocumentMsg = BaseUpdateMsg & SharedValues;
@@ -32,8 +30,6 @@ export function validateUpdateDocumentMsg(
     assert.ok(typeof msg.isXML === 'boolean');
     assert.ok('characterSet' in msg);
     assert.ok(typeof msg.characterSet === 'string');
-    assert.ok('xmlStandalone' in msg);
-    assert.ok(typeof msg.xmlStandalone === 'boolean');
 }
 
 export type StoredVirtualDocumentProps = StoredVirtualNodeProps & SharedValues;
@@ -49,7 +45,6 @@ export function VirtualDocument(props: VirtualDocumentProps): ReactNode {
             nodeValue={props.nodeValue}
             isXML={props.isXML}
             xmlEncoding={props.characterSet}
-            xmlStandalone={props.xmlStandalone}
         />
         : undefined;
 
