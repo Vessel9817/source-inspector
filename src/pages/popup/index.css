@@ -2,25 +2,54 @@
 * {
     font-family: Consolas, 'Courier New', monospace;
     font-size: 12px;
-    color: #389cff;
+    color: var(--light-mode, var(--general-light)) var(--dark-mode, var(--general-dark));
 }
 
 :root {
-    color-scheme: dark;
-    /*
     color-scheme: light dark;
-    color: light-dark();
-    */
+    --light-mode: initial;
+    --dark-mode: ;
     overflow: scroll;
+
+    /* Colors */
+    --general-light: #c76300;
+    --general-dark: #389cff;
+    --bg-light: white;
+    --bg-dark: black;
+    --a-light: red;
+    --a-dark: aqua;
+    --debug-light: #00d100;
+    --debug-dark: #ff2eff;
+    --text-light: black;
+    --text-dark: white;
+    --text-bg-light: #d0b0b0;
+    --text-bg-dark: darkslategray;
+    --attr-light: #783114;
+    --attr-dark: skyblue;
+    --string-light: #055aff;
+    --string-dark: orange;
+    --comment-light: #474747;
+    --comment-dark: #b8b8b8;
+    --doctype-light: #666666;
+    --doctype-dark: #999999;
+    --document-light: black;
+    --document-dark: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-mode: ;
+        --dark-mode: initial;
+    }
 }
 
 body {
-    background-color: black;
+    background-color: var(--light-mode, var(--bg-light)) var(--dark-mode, var(--bg-dark));
 }
 
 a {
     display: inline;
-    color: aqua;
+    color: var(--light-mode, var(--a-light)) var(--dark-mode, var(--a-dark));
     text-decoration: underline;
 }
 
@@ -39,35 +68,35 @@ ul {
 }
 
 .debug {
-    color: #ff2eff;
+    color: var(--light-mode, var(--debug-light)) var(--dark-mode, var(--debug-dark));
 }
 
 .text {
     display: inline;
-    color: white;
-    background-color: darkslategray;
+    color: var(--light-mode, var(--text-light)) var(--dark-mode, var(--text-dark));
+    background-color: var(--light-mode, var(--text-bg-light)) var(--dark-mode, var(--text-bg-dark));
 }
 
 .attr {
     display: inline;
-    color: skyblue;
+    color: var(--light-mode, var(--attr-light)) var(--dark-mode, var(--attr-dark));
 }
 
 .string {
     display: inline;
-    color: orange;
+    color: var(--light-mode, var(--string-light)) var(--dark-mode, var(--string-dark));
 }
 
 .comment {
-    color: #b8b8b8;
+    color: var(--light-mode, var(--comment-light)) var(--dark-mode, var(--comment-dark));
 }
 
 .doctype {
-    color: #999999;
+    color: var(--light-mode, var(--doctype-light)) var(--dark-mode, var(--doctype-dark));
 }
 
 .document {
-    color: white;
+    color: var(--light-mode, var(--document-light)) var(--dark-mode, var(--document-dark));
 }
 
 /* Top-level formatting */

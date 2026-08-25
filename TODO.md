@@ -29,7 +29,6 @@
 - Rethink debug view (possibly a test-id field?)
 - Conform to a11y standards
   - Add the ability to select and navigate between elements in the inspector
-  - Add a light mode toggle
 - Add an [error boundary][error-boundary]
   for improved debugging UX. See also: [createRoot options][createRoot]
 - Tell the user when a protected page cannot be inspected
@@ -37,6 +36,7 @@
 
 ## Backlog Priorities
 
+- Add a light mode button toggle (override `color-scheme`)
 - Configure React source map generation
   (`React.createElement` statements are ugly)
 - Integrate pre-commit
