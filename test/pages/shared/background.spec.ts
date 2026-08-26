@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { describe, it } from 'node:test';
+import { afterEach, describe, it } from 'node:test';
 import * as background from '../../../src/pages/shared/background';
 
 describe('background commons', () => {
@@ -100,6 +100,11 @@ describe('background commons', () => {
                 await background.testInjectionUri('file:///C:/test.html'),
                 true
             );
+        });
+
+        afterEach(() => {
+            Reflect.deleteProperty(globalThis, 'chrome');
+            Reflect.deleteProperty(globalThis, 'browser');
         });
     });
 });

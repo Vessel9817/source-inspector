@@ -4,6 +4,8 @@
  * circumventing debugger detection.
  */
 
+import { v4 as uuid } from 'uuid';
+import { TIMEOUT_MS } from '../popup/background';
 import type {
     ConnectMsg,
     PopupMsg,
@@ -17,9 +19,6 @@ import type {
     UpdateProcessingInstructionMsg,
     UpdateTextMsg
 } from '../popup/msgs';
-import { v4 as uuid } from 'uuid';
-import { TIMEOUT_MS } from '../popup/background';
-import { BROWSER } from '../shared';
 
 interface PartialNodeMutationRecord {
     readonly type: 'childList';

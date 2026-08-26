@@ -1,5 +1,4 @@
-// Don't import anything except types from webpack directory,
-// IT WILL BREAK THE BUNDLE
+// Be VERY intentional about importing from outside src/
 import type { BrowserName } from '../../../webpack/validators';
 
 /**
