@@ -15,6 +15,7 @@
         ],
         "noImplicitAny": true,
         "allowJs": true,
+        "checkJs": true,
         "allowImportingTsExtensions": true,
         "rewriteRelativeImportExtensions": true,
         "allowSyntheticDefaultImports": true,

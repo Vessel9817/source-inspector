@@ -10,6 +10,7 @@
 /coverage
 /tmp
 /temp
+*.old
 
 # Build outputs
 /dist

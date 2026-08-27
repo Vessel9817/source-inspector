@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import semver from 'semver';
 
-const ALLOWED_BROWSERS = ['chrome', 'firefox'] as const;
-const ALLOWED_ENVS = ['development', 'production'] as const;
+export const ALLOWED_BROWSERS = ['chrome', 'firefox'] as const;
+export const ALLOWED_ENVS = ['development', 'production'] as const;
 const MAX_PORT = 65535;
 
 export type BrowserName = typeof ALLOWED_BROWSERS[number];

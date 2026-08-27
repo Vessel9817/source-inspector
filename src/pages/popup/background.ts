@@ -121,7 +121,7 @@ class Popup {
             }, TIMEOUT_MS);
         }
 
-        // Opening popup (requires extension split to run in incognito)
+        // Opening popup
         chrome.windows.create(
             {
                 url: chrome.runtime.getURL('popup/index.html'),
