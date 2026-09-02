@@ -50,7 +50,7 @@
         "postcss-loader": "^8.2.1",
         "sanitize-filename": "^1.6.4",
         "sass": "^1.103.1",
-        "sass-loader": "^17.0.0",
+        "sass-loader": "^17.0.1",
         "semver": "^7.8.5",
         "source-map": "^0.8.0",
         "source-map-loader": "^5.0.0",
