@@ -14,12 +14,8 @@ export type Manifest =
     | chrome.runtime.Manifest
     | browser._manifest.WebExtensionManifest;
 
-type Optional<T> = {
-    [P in keyof T]?: undefined extends T[P] ? T[P] : never;
-}
-
 // Chrome and Firefox disagree on the use of certain properties
-type SharedManifestProps = Optional<Omit<
+type SharedManifestProps = Partial<Omit<
     chrome.runtime.ManifestV3 & browser._manifest.WebExtensionManifest,
         | 'author'
         | 'content_security_policy'
