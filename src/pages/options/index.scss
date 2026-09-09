@@ -1,0 +1,9 @@
+@use '../shared/index.css';
+
+:root {
+    /* Colors */
+    --text-light: black;
+    --text-dark: white;
+
+    color: var(--light-mode, var(--text-light)) var(--dark-mode, var(--text-dark));
+}

@@ -60,6 +60,13 @@ const webpackConfig: webpack.Configuration = {
                 )
             ],
             filename: path.join('background', 'index.js')
+        },
+        options: {
+            import: [
+                path.join(PROJECT_ROOT, 'src', 'pages', 'options', 'index.tsx')
+            ],
+            // HTMLWebpackPlugin will escape backslashes, which leads to invalid paths
+            filename: path.join('options', 'index.js').replaceAll('\\', '/')
         }
     },
     output: {

@@ -30,6 +30,20 @@ export const plugins = [
         minify: 'auto'
     }),
 
+    // Packaging options entry point
+    new HtmlWebpackPlugin({
+        template: path.join(
+            PROJECT_ROOT,
+            'src',
+            'pages',
+            'options',
+            'index.html'
+        ),
+        filename: path.join('options', 'index.html'),
+        chunks: ['options'],
+        minify: 'auto'
+    }),
+
     // Manually creating (unlinked) source map
     new CreateHtmlSourceMapWebpackPlugin(),
 
