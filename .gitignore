@@ -6,7 +6,8 @@
 # Dependencies
 /node_modules
 
-# Testing
+# Development
+*.psd
 /coverage
 /tmp
 /temp

@@ -22,7 +22,7 @@ type SharedManifestProps = Partial<Omit<
 >>
 
 // Collecting icons
-const VALID_SIZES = ['16', '32', '48', '128'];
+const VALID_SIZES = ['16', '32', '48', '128', '512'];
 const RELATIVE_ICON_PATHS = [
     ...new Map<string, [string, string]>(
         VALID_SIZES.map((size) => [
