@@ -25,8 +25,8 @@ export type NodeState = { [id: string]: StoredVirtualNodeProps };
 export const NodeContext = createContext<NodeState>({});
 
 interface PopupProps {
-    rootId: string | undefined;
-    nodes: NodeState;
+    readonly rootId: string | undefined;
+    readonly nodes: Readonly<NodeState>;
 }
 
 /**

@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import { LICENSE } from '../assets/license';
 import { IS_DEV_MODE } from '../env';
 
-export const resolveExts = ['.css'];
+export const resolveExts = ['.css', '.sass', '.scss'];
 
 export const moduleRules = [
     {

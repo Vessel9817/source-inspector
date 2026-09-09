@@ -30,7 +30,6 @@ const webpackConfig: webpack.Configuration = {
               ]
           },
     entry: {
-        // Content script
         content: {
             import: [
                 path.join(
@@ -43,8 +42,6 @@ const webpackConfig: webpack.Configuration = {
             ],
             filename: path.join('content', 'docListener.js')
         },
-
-        // Popup
         popup: {
             import: [
                 path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
@@ -52,8 +49,6 @@ const webpackConfig: webpack.Configuration = {
             // HTMLWebpackPlugin will escape backslashes, which leads to invalid paths
             filename: path.join('popup', 'index.js').replaceAll('\\', '/')
         },
-
-        // Background
         background: {
             import: [
                 path.join(

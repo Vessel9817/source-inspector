@@ -1,0 +1,28 @@
+/* General formatting */
+* {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--light-mode, var(--general-light)) var(--dark-mode, var(--general-dark));
+}
+
+:root {
+    color-scheme: light dark;
+    --light-mode: initial;
+    --dark-mode: ;
+    overflow: scroll;
+
+    /* Colors */
+    --bg-light: white;
+    --bg-dark: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-mode: ;
+        --dark-mode: initial;
+    }
+}
+
+body {
+    background-color: var(--light-mode, var(--bg-light)) var(--dark-mode, var(--bg-dark));
+}

@@ -54,7 +54,8 @@ const manifestBase: Omit<
 const shared: SharedManifestProps = {
     icons: MANIFEST_ICON_PATHS,
     default_locale: DEFAULT_LOCALE,
-    permissions: ['scripting', 'activeTab']
+    permissions: ['scripting', 'activeTab'],
+    incognito: 'spanning' // Split config isn't available in MV2
 };
 
 // Generating manifest file
@@ -66,7 +67,6 @@ switch (BROWSER) {
             ...manifestBase,
             ...shared,
             manifest_version: 3,
-            incognito: 'split', // We don't store data, so this is an unnecessary security improvement
             offline_enabled: true,
             background: {
                 service_worker: path.join('background', 'index.js')
@@ -84,7 +84,6 @@ switch (BROWSER) {
             ...manifestBase,
             ...shared,
             manifest_version: 2,
-            incognito: 'spanning', // Split config isn't available in MV2
             background: {
                 scripts: [path.join('background', 'index.js')],
                 persistent: false

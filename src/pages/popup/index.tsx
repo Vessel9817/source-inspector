@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { PopupManager } from './stateManager';
 
 // CSS
-import './index.css';
+import './index.scss';
 
 const container = document.getElementById('app-container');
 
@@ -46,4 +46,8 @@ if (container != null) {
     };
 
     await render();
+}
+else {
+    // Shouldn't occur
+    throw new Error('App container missing');
 }
