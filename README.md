@@ -180,6 +180,7 @@ and its dependencies.
 - [Code review icons][flaticon] created by Freepik - Flaticon
 - The community members involved in contribution and translation
 
+[license-image]: https://raw.githubusercontent.com/Vessel9817/source-inspector/refs/heads/main/license.svg
 [ci-badge]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml/badge.svg
 [ci-workflow]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml
 [node-types]: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
@@ -193,4 +194,3 @@ and its dependencies.
 [xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
 [boilerplate]: https://github.com/Anonymous-Humanoid/chromium-extension-boilerplate
 [flaticon]: https://www.flaticon.com/free-icons/code-review
-[license-image]: https://img.shields.io/npm/l/markdownlint.svg
