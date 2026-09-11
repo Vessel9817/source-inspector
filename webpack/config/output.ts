@@ -24,6 +24,8 @@ export function filenameTemplate(ext: string): TemplatePathFn<PathDataChunk> {
 }
 
 export const htmlFilenameTemplate: TemplatePathFn<PathDataChunk> = (pathData) => {
+    // Note: Folders and files should not start with underscore: reserved by Chrome
+
     assert.ok(pathData.filename, 'HTML chunk missing filename');
 
     const filepath = pathData.filename;
@@ -32,7 +34,5 @@ export const htmlFilenameTemplate: TemplatePathFn<PathDataChunk> = (pathData) =>
     const filename = path.basename(filepath);
     const filedir = path.basename(path.dirname(filepath));
 
-    console.log(pathData.filename);
-
-    return path.join(filedir, filename);
+    return path.join(filedir, filename).replace(/^_+/g, '');
 };
