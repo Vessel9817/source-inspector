@@ -31,8 +31,12 @@ export const htmlFilenameTemplate: TemplatePathFn<PathDataChunk> = (pathData) =>
     const filepath = pathData.filename;
 
     // If path is /a/b/c/file.html, return c/file.html
-    const filename = path.basename(filepath);
+    let filename = path.basename(filepath);
     const filedir = path.basename(path.dirname(filepath));
+
+    if (!filename.endsWith('.html')) {
+        filename += '.html';
+    }
 
     return path.join(filedir, filename).replace(/^_+/g, '');
 };
