@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import path from 'node:path';
 import { PathDataChunk, type AssetInfo, type PathData } from 'webpack';
 
@@ -8,35 +7,26 @@ type TemplatePathFn<T extends PathData = PathData> = (
 ) => string;
 
 export function filenameTemplate(ext: string): TemplatePathFn<PathDataChunk> {
-    // Note: Folders and files should not start with underscore: reserved by Chrome
-
     return (pathData) => {
+        let filename: string;
+
         if (pathData.filename) {
             // Initial chunk
             // https://webpack.js.org/concepts/under-the-hood/#chunks
-            return pathData.filename.replace(/^_+/g, '') + ext;
-        }
 
-        const filename = pathData.chunk.id?.toString() + ext;
+            const dirname = path.dirname(pathData.filename);
+
+            filename = path.basename(pathData.filename);
+            // Files should not start with underscore: reserved by Chrome
+            filename = path.join(dirname, filename.replace(/^_+/g, '') + ext);
+        }
+        else {
+            // Non-initial chunk
+
+            // Files should not start with underscore: reserved by Chrome
+            filename = pathData.chunk.id?.toString().replace(/^_+/g, '') + ext;
+        }
 
         return filename;
     }
 }
-
-export const htmlFilenameTemplate: TemplatePathFn<PathDataChunk> = (pathData) => {
-    // Note: Folders and files should not start with underscore: reserved by Chrome
-
-    assert.ok(pathData.filename, 'HTML chunk missing filename');
-
-    const filepath = pathData.filename;
-
-    // If path is /a/b/c/file.html, return c/file.html
-    let filename = path.basename(filepath);
-    const filedir = path.basename(path.dirname(filepath));
-
-    if (!filename.endsWith('.html')) {
-        filename += '.html';
-    }
-
-    return path.join(filedir, filename).replace(/^_+/g, '');
-};
