@@ -83,7 +83,7 @@ class Popup {
     async #initializePopupBroker(): Promise<void> {
         const self = this;
 
-        function onWindowCreated(tabId: number): void {
+        function onWindowCreated(popupId: number): void {
             // Waiting for popup to initialize
             async function MSG_BROKER(
                 _msg: Readonly<any>,
@@ -91,16 +91,16 @@ class Popup {
             ): Promise<void> {
                 if (
                     sender.id === chrome.runtime.id &&
-                    sender.tab?.id === tabId
+                    sender.tab?.id === popupId
                 ) {
                     chrome.runtime.onMessage.removeListener(MSG_BROKER);
                     clearTimeout(TIMEOUT);
 
                     console.log(
-                        getMessage('bg_script_initialized', [tabId.toString()])
+                        getMessage('bg_popup_initialized', [popupId.toString()])
                     );
 
-                    self.#popupId = tabId;
+                    self.#popupId = popupId;
 
                     self.#tryConnecting();
                 }
@@ -115,7 +115,7 @@ class Popup {
                 console.error(
                     getMessage(
                         'bg_popup_timeout',
-                        [tabId.toString(), TIMEOUT_MS.toString()]
+                        [popupId.toString(), TIMEOUT_MS.toString()]
                     )
                 );
             }, TIMEOUT_MS);
