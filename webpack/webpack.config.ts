@@ -1,4 +1,3 @@
-import assert from 'node:assert/strict';
 import path from 'node:path';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
@@ -46,32 +45,20 @@ const webpackConfig: webpack.Configuration = {
                     'docListener.ts'
                 )
             ],
-            filename: path.join('content', 'docListener.js')
+            filename: path.join('content', 'docListener.js'),
+            html: false
         },
         popup: {
-            import: [
-                path.join(
-                    PROJECT_ROOT,
-                    'src',
-                    'pages',
-                    'popup',
-                    'index.html'
-                ),
-                path.join(
-                    PROJECT_ROOT,
-                    'src',
-                    'pages',
-                    'popup',
-                    'index.tsx'
-                ),
-                path.join(
-                    PROJECT_ROOT,
-                    'src',
-                    'pages',
-                    'popup',
-                    'index.scss'
-                )
-            ]
+            import: path.join(
+                PROJECT_ROOT,
+                'src',
+                'pages',
+                'popup',
+                'index.tsx'
+            ),
+            html: {
+                title: 'Inspector'
+            }
         },
         background: {
             import: [
@@ -83,32 +70,20 @@ const webpackConfig: webpack.Configuration = {
                     'index.ts'
                 )
             ],
-            filename: path.join('background', 'index.js')
+            filename: path.join('background', 'index.js'),
+            html: false
         },
         options: {
-            import: [
-                path.join(
-                    PROJECT_ROOT,
-                    'src',
-                    'pages',
-                    'options',
-                    'index.html'
-                ),
-                path.join(
-                    PROJECT_ROOT,
-                    'src',
-                    'pages',
-                    'options',
-                    'index.tsx'
-                ),
-                path.join(
-                    PROJECT_ROOT,
-                    'src',
-                    'pages',
-                    'options',
-                    'index.scss'
-                )
-            ]
+            import: path.join(
+                PROJECT_ROOT,
+                'src',
+                'pages',
+                'options',
+                'index.tsx'
+            ),
+            html: {
+                title: 'Options'
+            }
         }
     },
     output: {
@@ -116,6 +91,7 @@ const webpackConfig: webpack.Configuration = {
         clean: true,
         publicPath: '/',
         iife: true,
+        html: config.html.output,
         htmlFilename: config.output.htmlFilenameTemplate,
         htmlChunkFilename: config.output.filenameTemplate('.html'),
         cssFilename: config.output.filenameTemplate('.css'),

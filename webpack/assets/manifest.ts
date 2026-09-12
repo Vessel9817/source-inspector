@@ -56,7 +56,7 @@ const shared: SharedManifestProps = {
     default_locale: DEFAULT_LOCALE,
     permissions: ['scripting', 'activeTab'],
     incognito: 'spanning', // Split config isn't available in MV2
-    options_page: path.join('options', 'index.html')
+    options_page: 'options'
 };
 
 // Generating manifest file

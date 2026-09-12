@@ -5,6 +5,14 @@ import {
     HtmlBannerWebpackPlugin
 } from '../plugins';
 
+export const output: NonNullable<webpack.Configuration['output']>['html'] = {
+    meta: {
+        charset: 'UTF-8',
+        viewport: 'width=device-width, initial-scale=1'
+    },
+    // inject: 'body'
+};
+
 export const plugins: webpack.Configuration['plugins'] = [
     // Manually creating (unlinked) source map
     new CreateHtmlSourceMapWebpackPlugin(),
