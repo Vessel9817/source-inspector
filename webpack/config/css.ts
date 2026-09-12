@@ -5,7 +5,7 @@ import { IS_DEV_MODE } from '../env';
 
 export const resolveExts = ['.css', '.sass', '.scss'];
 
-export const moduleRules = [
+export const moduleRules: NonNullable<webpack.ModuleOptions['rules']> = [
     {
         // https://www.npmjs.com/package/style-loader#recommend
         test: /\.(css|scss|sass)$/,
@@ -40,7 +40,7 @@ export const moduleRules = [
     }
 ];
 
-export const plugins = [
+export const plugins: NonNullable<webpack.Configuration['plugins']> = [
     // https://www.npmjs.com/package/style-loader#recommend
     !IS_DEV_MODE && new MiniCssExtractPlugin(),
 

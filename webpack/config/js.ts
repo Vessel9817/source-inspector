@@ -7,7 +7,7 @@ import { BROWSER, NODE_ENV, PROJECT_ROOT } from '../env';
 // TS/TSX must come before JS/JSX
 export const resolveExts = ['.ts', '.tsx', '.js', '.jsx'];
 
-export const moduleRules = [
+export const moduleRules: NonNullable<webpack.ModuleOptions['rules']> = [
     {
         test: /\.tsx?$/,
         type: 'javascript/esm',
@@ -30,7 +30,7 @@ export const moduleRules = [
     }
 ];
 
-export const plugins = [
+export const plugins: NonNullable<webpack.Configuration['plugins']> = [
     // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
     new ForkTsCheckerWebpackPlugin(),
 
