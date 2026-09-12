@@ -1,49 +1,19 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import path from 'node:path';
+import type webpack from 'webpack';
 import { LICENSE } from '../assets/license';
-import { PROJECT_ROOT } from '../env';
 import {
     CreateHtmlSourceMapWebpackPlugin,
     HtmlBannerWebpackPlugin
 } from '../plugins';
 
-export const moduleRules = [
-    {
-        test: /\.html$/,
-        exclude: /node_modules/,
-        loader: 'html-loader'
-    }
-];
+export const output: NonNullable<webpack.Configuration['output']>['html'] = {
+    meta: {
+        charset: 'UTF-8',
+        viewport: 'width=device-width, initial-scale=1'
+    },
+    // inject: 'body'
+};
 
-export const plugins = [
-    // Packaging popup entry point
-    new HtmlWebpackPlugin({
-        template: path.join(
-            PROJECT_ROOT,
-            'src',
-            'pages',
-            'popup',
-            'index.html'
-        ),
-        filename: path.join('popup', 'index.html'),
-        chunks: ['popup'],
-        minify: 'auto'
-    }),
-
-    // Packaging options entry point
-    new HtmlWebpackPlugin({
-        template: path.join(
-            PROJECT_ROOT,
-            'src',
-            'pages',
-            'options',
-            'index.html'
-        ),
-        filename: path.join('options', 'index.html'),
-        chunks: ['options'],
-        minify: 'auto'
-    }),
-
+export const plugins: webpack.Configuration['plugins'] = [
     // Manually creating (unlinked) source map
     new CreateHtmlSourceMapWebpackPlugin(),
 

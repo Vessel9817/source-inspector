@@ -12,6 +12,11 @@ import {
 const webpackConfig: webpack.Configuration = {
     context: PROJECT_ROOT,
     mode: IS_DEV_MODE ? 'development' : 'production',
+    experiments: {
+        html: true,
+        css: false, // Can't use with css-loader or style-loader
+        //futureDefaults: true // For testing
+    },
     // Extensions cannot use eval
     devtool: IS_DEV_MODE
         ? 'hidden-cheap-module-source-map'
@@ -40,14 +45,20 @@ const webpackConfig: webpack.Configuration = {
                     'docListener.ts'
                 )
             ],
-            filename: path.join('content', 'docListener.js')
+            filename: path.join('content', 'docListener.js'),
+            html: false
         },
         popup: {
-            import: [
-                path.join(PROJECT_ROOT, 'src', 'pages', 'popup', 'index.tsx')
-            ],
-            // HTMLWebpackPlugin will escape backslashes, which leads to invalid paths
-            filename: path.join('popup', 'index.js').replaceAll('\\', '/')
+            import: path.join(
+                PROJECT_ROOT,
+                'src',
+                'pages',
+                'popup',
+                'index.tsx'
+            ),
+            html: {
+                title: 'Inspector'
+            }
         },
         background: {
             import: [
@@ -59,27 +70,40 @@ const webpackConfig: webpack.Configuration = {
                     'index.ts'
                 )
             ],
-            filename: path.join('background', 'index.js')
+            filename: path.join('background', 'index.js'),
+            html: false
         },
         options: {
-            import: [
-                path.join(PROJECT_ROOT, 'src', 'pages', 'options', 'index.tsx')
-            ],
-            // HTMLWebpackPlugin will escape backslashes, which leads to invalid paths
-            filename: path.join('options', 'index.js').replaceAll('\\', '/')
+            import: path.join(
+                PROJECT_ROOT,
+                'src',
+                'pages',
+                'options',
+                'index.tsx'
+            ),
+            html: {
+                title: 'Options'
+            }
         }
     },
     output: {
         path: OUTPUT_ABS_DIR,
         clean: true,
         publicPath: '/',
-        iife: true
+        iife: true,
+        html: config.html.output,
+        htmlFilename: config.output.filenameTemplate('.html'),
+        htmlChunkFilename: config.output.filenameTemplate('.html'),
+        cssFilename: config.output.filenameTemplate('.css'),
+        cssChunkFilename: config.output.filenameTemplate('.css'),
+        filename: config.output.filenameTemplate('.js'),
+        chunkFilename: config.output.filenameTemplate('.js')
     },
     resolve: {
         extensions: [
             ...config.assets.resolveExts,
-            ...config.js.resolveExts,
-            ...config.css.resolveExts
+            ...config.js.resolveExts, // JS before CSS for index import conflicts
+            ...config.css.resolveExts,
         ]
     },
     module: {
@@ -87,15 +111,13 @@ const webpackConfig: webpack.Configuration = {
             ...config.assets.moduleRules,
             ...config.css.moduleRules,
             ...config.js.moduleRules,
-            ...config.html.moduleRules
         ]
     },
     plugins: [
         new webpack.ProgressPlugin(),
         ...config.assets.plugins,
-        ...config.js.plugins,
         ...config.css.plugins,
-        ...config.html.plugins
+        ...config.js.plugins,
     ],
     watchOptions: {
         // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation

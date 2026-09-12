@@ -1,7 +1,7 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { type Tap } from 'tapable';
 import type { Compiler, WebpackPluginInstance } from 'webpack';
+import webpack from 'webpack';
 import { type RawSourceMap } from 'webpack-sources';
 import { createSourceMapSource } from './genFile';
 
@@ -51,16 +51,16 @@ export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
         compiler.hooks.compilation.tap(this.plugin, (compilation) => {
             // beforeEmit needed to supersede minimization, see:
             // https://github.com/jantimon/html-webpack-plugin?tab=readme-ov-file#events
-            HtmlWebpackPlugin.getCompilationHooks(
+            webpack.html.HtmlModulesPlugin.getCompilationHooks(
                 compilation
-            ).beforeEmit.tapAsync(this.plugin, async (data, cb) => {
+            ).transformHtml.tapAsync(this.plugin, async (html, ctx) => {
                 if (this.options.footer) {
                     const banner = '\n' + this.options.banner;
 
-                    data.html += banner;
+                    html += banner;
                 }
                 else {
-                    data.html = `${this.options.banner}\n${data.html}`;
+                    html = `${this.options.banner}\n${html}`;
 
                     if (this.options.sourceMap === true) {
                         const lines = this.options.banner.split('\n').length;
@@ -107,7 +107,7 @@ export default class HtmlBannerWebpackPlugin implements WebpackPluginInstance {
                 }
 
                 // Telling Webpack to move on
-                cb(null, data);
+                return html;
             });
         });
     }
