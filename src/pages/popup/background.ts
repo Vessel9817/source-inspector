@@ -124,7 +124,7 @@ class Popup {
         // Opening popup
         chrome.windows.create(
             {
-                url: chrome.runtime.getURL('popup'),
+                url: chrome.runtime.getURL('popup.html'),
                 type: 'popup'
             },
             (popup) => {
