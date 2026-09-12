@@ -17,53 +17,146 @@ export const IS_PRODUCTION = NODE_ENV === 'production';
  */
 export const BROWSER = process.env.BROWSER as BrowserName;
 
-export function getMessage(i18nKey: 'ext_name', args: []): string;
-export function getMessage(i18nKey: 'ext_description', args: []): string;
-export function getMessage(i18nKey: 'ext_author', args: []): string;
-export function getMessage(i18nKey: 'script_disconnected', args: []): string;
-export function getMessage(i18nKey: 'script_connected', args: []): string;
-export function getMessage(i18nKey: 'popup_disconnected', args: []): string;
-export function getMessage(i18nKey: 'bg_connecting', args: []): string;
-export function getMessage(i18nKey: 'bg_registered', args: []): string;
-export function getMessage(i18nKey: 'bg_script_initialized', args: [string]): string;
-export function getMessage(i18nKey: 'bg_popup_initialized', args: [string]): string;
-export function getMessage(i18nKey: 'bg_script_timeout', args: [string, string]): string;
-export function getMessage(i18nKey: 'bg_popup_timeout', args: [string, string]): string;
-export function getMessage(i18nKey: 'renderer_unknown', args: [string]): string;
-export function getMessage(i18nKey: 'script_char_mutation', args: [string]): string;
-export function getMessage(i18nKey: 'script_invalid_attr', args: [string]): string;
-export function getMessage(i18nKey: 'script_missing_attr', args: []): string;
-export function getMessage(i18nKey: 'script_caution', args: []): string;
-export function getMessage(i18nKey: 'script_missing_node', args: []): string;
-export function getMessage(i18nKey: 'script_unsupported_node', args: [string, string]): string;
-export function getMessage(i18nKey: 'script_unimplemented_node', args: [string, string]): string;
-export function getMessage(i18nKey: 'script_ready', args: []): string;
-export function getMessage(i18nKey: 'renderer_timeout', args: []): string;
-export function getMessage(i18nKey: 'popup_connected', args: [string]): string;
-export function getMessage(i18nKey: 'popup_sibling_missing', args: [string]): string;
-export function getMessage(i18nKey: 'popup_invalid_msg', args: []): string;
-export function getMessage(i18nKey: 'popup_root_missing', args: [string]): string;
-export function getMessage(i18nKey: 'popup_root_sibling_missing', args: [string]): string;
-export function getMessage(i18nKey: 'popup_missing_node', args: [string]): string;
-export function getMessage(i18nKey: 'popup_hanging_attr', args: []): string;
-export function getMessage(i18nKey: 'popup_node_removed', args: [string]): string;
-export function getMessage(i18nKey: 'popup_unsupported_node', args: [string]): string;
-export function getMessage(i18nKey: 'popup_invalid_update', args: []): string;
-export function getMessage(i18nKey: 'popup_validation_failed', args: []): string;
+export function getMessage(
+    messageName: 'ext_name',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'ext_description',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'ext_author',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'script_disconnected',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'script_connected',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'popup_disconnected',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'bg_connecting',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'bg_registered',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'bg_script_initialized',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'bg_popup_initialized',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'bg_script_timeout',
+    substitutions: [string, string]
+): string;
+export function getMessage(
+    messageName: 'bg_popup_timeout',
+    substitutions: [string, string]
+): string;
+export function getMessage(
+    messageName: 'renderer_unknown',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'script_char_mutation',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'script_invalid_attr',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'script_missing_attr',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'script_caution',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'script_missing_node',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'script_unsupported_node',
+    substitutions: [string, string]
+): string;
+export function getMessage(
+    messageName: 'script_unimplemented_node',
+    substitutions: [string, string]
+): string;
+export function getMessage(
+    messageName: 'script_ready',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'renderer_timeout',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'popup_connected',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_sibling_missing',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_invalid_msg',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'popup_root_missing',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_root_sibling_missing',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_missing_node',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_hanging_attr',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'popup_node_removed',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_unsupported_node',
+    substitutions: [string]
+): string;
+export function getMessage(
+    messageName: 'popup_invalid_update',
+    substitutions: []
+): string;
+export function getMessage(
+    messageName: 'popup_validation_failed',
+    substitutions: []
+): string;
 /**
  * Returns a message in the user's localization
- * @param i18nKey The `messages.json` key
- * @param args The substitution arguments
+ * @param messageName The `messages.json` key
+ * @param substitutions The substitution arguments
  */
 export function getMessage(
-    i18nKey: keyof typeof import('../../../_locales/en/messages.json'),
-    args: string[]
+    messageName: keyof typeof import('../../../_locales/en/messages.json'),
+    substitutions: string[]
 ): string {
-    let msg = chrome.i18n.getMessage(i18nKey);
-
-    for (let i = 0; i < args.length; i++) {
-        msg = msg.replaceAll(`{${i}}`, args[i]);
-    }
-
-    return msg;
+    return chrome.i18n.getMessage(messageName, substitutions);
 }
