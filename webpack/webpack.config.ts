@@ -92,7 +92,7 @@ const webpackConfig: webpack.Configuration = {
         publicPath: '/',
         iife: true,
         html: config.html.output,
-        htmlFilename: config.output.htmlFilenameTemplate,
+        htmlFilename: config.output.filenameTemplate('.html'),
         htmlChunkFilename: config.output.filenameTemplate('.html'),
         cssFilename: config.output.filenameTemplate('.css'),
         cssChunkFilename: config.output.filenameTemplate('.css'),
