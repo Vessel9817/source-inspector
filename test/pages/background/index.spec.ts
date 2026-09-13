@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { load } from '../shared';
+import { load, mockEnv } from '../shared';
 
 describe('background script', () => {
     it('registers background scripts', async (t) => {
@@ -20,13 +20,8 @@ describe('background script', () => {
             }
         );
 
-        globalThis.chrome = {
-            i18n: {
-                getMessage: (...args) => ''
-            } as typeof chrome.i18n,
-        } as typeof chrome;
-
         // Test
+        mockEnv({}, t);
         await load('../../../src/pages/background');
         assert.equal(calls, 1);
     });

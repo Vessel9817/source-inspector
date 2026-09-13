@@ -1,4 +1,5 @@
 import registerPopup from '../popup/background';
+import { getMessage } from '../shared';
 
 class Background {
     /**
@@ -7,7 +8,7 @@ class Background {
     static register() {
         registerPopup();
 
-        console.log(chrome.i18n.getMessage('bg_registered'));
+        console.log(getMessage('bg_registered', []));
     }
 }
 

@@ -1,6 +1,7 @@
 import { E_TIMEOUT } from 'async-mutex';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { getMessage } from '../shared';
 import { PopupManager } from './stateManager';
 
 // CSS
@@ -29,7 +30,7 @@ if (container != null) {
         }
         catch (err) {
             if (err === E_TIMEOUT) {
-                console.warn(chrome.i18n.getMessage('renderer_timeout'));
+                console.warn(getMessage('renderer_timeout', []));
             } else {
                 throw err;
             }

@@ -1,4 +1,5 @@
 {
+    "$schema": "../../schema/locales.json",
     "ext_name": {
         "description": "The extension name",
         "message": "Source Inspector"
@@ -33,31 +34,90 @@
     },
     "bg_script_initialized": {
         "description": "Called by the background script",
-        "message": "Tab {0} successfully initialized!"
+        "message": "Tab $tab_id$ successfully initialized!",
+        "placeholders": {
+            "tab_id": {
+                "description": "The unique tab identifier",
+                "content": "$1",
+                "example": "12"
+            }
+        }
     },
     "bg_popup_initialized": {
         "description": "Called by the background script",
-        "message": "Popup {0} successfully initialized!"
+        "message": "Popup $popup_id$ successfully initialized!",
+        "placeholders": {
+            "popup_id": {
+                "description": "The unique popup identifier",
+                "content": "$1",
+                "example": "12"
+            }
+        }
     },
     "bg_script_timeout": {
         "description": "Called by the background script",
-        "message": "Tab {0} failed to connect within {1}ms"
+        "message": "Tab $tab_id$ failed to connect within $timeout$ms",
+        "placeholders": {
+            "tab_id": {
+                "description": "The unique tab identifier",
+                "content": "$1",
+                "example": "12"
+            },
+            "timeout": {
+                "description": "The timeout, in milliseconds",
+                "content": "$2",
+                "example": "5000"
+            }
+        }
     },
     "bg_popup_timeout": {
         "description": "Called by the background script",
-        "message": "Popup {0} failed to connect within {1}ms"
+        "message": "Popup $popup_id$ failed to connect within $timeout$ms",
+        "placeholders": {
+            "popup_id": {
+                "description": "The unique popup identifier",
+                "content": "$1",
+                "example": "12"
+            },
+            "timeout": {
+                "description": "The timeout, in milliseconds",
+                "content": "$2",
+                "example": "5000"
+            }
+        }
     },
     "renderer_unknown": {
         "description": "Called by the popup",
-        "message": "Couldn't render unknown node of id: {0}"
+        "message": "Couldn't render unknown node of id: $node_id$",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "script_char_mutation": {
         "description": "Debug message from the content script",
-        "message": "Character data mutation on node {0}:"
+        "message": "Character data mutation on node $node_id$:",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "script_invalid_attr": {
         "description": "Called by the content script",
-        "message": "Invalid attribute mutation on node of id {0}:"
+        "message": "Invalid attribute mutation on node of id $node_id$:",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "script_missing_attr": {
         "description": "Called by the content script",
@@ -73,11 +133,35 @@
     },
     "script_unsupported_node": {
         "description": "Called by the content script",
-        "message": "Unimplemented node type {0} not added. Any anomalous parent updates associated with id {1} are the result of this."
+        "message": "Unimplemented node type $node_type$ not added. Any anomalous parent updates associated with id $ndoe_id$ are the result of this.",
+        "placeholders": {
+            "node_type": {
+                "description": "The numeric node type",
+                "content": "$1",
+                "example": "2"
+            },
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$2",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "script_unimplemented_node": {
         "description": "Called by the content script in the event of developer error",
-        "message": "Node of type {0} is marked as supported, but no implementation exists. Skipping addition of node. Any anomalous parent updates associated with id {1} are the result of this."
+        "message": "Node of type $node_type$ is marked as supported, but no implementation exists. Skipping addition of node. Any anomalous parent updates associated with id $node_id$ are the result of this.",
+        "placeholders": {
+            "node_type": {
+                "description": "The numeric node type",
+                "content": "$1",
+                "example": "2"
+            },
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$2",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "script_ready": {
         "description": "Called by the content script",
@@ -89,11 +173,25 @@
     },
     "popup_connected": {
         "description": "Called by the popup",
-        "message": "Successfully connected to tab {0}!"
+        "message": "Successfully connected to tab $tab_id$!",
+        "placeholders": {
+            "tab_id": {
+                "description": "The unique tab identifier",
+                "content": "$1",
+                "example": "12"
+            }
+        }
     },
     "popup_sibling_missing": {
         "description": "Called by the popup",
-        "message": "Anomalous update: sibling id {0} not found"
+        "message": "Anomalous update: sibling id $node_id$ not found",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "popup_invalid_msg": {
         "description": "Called by the popup",
@@ -101,15 +199,36 @@
     },
     "popup_root_missing": {
         "description": "Called by the popup",
-        "message": "Anomalous root node update on id: {0}"
+        "message": "Anomalous root node update on id: $node_id$",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "popup_root_sibling_missing": {
         "description": "Called by the popup when the root node is missing",
-        "message": "Unexpected previous sibling id: {0}"
+        "message": "Unexpected previous sibling id: $node_id$",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "popup_missing_node": {
         "description": "Called by the popup",
-        "message": "Anomalous node removal: {0}"
+        "message": "Anomalous node removal: $node_id$",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "popup_hanging_attr": {
         "description": "Called by the popup",
@@ -117,11 +236,25 @@
     },
     "popup_node_removed": {
         "description": "Called by the popup",
-        "message": "Node of id {0} already removed from ancestor node:"
+        "message": "Node of id $node_id$ already removed from ancestor node:",
+        "placeholders": {
+            "node_id": {
+                "description": "The unique node debug identifier",
+                "content": "$1",
+                "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+        }
     },
     "popup_unsupported_node": {
         "description": "Called by the popup",
-        "message": "Unsupported node type {0} updated:"
+        "message": "Unsupported node type $node_type$ updated:",
+        "placeholders": {
+            "node_type": {
+                "description": "The numeric node type",
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "popup_invalid_update": {
         "description": "Called by the popup",

@@ -1,4 +1,4 @@
-import { BROWSER } from '../shared';
+import { BROWSER, getMessage } from '../shared';
 import { testInjectionUri } from '../shared/background';
 import { type ConnectMsg } from './msgs';
 
@@ -11,7 +11,7 @@ class Popup {
 
     #tryConnecting(): void {
         if (this.#popupId != null && this.#tabId != null) {
-            console.log(chrome.i18n.getMessage('bg_connecting'));
+            console.log(getMessage('bg_connecting', []));
 
             const msg: ConnectMsg = {
                 type: 'connection',
@@ -41,8 +41,7 @@ class Popup {
                 clearTimeout(TIMEOUT);
 
                 console.log(
-                    chrome.i18n.getMessage('bg_script_initialized')
-                        .replaceAll('{0}', tabId.toString())
+                    getMessage('bg_script_initialized', [tabId.toString()])
                 );
 
                 self.#tabId = tabId;
@@ -56,9 +55,10 @@ class Popup {
             chrome.runtime.onMessage.removeListener(MSG_BROKER);
 
             console.error(
-                chrome.i18n.getMessage('bg_script_timeout')
-                    .replaceAll('{0}', tabId.toString())
-                    .replaceAll('{1}', TIMEOUT_MS.toString())
+                getMessage(
+                    'bg_script_timeout',
+                    [tabId.toString(), TIMEOUT_MS.toString()]
+                )
             );
         }, TIMEOUT_MS);
 
@@ -83,7 +83,7 @@ class Popup {
     async #initializePopupBroker(): Promise<void> {
         const self = this;
 
-        function onWindowCreated(tabId: number): void {
+        function onWindowCreated(popupId: number): void {
             // Waiting for popup to initialize
             async function MSG_BROKER(
                 _msg: Readonly<any>,
@@ -91,17 +91,16 @@ class Popup {
             ): Promise<void> {
                 if (
                     sender.id === chrome.runtime.id &&
-                    sender.tab?.id === tabId
+                    sender.tab?.id === popupId
                 ) {
                     chrome.runtime.onMessage.removeListener(MSG_BROKER);
                     clearTimeout(TIMEOUT);
 
                     console.log(
-                        chrome.i18n.getMessage('bg_script_initialized')
-                            .replaceAll('{0}', tabId.toString())
+                        getMessage('bg_popup_initialized', [popupId.toString()])
                     );
 
-                    self.#popupId = tabId;
+                    self.#popupId = popupId;
 
                     self.#tryConnecting();
                 }
@@ -114,9 +113,10 @@ class Popup {
                 chrome.runtime.onMessage.removeListener(MSG_BROKER);
 
                 console.error(
-                    chrome.i18n.getMessage('bg_popup_timeout')
-                        .replaceAll('{0}', tabId.toString())
-                        .replaceAll('{1}', TIMEOUT_MS.toString())
+                    getMessage(
+                        'bg_popup_timeout',
+                        [popupId.toString(), TIMEOUT_MS.toString()]
+                    )
                 );
             }, TIMEOUT_MS);
         }

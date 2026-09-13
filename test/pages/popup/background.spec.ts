@@ -30,9 +30,6 @@ describe('popup background script', () => {
                     extension: {
                         inIncognitoContext: false
                     } as typeof chrome.extension,
-                    i18n: {
-                        getMessage: (...args) => ''
-                    } as typeof chrome.i18n,
                     runtime: {
                         getURL: (...args) => '',
                         onMessage: {
