@@ -45,7 +45,7 @@ export const plugins = [
 
                     delete locale?.$schema;
 
-                    return JSON.stringify(locale);
+                    return JSON.stringify(locale, null, IS_DEV_MODE ? 2 : undefined);
                 }
             }
         ]
