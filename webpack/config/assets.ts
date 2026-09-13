@@ -1,4 +1,5 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import assert from 'node:assert/strict';
 import path from 'node:path';
 import { ICON_PATH_MAPPINGS, MANIFEST } from '../assets/manifest';
 import { IS_DEV_MODE, OUTPUT_ABS_DIR, PROJECT_ROOT } from '../env';
@@ -34,12 +35,22 @@ export const plugins = [
             ...ICON_PATH_MAPPINGS,
             {
                 from: path.join(PROJECT_ROOT, '_locales'),
-                to: path.join(OUTPUT_ABS_DIR, '_locales')
+                to: path.join(OUTPUT_ABS_DIR, '_locales'),
+                transform: (datum) => {
+                    const locale = JSON.parse(datum.toString());
+
+                    assert.ok(typeof locale === 'object');
+                    assert.ok(locale != null);
+
+                    delete locale?.$schema;
+
+                    return JSON.stringify(locale);
+                }
             }
         ]
     }),
 
-    // Generating manifest files
+    // Generating manifest file
     GenerateFilePlugin.generateManifestPlugin({
         manifest: MANIFEST,
         indents: IS_DEV_MODE ? 2 : undefined

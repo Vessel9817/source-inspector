@@ -1,16 +1,16 @@
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
+import fs from 'node:fs/promises';
 import { describe, it } from 'node:test';
 
 const localesDir = new URL('../../_locales/', import.meta.url);
 
-function messageKeys(locale: string): string[] {
+async function messageKeys(locale: string): Promise<string[]> {
     const file = new URL(`${locale}/messages.json`, localesDir);
-    return Object.keys(JSON.parse(readFileSync(file, 'utf8'))).sort();
+    return Object.keys(JSON.parse(await fs.readFile(file, 'utf8'))).sort();
 }
 
 describe('locale messages', async () => {
-    const locales = readdirSync(localesDir, { withFileTypes: true })
+    const locales = (await fs.readdir(localesDir, { withFileTypes: true }))
         .filter((entry) => entry.isDirectory())
         .map((entry) => entry.name)
         .sort();
@@ -22,12 +22,12 @@ describe('locale messages', async () => {
         assert.ok(typeof defaultLocale === 'string', 'Missing locales');
     });
 
-    const defaultKeys = messageKeys(defaultLocale as string);
+    const defaultKeys = await messageKeys(defaultLocale as string);
 
     for (const locale of locales) {
-        it(`${locale} has the same top-level keys as ${defaultLocale}`, () => {
+        it(`${locale} has the same top-level keys as ${defaultLocale}`, async () => {
             assert.deepEqual(
-                messageKeys(locale),
+                await messageKeys(locale),
                 defaultKeys,
                 `${locale}/messages.json must have the same top-level keys as ${defaultLocale}/messages.json`
             );
