@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext } from 'react';
-import { IS_PRODUCTION } from '../shared';
+import { getMessage, IS_PRODUCTION } from '../shared';
 import type { StoredVirtualNodeProps } from './base';
 import {
     type StoredVirtualAttributeProps,
@@ -248,10 +248,7 @@ export function ChildManager({ id }: { readonly id: string }): ReactNode {
     const node = nodes[id];
 
     if (node == null) {
-        console.error(
-            chrome.i18n.getMessage('renderer_unknown')
-                .replaceAll('{0}', id)
-        );
+        console.error(getMessage('renderer_unknown', [id]));
         return;
     }
 
