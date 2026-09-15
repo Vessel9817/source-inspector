@@ -102,7 +102,7 @@ const webpackConfig: webpack.Configuration = {
     resolve: {
         extensions: [
             ...config.assets.resolveExts,
-            ...config.js.resolveExts, // JS before CSS for index import conflicts
+            ...config.js.resolveExts,
             ...config.css.resolveExts,
         ]
     },

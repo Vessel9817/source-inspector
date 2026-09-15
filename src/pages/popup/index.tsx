@@ -4,7 +4,7 @@ import { generateRoot, getMessage } from '../shared';
 import { PopupManager } from './stateManager';
 
 // CSS
-import './index.scss';
+import './index.css';
 
 // Connecting to tab
 const root = generateRoot();

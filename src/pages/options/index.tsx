@@ -3,7 +3,7 @@ import { generateRoot } from '../shared';
 import Options from './options';
 
 // CSS
-import './index.scss';
+import './index.css';
 
 const root = generateRoot();
 
