@@ -1,6 +1,7 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import type webpack from 'webpack';
 import { ICON_PATH_MAPPINGS, MANIFEST } from '../assets/manifest';
 import { IS_DEV_MODE, OUTPUT_ABS_DIR, PROJECT_ROOT } from '../env';
 import { GenerateFilePlugin } from '../plugins';
@@ -18,7 +19,7 @@ export const resolveExts = [
     '.woff2'
 ];
 
-export const moduleRules = [
+export const moduleRules: NonNullable<webpack.ModuleOptions['rules']> = [
     {
         test: new RegExp(
             String.raw`\.(?:${resolveExts.map((ext) => RegExp.escape(ext)).join('|')})$`
@@ -44,7 +45,7 @@ export const plugins = [
 
                     delete locale?.$schema;
 
-                    return JSON.stringify(locale);
+                    return JSON.stringify(locale, null, IS_DEV_MODE ? 2 : undefined);
                 }
             }
         ]

@@ -1,3 +1,4 @@
+import { createRoot, type Root } from 'react-dom/client';
 // Be VERY intentional about importing from outside src/
 import type { BrowserName } from '../../../webpack/validators';
 
@@ -159,4 +160,18 @@ export function getMessage(
     substitutions: string[]
 ): string {
     return chrome.i18n.getMessage(messageName, substitutions);
+}
+
+/**
+ * Adds a container to the document body with a component root
+ * @returns A React component root
+ */
+export function generateRoot(): Root {
+    const container = document.createElement('div');
+    
+    container.id = 'app-container';
+    
+    document.body.appendChild(container);
+    
+    return createRoot(container);
 }

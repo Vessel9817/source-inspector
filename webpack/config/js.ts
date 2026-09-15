@@ -3,11 +3,12 @@ import path from 'node:path';
 import webpack from 'webpack';
 import { LICENSE } from '../assets/license';
 import { BROWSER, NODE_ENV, PROJECT_ROOT } from '../env';
+import { filenameTemplate } from './output';
 
 // TS/TSX must come before JS/JSX
 export const resolveExts = ['.ts', '.tsx', '.js', '.jsx'];
 
-export const moduleRules = [
+export const moduleRules: NonNullable<webpack.ModuleOptions['rules']> = [
     {
         test: /\.tsx?$/,
         type: 'javascript/esm',
@@ -30,7 +31,14 @@ export const moduleRules = [
     }
 ];
 
-export const plugins = [
+const template = filenameTemplate('.js');
+
+export const output: webpack.Configuration['output'] = {
+    filename: template,
+    chunkFilename: template
+};
+
+export const plugins: NonNullable<webpack.Configuration['plugins']> = [
     // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
     new ForkTsCheckerWebpackPlugin(),
 
