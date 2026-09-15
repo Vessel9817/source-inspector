@@ -133,7 +133,7 @@
     },
     "script_unsupported_node": {
         "description": "Called by the content script",
-        "message": "Unimplemented node type $node_type$ not added. Any anomalous parent updates associated with id $ndoe_id$ are the result of this.",
+        "message": "Unimplemented node type $node_type$ not added. Any anomalous parent updates associated with id $node_id$ are the result of this.",
         "placeholders": {
             "node_type": {
                 "description": "The numeric node type",
