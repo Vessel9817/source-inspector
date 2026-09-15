@@ -91,13 +91,9 @@ const webpackConfig: webpack.Configuration = {
         clean: true,
         publicPath: '/',
         iife: true,
-        html: config.html.output,
-        htmlFilename: config.output.filenameTemplate('.html'),
-        htmlChunkFilename: config.output.filenameTemplate('.html'),
-        cssFilename: config.output.filenameTemplate('.css'),
-        cssChunkFilename: config.output.filenameTemplate('.css'),
-        filename: config.output.filenameTemplate('.js'),
-        chunkFilename: config.output.filenameTemplate('.js')
+        ...config.js.output,
+        ...config.css.output,
+        ...config.html.output,
     },
     resolve: {
         extensions: [
