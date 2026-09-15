@@ -13,9 +13,9 @@ const webpackConfig: webpack.Configuration = {
     context: PROJECT_ROOT,
     mode: IS_DEV_MODE ? 'development' : 'production',
     experiments: {
-        html: true,
-        css: false, // Can't use with css-loader or style-loader
-        //futureDefaults: true // For testing
+        html: true, // Can't use with html-webpack-plugin
+        css: false, // Can't use with style-loader
+        //futureDefaults: true // For testing in preparation for next major Webpack version
     },
     // Extensions cannot use eval
     devtool: IS_DEV_MODE
