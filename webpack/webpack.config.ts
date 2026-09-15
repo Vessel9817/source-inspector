@@ -13,8 +13,8 @@ const webpackConfig: webpack.Configuration = {
     context: PROJECT_ROOT,
     mode: IS_DEV_MODE ? 'development' : 'production',
     experiments: {
-        html: true, // Can't use with html-webpack-plugin
-        css: false, // Can't use with style-loader
+        html: config.html.native, 
+        css: config.css.native,
         //futureDefaults: true // For testing in preparation for next major Webpack version
     },
     // Extensions cannot use eval
@@ -107,9 +107,11 @@ const webpackConfig: webpack.Configuration = {
         ]
     },
     module: {
+        parser: {
+            ...config.css.parsers
+        },
         rules: [
             ...config.assets.moduleRules,
-            ...config.css.moduleRules,
             ...config.js.moduleRules,
         ]
     },

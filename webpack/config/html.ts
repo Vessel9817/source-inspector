@@ -5,6 +5,11 @@ import {
     HtmlBannerWebpackPlugin
 } from '../plugins';
 
+/**
+ * @experimental To be released as stable in Webpack 6
+ */
+export const native = true;
+
 export const output: NonNullable<webpack.Configuration['output']>['html'] = {
     meta: {
         charset: 'UTF-8',
