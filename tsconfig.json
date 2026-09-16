@@ -1,3 +1,4 @@
 {
+    "$schema": "https://www.schemastore.org/tsconfig.json",
     "extends": "./tsconfig.base.jsonc"
 }

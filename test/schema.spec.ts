@@ -11,6 +11,27 @@ const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const ignoredDirectories = new Set(['.git', 'dist', 'node_modules']);
 const supportedExtensions = new Set(['.json', '.yaml', '.yml']);
 
+// Matches SchemaStore defaults
+// https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L512-L531
+const unknownKeywords = [
+    'allowTrailingCommas',
+    'defaultSnippets',
+    'markdownDescription',
+    'enumDescriptions',
+    'markdownEnumDescriptions',
+    'x-taplo',
+    'x-taplo-info',
+    'x-tombi-toml-version',
+    'x-tombi-array-values-order',
+    'x-tombi-array-values-order-by',
+    'x-tombi-table-keys-order',
+    'x-tombi-string-formats',
+    'x-tombi-additional-key-label',
+    'x-intellij-language-injection',
+    'x-intellij-html-description',
+    'x-intellij-enum-metadata',
+];
+
 async function sourceFiles(directory: string): Promise<string[]> {
     const files: string[] = [];
 
@@ -82,18 +103,22 @@ describe('schema-backed source files', async () => {
     });
 
     for (const { document, file, reference } of documents) {
-        it(path.relative(projectRoot, file), async () => {
+        it(`validate ${path.relative(projectRoot, file)}`, async () => {
             const schemaUri = new URL(reference, pathToFileURL(file)).href;
-            // SchemaStore currently contains some cross-branch `required` keywords.
-            // Keep strict validation enabled while allowing that valid draft-07 pattern.
+            // Matches non-strict SchemaStore defaults
+            // https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L447-L458
             const ajv = new Ajv({
-                allErrors: true,
                 loadSchema,
-                strict: true,
-                strictRequired: false
+                strictTypes: false,
+                strictTuples: false,
+                allowMatchingProperties: true
             });
 
             addFormats(ajv);
+
+            for (const keyword of unknownKeywords) {
+                ajv.addKeyword(keyword);
+            }
 
             const validate = ajv.getSchema(schemaUri)
                 ?? await ajv.compileAsync(await loadSchema(schemaUri));
