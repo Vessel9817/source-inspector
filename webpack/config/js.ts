@@ -5,6 +5,8 @@ import { LICENSE } from '../assets/license';
 import { BROWSER, NODE_ENV, PROJECT_ROOT } from '../env';
 import { filenameTemplate } from './output';
 
+const tsconfig = path.join(PROJECT_ROOT, 'tsconfig.json');
+
 // TS/TSX must come before JS/JSX
 export const resolveExts = ['.ts', '.tsx', '.js', '.jsx'];
 
@@ -19,7 +21,7 @@ export const moduleRules: NonNullable<webpack.ModuleOptions['rules']> = [
                 // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
                 loader: 'ts-loader',
                 options: {
-                    configFile: path.join(PROJECT_ROOT, 'tsconfig.json'),
+                    configFile: tsconfig,
                     compilerOptions: {
                         emitDeclarationOnly: false,
                         noEmit: false
@@ -40,7 +42,11 @@ export const output: webpack.Configuration['output'] = {
 
 export const plugins: NonNullable<webpack.Configuration['plugins']> = [
     // https://npmjs.com/package/fork-ts-checker-webpack-plugin#installation
-    new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+        typescript: {
+            configFile: tsconfig
+        }
+    }),
 
     // assert polyfill depends on process
     // https://github.com/browserify/commonjs-assert/issues/55#issuecomment-996543717
