@@ -6,10 +6,11 @@ import path from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parse as parseYaml } from 'yaml';
+import { parse as parseJsonc } from 'jsonc-parser';
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const ignoredDirectories = new Set(['.git', 'dist', 'node_modules']);
-const supportedExtensions = new Set(['.json', '.yaml', '.yml']);
+const supportedExtensions = new Set(['.json', '.jsonc', '.yaml', '.yml']);
 
 // Matches SchemaStore defaults
 // https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L512-L531
@@ -53,9 +54,13 @@ async function sourceFiles(directory: string): Promise<string[]> {
 
 async function readDocument(file: string): Promise<unknown> {
     const contents = await fs.readFile(file, 'utf8');
-    return path.extname(file) === '.json'
+    const ext = path.extname(file);
+
+    return ext === '.json'
         ? JSON.parse(contents)
-        : parseYaml(contents);
+        : ext === '.jsonc'
+            ? parseJsonc(contents)
+            : parseYaml(contents);
 }
 
 function schemaReference(document: unknown): string | undefined {
@@ -103,7 +108,7 @@ describe('schema-backed source files', async () => {
     });
 
     for (const { document, file, reference } of documents) {
-        it(`validate ${path.relative(projectRoot, file)}`, async () => {
+        it(`validates ${path.relative(projectRoot, file)}`, async () => {
             const schemaUri = new URL(reference, pathToFileURL(file)).href;
             // Matches non-strict SchemaStore defaults
             // https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L447-L458
