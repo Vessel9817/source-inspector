@@ -8,7 +8,7 @@ import { filenameTemplate } from './output';
  */
 export const native = true;
 
-export const resolveExts = ['.css', '.sass', '.scss'];
+export const resolveExts = ['.css'];
 
 export const parsers: NonNullable<webpack.ModuleOptions['parser']> = {
     css: {
