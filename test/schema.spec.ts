@@ -1,12 +1,12 @@
 import Ajv, { type AnySchemaObject } from 'ajv';
 import addFormats from 'ajv-formats';
+import { parse as parseJsonc } from 'jsonc-parser';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parse as parseYaml } from 'yaml';
-import { parse as parseJsonc } from 'jsonc-parser';
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const ignoredDirectories = new Set(['.git', 'dist', 'node_modules']);
@@ -63,19 +63,46 @@ async function readDocument(file: string): Promise<unknown> {
             : parseYaml(contents);
 }
 
-function schemaReference(document: unknown): string | undefined {
-    if (typeof document !== 'object' || document === null || Array.isArray(document)) {
+/**
+ * Parses file metadata to determine its schema definition
+ * @param file The file path
+ * @param doc The parsed file contents
+ * @returns The file's schema URI reference, if any
+ */
+async function schemaReference(
+    file: string,
+    doc: unknown
+): Promise<string | undefined> {
+    if (typeof doc !== 'object' || doc === null || Array.isArray(doc)) {
         return;
     }
 
-    const reference = (document as Record<string, unknown>).$schema;
+    const ext = path.extname(file);
+    let ref: unknown;
 
-    return typeof reference === 'string' ? reference : undefined;
+    if (/^\.ya?ml$/.test(ext)) {
+        // Schema declaration must be the first line and follow strict spacing requirements
+        const header = (await fs.readFile(file, 'utf8')).trimStart().split('\n')[0];
+
+        if (header) {
+            ref = /^# yaml-language-server: \$schema=(?<$schema>.+)$/.exec(header)?.groups?.$schema;
+        }
+    }
+    else {
+        ref = (doc as Record<string, unknown>).$schema;
+    }
+
+    return typeof ref === 'string' ? ref : undefined;
 }
 
+/**
+ * Loads a schema by its URI
+ * @param uri The schema URI
+ * @returns The schema object
+ */
 async function loadSchema(uri: string): Promise<AnySchemaObject> {
     if (uri.startsWith('file:')) {
-        return readDocument(fileURLToPath(uri)) as Promise<AnySchemaObject>;
+        return await readDocument(fileURLToPath(uri)) as Promise<AnySchemaObject>;
     }
 
     const response = await fetch(uri);
@@ -85,31 +112,31 @@ async function loadSchema(uri: string): Promise<AnySchemaObject> {
         `Unable to load schema ${uri}: ${response.status} ${response.statusText}`
     );
 
-    return response.json() as Promise<AnySchemaObject>;
+    return await response.json() as Promise<AnySchemaObject>;
 }
 
-describe('schema-backed source files', async () => {
-    const documents = [];
+describe('schema', async () => {
+    const documents: { doc: any, file: string, ref: string }[] = [];
 
     for (const file of await sourceFiles(projectRoot)) {
-        const document = await readDocument(file);
-        const reference = schemaReference(document);
+        const doc = await readDocument(file);
+        const ref = await schemaReference(file, doc);
 
-        if (reference) {
-            documents.push({ document, file, reference });
+        if (ref) {
+            documents.push({ doc, file, ref });
         }
     }
 
-    await it('exists', () => {
+    await it('is defined in a source file', () => {
         assert.notEqual(
             documents.length, 0,
             'No source files with a top-level $schema were found'
         );
     });
 
-    for (const { document, file, reference } of documents) {
-        it(`validates ${path.relative(projectRoot, file)}`, async () => {
-            const schemaUri = new URL(reference, pathToFileURL(file)).href;
+    for (const { doc, file, ref } of documents) {
+        it(`validates ${path.relative(projectRoot, file).replaceAll('\\', '/')}`, async () => {
+            const schemaUri = new URL(ref, pathToFileURL(file)).href;
             // Matches non-strict SchemaStore defaults
             // https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L447-L458
             const ajv = new Ajv({
@@ -129,8 +156,8 @@ describe('schema-backed source files', async () => {
                 ?? await ajv.compileAsync(await loadSchema(schemaUri));
 
             assert.ok(
-                validate(document),
-                `${path.relative(projectRoot, file)} does not match ${reference}:\n${ajv.errorsText(validate.errors, { separator: '\n' })}`
+                validate(doc),
+                `${path.relative(projectRoot, file)} does not match ${ref}:\n${ajv.errorsText(validate.errors, { separator: '\n' })}`
             );
         });
     }
