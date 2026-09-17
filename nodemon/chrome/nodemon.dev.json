@@ -17,7 +17,7 @@
         "./src/react-app-env.d.ts",
         "./package.json",
         "./package-lock.json",
-        "./tsconfig.json"
+        "tsconfig.*"
     ],
     "env": {
         "NODE_ENV": "development",

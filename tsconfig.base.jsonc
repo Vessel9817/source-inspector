@@ -1,0 +1,40 @@
+{
+    "$schema": "https://www.schemastore.org/tsconfig.json",
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": [
+            // General JS
+            "ESNext",
+
+            // Web interfaces
+            "DOM",
+            "DOM.Iterable",
+
+            // Asynchronocity and promises
+            "ES2020.Promise",
+            "ES2018.AsyncIterable"
+        ],
+        "noImplicitAny": true,
+        "allowJs": true,
+        "checkJs": true,
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "ES2022",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "jsx": "react",
+        "typeRoots": ["./node_modules/@types"],
+        "types": ["chrome", "firefox-webext-browser", "node"],
+        "noErrorTruncation": true, // See fully expanded types
+        "rootDir": ".",
+        "outDir": "dist/tsc" // See also: https://stackoverflow.com/a/48798945
+    },
+    "include": ["src", "test", "webpack"],
+    "exclude": ["dist", "node_modules"]
+}

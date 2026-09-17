@@ -512,7 +512,7 @@ function _onConnect(connection: browser.runtime.Port): void {
 function _connect(): void {
     // Notifying background we're ready to connect
     chrome.runtime.onConnect.addListener(_onConnect);
-    chrome.runtime.sendMessage({} as any);
+    chrome.runtime.sendMessage(chrome.runtime.id, {} as any);
     console.log(getMessage('script_ready', []));
 
     // Removing listener after fixed timeout

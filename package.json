@@ -4,7 +4,6 @@
     "description": "A from-scratch open-source document source inspector that aims to be invisible to websites",
     "license": "MIT",
     "type": "module",
-    "sideEffects": true,
     "private": true,
     "repository": {
         "type": "git",
@@ -41,6 +40,7 @@
         "commander": "^15.0.0",
         "copy-webpack-plugin": "^14.0.0",
         "fork-ts-checker-webpack-plugin": "^9.1.0",
+        "jsonc-parser": "^3.3.1",
         "nodemon": "^3.1.14",
         "path-sanitizer": "^4.0.2",
         "sanitize-filename": "^1.6.4",

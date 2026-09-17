@@ -87,9 +87,9 @@ export class PopupManager {
         // `browser` can only have one async sender/receiver,
         // so we wrap a syncronous sender and use an async receiver
         return BROWSER == 'chrome'
-            ? chrome.runtime.sendMessage(msg)
+            ? chrome.runtime.sendMessage(chrome.runtime.id, msg)
             : new Promise((resolve) => {
-                browser.runtime.sendMessage(msg, resolve)
+                chrome.runtime.sendMessage(chrome.runtime.id, msg, resolve)
             });
     }
 
