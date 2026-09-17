@@ -1,7 +1,13 @@
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 import { E_TIMEOUT } from 'async-mutex';
 import React from 'react';
-import { generateRoot, getMessage } from '../shared';
+import { generateRoot, getMessage, IS_PRODUCTION } from '../shared';
 import { PopupManager } from './stateManager';
+
+// Must run before React is used
+if (IS_PRODUCTION) {
+    disableReactDevTools();
+}
 
 // CSS
 import './index.css';
