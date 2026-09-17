@@ -78,9 +78,9 @@ function renderElement(
 
     // https://github.com/Anonymous-Humanoid/source-inspector/issues/44#issuecomment-5315806605
     const isVoidElement = VOID_ELEMENTS.has(node.nodeName);
-    const hasNoSubNodes = node.childNodeIds.length < 1 && node.nodeValue == null;
+    const hasChildren = node.childNodeIds.length >= 1 || node.nodeValue !== null;
 
-    if (isVoidElement && hasNoSubNodes) {
+    if (isVoidElement && !hasChildren) {
         renderingChildren = [...attrs, ' />'];
     } else {
         renderingChildren = [
@@ -103,6 +103,7 @@ function renderElement(
                 nodeType={node.nodeType}
                 nodeName={node.nodeName}
                 nodeValue={node.nodeValue}
+                error={isVoidElement && hasChildren}
             >
                 {renderingChildren}
             </VirtualElement>
