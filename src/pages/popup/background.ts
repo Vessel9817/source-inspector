@@ -25,8 +25,8 @@ class Popup {
     /**
      * Allows the inspected tab to connect,
      * allowing document changes to be communicated
-     * @param tabId
-     * @param popupId
+     * @param tabId The tab ID of the injected tab
+     * @param popupId The tab ID of the popup
      */
     #initializeTabBroker(tabId: number): void {
         const self = this;
@@ -78,7 +78,7 @@ class Popup {
     /**
      * Allows the inspector popup to connect,
      * allowing document changes to be
-     * communicated to the inspected tab
+     * communicated to the content script
      */
     async #initializePopupBroker(): Promise<void> {
         const self = this;
@@ -135,7 +135,7 @@ class Popup {
 
     /**
      * Initializes the popup to inspect the given tab's document source
-     * @param tab
+     * @param tab The tab to inspect
      */
     static async tryCreatingPopup(tab: browser.tabs.Tab): Promise<void> {
         if (

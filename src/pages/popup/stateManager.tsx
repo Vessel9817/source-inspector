@@ -196,7 +196,7 @@ export class PopupManager {
     /**
      * Places the given message into a queue for processing.
      * Input should be treated as untrusted.
-     * @param msg
+     * @param msg The message to enqueue
      * @implNote Thread safety: acquires the {@link queueLock}
      */
     private async _queueMessage(msg: Readonly<unknown>): Promise<void> {
@@ -231,7 +231,7 @@ export class PopupManager {
     /**
      * Processes the given message, resulting in a
      * virtual DOM tree modification if successful
-     * @param msg
+     * @param msg The message to process
      * @implNote Thread safety: acquires the {@link nodeLock}
      */
     private async processMessage(msg: Readonly<PopupMsg>): Promise<void> {
@@ -400,8 +400,8 @@ export class PopupManager {
     }
 
     /**
-     * Updates any type of node based on the given message
-     * @param msg
+     * Updates a node's state
+     * @param msg The node update message
      * @implNote Not thread safe: must only be called under the {@link nodeLock}
      */
     private updateNodeHandler(msg: Readonly<UpdateMsg>): void {

@@ -5,7 +5,7 @@ class Background {
     /**
      * Registers all the background worker dependencies
      */
-    static register() {
+    static register(): void {
         registerPopup();
 
         console.log(getMessage('bg_registered', []));

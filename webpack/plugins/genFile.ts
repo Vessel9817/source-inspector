@@ -32,11 +32,12 @@ type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content' | 'target'> &
     manifest: Manifest;
 
     /**
-     * How much to indent the manifest
+     * How many spaces with which to indent the manifest
      */
     indents?: number;
 
     /**
+     * The source file path
      * @default 'manifest.json'
      */
     target?: string;
@@ -72,6 +73,7 @@ type CreateSourceMapArgs = {
 /**
  * Creates a source map for use in Webpack
  * @param options Source map configuration options
+ * @returns A source map
  * @see {@link https://tc39.es/ecma426/2024/#source-map-format Specification}
  */
 export function createSourceMap(
@@ -106,6 +108,7 @@ export function createSourceMap(
 /**
  * Creates a source that wraps a source map for use in Webpack
  * @param options Source map configuration options
+ * @returns A Webpack source
  * @see {@link createSourceMap}
  */
 export function createSourceMapSource(

@@ -21,11 +21,15 @@ import type {
 } from '../popup/msgs';
 import { getMessage } from '../shared';
 
+/**
+ * A partial {@link MutationRecord}
+ * @see {@link https://developer.mozilla.org/docs/Web/API/MutationRecord MDN Reference}
+ */
 interface PartialNodeMutationRecord {
     readonly type: 'childList';
     readonly target?: Node | null;
-    readonly addedNodes: NodeList | Node[];
-    readonly removedNodes: NodeList | Node[];
+    readonly addedNodes: Iterable<Node>;
+    readonly removedNodes: Iterable<Node>;
     readonly previousSibling?: Node | null;
 }
 
@@ -476,7 +480,7 @@ function _disconnectBackground(): void {
 
 /**
  * The connection handler. Posts document updates to the popup.
- * @param connection
+ * @param connection The new connection
  */
 function _onConnect(connection: browser.runtime.Port): void {
     console.log(getMessage('script_connected', []));
@@ -496,7 +500,6 @@ function _onConnect(connection: browser.runtime.Port): void {
         subtree: true,
         attributes: true,
         characterData: true
-        // characterDataOldValue: true
     });
 
     // Pushing initial DOM and blocking mutations, then pushing any mutations

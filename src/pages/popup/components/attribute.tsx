@@ -14,6 +14,10 @@ type SharedValues = {
 
 export type UpdateAttributeMsg = BaseUpdateMsg & SharedValues;
 
+/**
+ * Validates the given message
+ * @param msg The attribute state update message
+ */
 export function validateUpdateAttributeMsg(
     msg: Readonly<unknown>
 ): asserts msg is UpdateAttributeMsg {
@@ -30,7 +34,9 @@ export type StoredVirtualAttributeProps = StoredVirtualNodeProps &
 export type VirtualAttributeProps = NonStoredProps<StoredVirtualAttributeProps>;
 
 /**
- * The document source virtual element attribute component
+ * The source attribute component
+ * @param props The attribute state
+ * @returns An attribute visualization
  */
 export function VirtualAttribute(
     props: Readonly<VirtualAttributeProps>
