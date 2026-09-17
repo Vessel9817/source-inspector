@@ -3,13 +3,16 @@
     "exec": "node --run=start-helper",
     "verbose": true,
     "ignore": [
-        "/dist",
-        "/coverage",
-        "/.vscode",
-        "/.git",
-        "/test",
-        "/.github",
-        "/nodemon"
+        "**/dist/**",
+        "**/node_modules/**",
+        "**/coverage/**",
+        "**/.idea/**",
+        "**/.vs/**",
+        "**/.vscode/**",
+        "**/.git/**",
+        "**/test/**",
+        "**/.github/**",
+        "**/nodemon/**"
     ],
     "watch": [
         "./webpack/",
@@ -17,7 +20,7 @@
         "./src/react-app-env.d.ts",
         "./package.json",
         "./package-lock.json",
-        "tsconfig.*"
+        "./tsconfig.*"
     ],
     "env": {
         "NODE_ENV": "development",
