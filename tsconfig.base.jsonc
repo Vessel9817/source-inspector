@@ -1,3 +1,5 @@
+// tsconfig.json is needed until the following issue is resolved:
+// https://github.com/microsoft/vscode/issues/12463
 {
     "$schema": "https://www.schemastore.org/tsconfig.json",
     "compilerOptions": {
