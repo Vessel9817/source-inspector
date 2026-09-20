@@ -32,7 +32,8 @@
         "noEmit": true,
         "jsx": "react",
         "typeRoots": ["./node_modules/@types"],
-        "types": ["chrome", "firefox-webext-browser", "node"],
+        // firefox-webext-browser must come before chrome, as browser types conflict
+        "types": ["node", "firefox-webext-browser", "chrome"],
         "noErrorTruncation": true, // See fully expanded types
         "rootDir": ".",
         "outDir": "dist/tsc" // See also: https://stackoverflow.com/a/48798945
