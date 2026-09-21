@@ -20,6 +20,7 @@ import type {
     UpdateTextMsg
 } from '../popup/msgs';
 import { getMessage } from '../shared';
+import { type AttributeCacheEntry, updateAttributeCache } from './attributeCache';
 
 /**
  * A partial {@link MutationRecord}
@@ -83,10 +84,7 @@ const ADD_NODE_SUPPORTED_TYPES = new Set<Readonly<number>>([
 let _connection: browser.runtime.Port | undefined;
 let _observer: MutationObserver | undefined;
 const _elementMap = new WeakMap<Node, string>();
-const _attrMap = new WeakMap<
-    Element,
-    Array<{ id: string; attrName: string }>
->();
+const _attrMap = new WeakMap<Element, AttributeCacheEntry[]>();
 let _initialDomConstructed = false;
 /**
  * @implNote Not thread safe: do not use in a multithreaded environment
