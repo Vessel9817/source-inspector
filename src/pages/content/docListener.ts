@@ -139,34 +139,9 @@ function _getAttrId(
     }
 
     const elementAttrCaches = _attrMap.get(ownerElement)!;
-    let attrCache = elementAttrCaches.find(
-        (obj) => obj.attrName === attrName
-    );
+    const id = _getId(attr ?? ownerElement.getAttributeNode(attrName)!);
 
-    if (attrCache == null) {
-        const id = _getId(attr!);
-        attrCache = { id, attrName };
-
-        elementAttrCaches.push(attrCache);
-
-        return id;
-    } else if (attr == null) {
-        return attrCache.id;
-    }
-
-    const id = _getId(attr);
-
-    attrCache = elementAttrCaches.find((obj) => obj.id === id);
-
-    if (attrCache == null) {
-        attrCache = { id, attrName };
-
-        elementAttrCaches.push(attrCache);
-    } else {
-        attrCache.attrName = attrName;
-    }
-
-    return attrCache.id;
+    return updateAttributeCache(elementAttrCaches, id, attrName).id;
 }
 
 function _characterDataHandler(
