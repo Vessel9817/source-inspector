@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { afterEach, beforeEach, describe, it } from 'node:test';
 import { load, mockEnv } from '../shared';
+import { updateAttributeCache } from '../../../src/pages/content/attributeCache';
 
 describe('content script', () => {
     beforeEach(() => {
@@ -19,6 +20,24 @@ describe('content script', () => {
         node.DOCUMENT_FRAGMENT_NODE = 11;
         node.NOTATION_NODE = 12;
         globalThis.Node = node;
+    });
+
+    it('reuses an id when the browser replaces an attribute node', () => {
+        const cache = [{ id: 'old-id', attrName: 'data-test' }];
+
+        const entry = updateAttributeCache(cache, 'new-id', 'DATA-TEST');
+
+        assert.equal(entry.id, 'new-id');
+        assert.deepEqual(cache, [{ id: 'new-id', attrName: 'data-test' }]);
+    });
+
+    it('tracks renamed attributes without adding a duplicate entry', () => {
+        const cache = [{ id: 'attribute-id', attrName: 'data-old' }];
+
+        const entry = updateAttributeCache(cache, 'attribute-id', 'data-new');
+
+        assert.equal(entry.attrName, 'data-new');
+        assert.deepEqual(cache, [{ id: 'attribute-id', attrName: 'data-new' }]);
     });
 
     it('closes connection on timeout', async (t) => {

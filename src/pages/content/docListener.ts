@@ -20,6 +20,7 @@ import type {
     UpdateTextMsg
 } from '../popup/msgs';
 import { getMessage } from '../shared';
+import { type AttributeCacheEntry, updateAttributeCache } from './attributeCache';
 
 /**
  * A partial {@link MutationRecord}
@@ -83,10 +84,7 @@ const ADD_NODE_SUPPORTED_TYPES = new Set<Readonly<number>>([
 let _connection: browser.runtime.Port | undefined;
 let _observer: MutationObserver | undefined;
 const _elementMap = new WeakMap<Node, string>();
-const _attrMap = new WeakMap<
-    Element,
-    Array<{ id: string; attrName: string }>
->();
+const _attrMap = new WeakMap<Element, AttributeCacheEntry[]>();
 let _initialDomConstructed = false;
 /**
  * @implNote Not thread safe: do not use in a multithreaded environment
@@ -144,34 +142,9 @@ function _getAttrId(
     }
 
     const elementAttrCaches = _attrMap.get(ownerElement)!;
-    let attrCache = elementAttrCaches.find(
-        (obj) => obj.attrName === attrName
-    );
+    const id = _getId(attr ?? ownerElement.getAttributeNode(attrName)!);
 
-    if (attrCache == null) {
-        const id = _getId(attr!);
-        attrCache = { id, attrName };
-
-        elementAttrCaches.push(attrCache);
-
-        return id;
-    } else if (attr == null) {
-        return attrCache.id;
-    }
-
-    const id = _getId(attr);
-
-    attrCache = elementAttrCaches.find((obj) => obj.id === id);
-
-    if (attrCache == null) {
-        attrCache = { id, attrName };
-
-        elementAttrCaches.push(attrCache);
-    } else {
-        attrCache.attrName = attrName;
-    }
-
-    return attrCache.id;
+    return updateAttributeCache(elementAttrCaches, id, attrName).id;
 }
 
 function _characterDataHandler(
