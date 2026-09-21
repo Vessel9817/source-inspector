@@ -1,49 +1,29 @@
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
 import { LICENSE } from '../assets/license';
 import { IS_DEV_MODE } from '../env';
+import { filenameTemplate } from './output';
 
-export const resolveExts = ['.css', '.sass', '.scss'];
+/**
+ * @experimental To be released as stable in Webpack 6
+ */
+export const native = true;
 
-export const moduleRules = [
-    {
-        // https://www.npmjs.com/package/style-loader#recommend
-        test: /\.(css|scss|sass)$/,
-        exclude: /node_modules/,
-        use: [
-            {
-                loader: IS_DEV_MODE
-                    ? 'style-loader'
-                    : MiniCssExtractPlugin.loader
-            },
-            {
-                loader: 'css-loader',
-                options: {
-                    esModule: true,
-                    sourceMap: true,
-                    modules: 'global'
-                }
-            },
-            {
-                loader: 'postcss-loader',
-                options: {
-                    sourceMap: true
-                }
-            },
-            {
-                loader: 'sass-loader',
-                options: {
-                    sourceMap: true
-                }
-            }
-        ]
+export const resolveExts = ['.css'];
+
+export const parsers: NonNullable<webpack.ModuleOptions['parser']> = {
+    css: {
+        exportType: IS_DEV_MODE ? 'style' : 'link'
     }
-];
+};
 
-export const plugins = [
-    // https://www.npmjs.com/package/style-loader#recommend
-    !IS_DEV_MODE && new MiniCssExtractPlugin(),
+const template = filenameTemplate('.css');
 
+export const output: webpack.Configuration['output'] = {
+    cssFilename: template,
+    cssChunkFilename: template
+};
+
+export const plugins: NonNullable<webpack.Configuration['plugins']> = [
     // Embedding license information after minimization
     new webpack.BannerPlugin({
         include: [/\.css$/i],

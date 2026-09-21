@@ -13,6 +13,10 @@ interface SharedValues {
 
 export type UpdateTextMsg = BaseUpdateMsg & SharedValues;
 
+/**
+ * Validates the given message
+ * @param msg The text node update message
+ */
 export function validateUpdateTextMsg(
     msg: Readonly<unknown>
 ): asserts msg is UpdateTextMsg {
@@ -29,7 +33,9 @@ export type StoredVirtualTextProps = StoredVirtualNodeProps &
 export type VirtualTextProps = NonStoredProps<StoredVirtualTextProps>;
 
 /**
- * The document source block virtual text node component
+ * The source text node component
+ * @param props The text node state
+ * @returns A text node visualization
  */
 export function VirtualText(props: Readonly<VirtualTextProps>): ReactNode {
     const hidden = props.nodeValue === '';
@@ -48,7 +54,9 @@ export interface VirtualInlineTextProps {
 }
 
 /**
- * The document source virtual inline text node component
+ * The source inline text component
+ * @param props The inline text state
+ * @returns An inline text component
  */
 export function VirtualInlineText(
     props: Readonly<VirtualInlineTextProps>

@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { SourceMapGenerator } from 'source-map';
 import { type Tap } from 'tapable';
 import type {
@@ -31,11 +32,12 @@ type GenerateManifestArgs = Omit<GenerateFilePluginArgs, 'content' | 'target'> &
     manifest: Manifest;
 
     /**
-     * How much to indent the manifest
+     * How many spaces with which to indent the manifest
      */
     indents?: number;
 
     /**
+     * The source file path
      * @default 'manifest.json'
      */
     target?: string;
@@ -71,6 +73,7 @@ type CreateSourceMapArgs = {
 /**
  * Creates a source map for use in Webpack
  * @param options Source map configuration options
+ * @returns A source map
  * @see {@link https://tc39.es/ecma426/2024/#source-map-format Specification}
  */
 export function createSourceMap(
@@ -105,6 +108,7 @@ export function createSourceMap(
 /**
  * Creates a source that wraps a source map for use in Webpack
  * @param options Source map configuration options
+ * @returns A Webpack source
  * @see {@link createSourceMap}
  */
 export function createSourceMapSource(
@@ -185,8 +189,8 @@ export default class GenerateFilePlugin implements WebpackPluginInstance {
     ): string {
         const replacer = (key: string, value: any) => {
             // Manifest requires forward slashes in paths
-            return typeof value === 'string'
-                ? value.replaceAll('\\', '/')
+            return typeof value === 'string' && path.sep !== '/'
+                ? value.replaceAll(path.sep, '/')
                 : value;
         };
 

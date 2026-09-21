@@ -1,7 +1,10 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: CI
 
 on:
   push:
+  pull_request:
 
 jobs:
   # Runs a TypeScript type check
@@ -38,7 +41,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Check dependency tree
-        run: npm i --package-lock-only --dry-run
+        run: npm i --package-lock-only --dry-run --no-fund
   # Builds extension
   build:
     permissions:

@@ -1,6 +1,5 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { type Tap } from 'tapable';
-import type { Compiler, WebpackPluginInstance } from 'webpack';
+import webpack, { type Compiler, type WebpackPluginInstance } from 'webpack';
 import { createSourceMapSource } from './genFile';
 
 export default class CreateHtmlSourceMapWebpackPlugin implements WebpackPluginInstance {
@@ -10,20 +9,20 @@ export default class CreateHtmlSourceMapWebpackPlugin implements WebpackPluginIn
         compiler.hooks.compilation.tap(this.plugin, (compilation) => {
             // beforeEmit needed to supersede minimization, see:
             // https://github.com/jantimon/html-webpack-plugin?tab=readme-ov-file#events
-            HtmlWebpackPlugin.getHooks(
+            webpack.html.HtmlModulesPlugin.getCompilationHooks(
                 compilation
-            ).beforeEmit.tapAsync(this.plugin, (data, cb) => {
+            ).transformHtml.tap(this.plugin, (html, ctx) => {
                 compilation.emitAsset(
-                    `${data.outputName}.map`,
+                    `${ctx.outputName}.map`,
                     createSourceMapSource({
-                        content: data.html,
-                        target: data.outputName
+                        content: html,
+                        target: ctx.outputName
                     }),
-                    { sourceFilename: data.outputName }
+                    { sourceFilename: ctx.outputName }
                 );
 
                 // Telling Webpack to move on
-                cb(null, data);
+                return html
             });
         });
     }

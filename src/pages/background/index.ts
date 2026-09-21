@@ -1,13 +1,14 @@
 import registerPopup from '../popup/background';
+import { getMessage } from '../shared';
 
 class Background {
     /**
      * Registers all the background worker dependencies
      */
-    static register() {
+    static register(): void {
         registerPopup();
 
-        console.log(chrome.i18n.getMessage('bg_registered'));
+        console.log(getMessage('bg_registered', []));
     }
 }
 

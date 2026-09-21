@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, beforeEach, describe, it } from 'node:test';
-import { load } from '../shared';
+import { load, mockEnv } from '../shared';
 import { updateAttributeCache } from '../../../src/pages/content/attributeCache';
 
 describe('content script', () => {
@@ -43,9 +43,6 @@ describe('content script', () => {
     it('closes connection on timeout', async (t) => {
         // Mockups
         globalThis.chrome = {
-            i18n: {
-                getMessage: (...args) => ''
-            } as typeof chrome.i18n,
             runtime: {
                 onConnect: {
                     addListener: (...args) => {},
@@ -57,7 +54,9 @@ describe('content script', () => {
 
         const cleanup = t.mock.method(globalThis.chrome.runtime.onConnect, 'removeListener');
 
+        // Test
         t.mock.timers.enable({ apis: ['setTimeout'], now: Date.now() });
+        mockEnv({ BROWSER: 'chrome' }, t); // BROWSER is unused
 
         await load<typeof import('../../../src/pages/content/docListener')>('../../../src/pages/content/docListener');
         t.mock.timers.runAll();

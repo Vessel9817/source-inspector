@@ -7,8 +7,7 @@
 
 ## Technical Priorities
 
-- Add documentation where it's missing or necessary (e.g, @param or @template)
-- [Encrypt messages][encrypt-msgs]
+- [Encrypt messages][encrypt-msgs] to any injected tab
 - Rethink debug view (possibly a test-id field?)
 
 ## Backlog Priorities

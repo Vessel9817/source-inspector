@@ -12,7 +12,6 @@ export interface NodeTreeProps {
  * connection effect, this component is not expected
  * to work properly in development with React's strict
  * mode enabled.
- *
  * @returns The document source inspection UI component
  */
 export default function NodeTree(props: NodeTreeProps): ReactNode {

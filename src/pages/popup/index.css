@@ -1,4 +1,4 @@
-@use '../shared/index.css';
+@import '../shared/index.css';
 
 /* General formatting */
 
@@ -24,6 +24,8 @@
     --doctype-dark: #999999;
     --document-light: black;
     --document-dark: white;
+    --error-bg-dark: rgba(139, 0, 0, 0.5);
+    --error-bg-light: rgba(255, 0, 0, 0.25);
 }
 
 a {
@@ -76,6 +78,10 @@ ul {
 
 .document {
     color: var(--light-mode, var(--document-light)) var(--dark-mode, var(--document-dark));
+}
+
+.error {
+    background-color: var(--light-mode, var(--error-bg-light)) var(--dark-mode, var(--error-bg-dark));
 }
 
 /* Top-level formatting */

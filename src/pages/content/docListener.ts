@@ -19,12 +19,17 @@ import type {
     UpdateProcessingInstructionMsg,
     UpdateTextMsg
 } from '../popup/msgs';
+import { getMessage } from '../shared';
 
+/**
+ * A partial {@link MutationRecord}
+ * @see {@link https://developer.mozilla.org/docs/Web/API/MutationRecord MDN Reference}
+ */
 interface PartialNodeMutationRecord {
     readonly type: 'childList';
     readonly target?: Node | null;
-    readonly addedNodes: NodeList | Node[];
-    readonly removedNodes: NodeList | Node[];
+    readonly addedNodes: Iterable<Node>;
+    readonly removedNodes: Iterable<Node>;
     readonly previousSibling?: Node | null;
 }
 
@@ -149,10 +154,7 @@ function _characterDataHandler(
 ): void {
     const id = _getId(mutation.target);
 
-    console.error(
-        chrome.i18n.getMessage('script_char_mutation').replaceAll('{0}', id),
-        mutation
-    );
+    console.error(getMessage('script_char_mutation', [id]), mutation);
 }
 
 function _attributesHandler(
@@ -163,11 +165,7 @@ function _attributesHandler(
     const parentId = _getId(ownerNode);
 
     if (ownerNode.nodeType !== Node.ELEMENT_NODE) {
-        console.error(
-            chrome.i18n.getMessage('script_invalid_attr')
-                .replaceAll('{0}', parentId),
-            ownerNode
-        );
+        console.error(getMessage('script_invalid_attr', [parentId]), ownerNode);
         return;
     }
 
@@ -196,9 +194,9 @@ function _removedNodesHandler(
             const attr = node as Attr;
 
             console.warn(
-                chrome.i18n.getMessage('script_missing_attr'),
+                getMessage('script_missing_attr', []),
                 attr,
-                chrome.i18n.getMessage('script_caution')
+                getMessage('script_caution', [])
             );
 
             if (attr.ownerElement != null) {
@@ -221,7 +219,7 @@ function _removedNodesHandler(
 
             _sendMessage(msg);
         } else {
-            console.info(chrome.i18n.getMessage('script_missing_node'), node);
+            console.info(getMessage('script_missing_node', []), node);
         }
     }
 }
@@ -234,9 +232,10 @@ function _addNode(
 
     if (!ADD_NODE_SUPPORTED_TYPES.has(node.nodeType)) {
         console.error(
-            chrome.i18n.getMessage('script_unsupported_node')
-                .replaceAll('{0}', node.nodeType.toString())
-                .replaceAll('{1}', id),
+            getMessage(
+                'script_unsupported_node',
+                [node.nodeType.toString(), id]
+            ),
             node
         );
         return;
@@ -330,9 +329,10 @@ function _addNode(
         default: {
             // Should never happen
             console.error(
-                chrome.i18n.getMessage('script_unimplemented_node')
-                    .replaceAll('{0}', node.nodeType.toString())
-                    .replaceAll('{1}', id)
+                getMessage(
+                    'script_unimplemented_node',
+                    [node.nodeType.toString(), id]
+                )
             );
         }
     }
@@ -442,7 +442,7 @@ function _disconnect(): void {
     _disconnectObserver();
     _disconnectConnection();
 
-    console.log(chrome.i18n.getMessage('popup_disconnected'));
+    console.log(getMessage('popup_disconnected', []));
 }
 
 /**
@@ -455,10 +455,10 @@ function _disconnectBackground(): void {
 
 /**
  * The connection handler. Posts document updates to the popup.
- * @param connection
+ * @param connection The new connection
  */
 function _onConnect(connection: browser.runtime.Port): void {
-    console.log(chrome.i18n.getMessage('script_connected'));
+    console.log(getMessage('script_connected', []));
 
     // Completing connection initialization
     _connection = connection;
@@ -475,7 +475,6 @@ function _onConnect(connection: browser.runtime.Port): void {
         subtree: true,
         attributes: true,
         characterData: true
-        // characterDataOldValue: true
     });
 
     // Pushing initial DOM and blocking mutations, then pushing any mutations
@@ -491,8 +490,8 @@ function _onConnect(connection: browser.runtime.Port): void {
 function _connect(): void {
     // Notifying background we're ready to connect
     chrome.runtime.onConnect.addListener(_onConnect);
-    chrome.runtime.sendMessage({} as any);
-    console.log(chrome.i18n.getMessage('script_ready'));
+    chrome.runtime.sendMessage(chrome.runtime.id, {} as any);
+    console.log(getMessage('script_ready', []));
 
     // Removing listener after fixed timeout
     setTimeout(_disconnectBackground, TIMEOUT_MS);

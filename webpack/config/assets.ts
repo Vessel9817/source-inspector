@@ -1,5 +1,7 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import assert from 'node:assert/strict';
 import path from 'node:path';
+import type webpack from 'webpack';
 import { ICON_PATH_MAPPINGS, MANIFEST } from '../assets/manifest';
 import { IS_DEV_MODE, OUTPUT_ABS_DIR, PROJECT_ROOT } from '../env';
 import { GenerateFilePlugin } from '../plugins';
@@ -17,7 +19,7 @@ export const resolveExts = [
     '.woff2'
 ];
 
-export const moduleRules = [
+export const moduleRules: NonNullable<webpack.ModuleOptions['rules']> = [
     {
         test: new RegExp(
             String.raw`\.(?:${resolveExts.map((ext) => RegExp.escape(ext)).join('|')})$`
@@ -34,12 +36,22 @@ export const plugins = [
             ...ICON_PATH_MAPPINGS,
             {
                 from: path.join(PROJECT_ROOT, '_locales'),
-                to: path.join(OUTPUT_ABS_DIR, '_locales')
+                to: path.join(OUTPUT_ABS_DIR, '_locales'),
+                transform: (datum) => {
+                    const locale = JSON.parse(datum.toString());
+
+                    assert.ok(typeof locale === 'object');
+                    assert.ok(locale != null);
+
+                    delete locale?.$schema;
+
+                    return JSON.stringify(locale, null, IS_DEV_MODE ? 2 : undefined);
+                }
             }
         ]
     }),
 
-    // Generating manifest files
+    // Generating manifest file
     GenerateFilePlugin.generateManifestPlugin({
         manifest: MANIFEST,
         indents: IS_DEV_MODE ? 2 : undefined

@@ -1,20 +1,18 @@
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { generateRoot, IS_PRODUCTION } from '../shared';
 import Options from './options';
 
+// Must run before React is used
+if (IS_PRODUCTION) {
+    disableReactDevTools();
+}
+
 // CSS
-import './index.scss';
+import './index.css';
 
-const container = document.getElementById('app-container');
+const root = generateRoot();
 
-if (container != null) {
-    const root = createRoot(container);
-
-    root.render(
-        <Options />
-    );
-}
-else {
-    // Shouldn't occur
-    throw new Error('App container missing');
-}
+root.render(
+    <Options />
+);

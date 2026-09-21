@@ -1,5 +1,6 @@
 import { Mutex, withTimeout } from 'async-mutex';
 import React, { createContext, ReactNode } from 'react';
+import { BROWSER, getMessage } from '../shared';
 import type { StoredVirtualNodeProps } from './base';
 import type {
     StoredVirtualAttributeProps,
@@ -18,7 +19,6 @@ import {
     validatePopupMsg
 } from './msgs';
 import NodeTree from './popup';
-import { BROWSER } from '../shared';
 
 export type NodeState = { [id: string]: StoredVirtualNodeProps };
 
@@ -87,9 +87,9 @@ export class PopupManager {
         // `browser` can only have one async sender/receiver,
         // so we wrap a syncronous sender and use an async receiver
         return BROWSER == 'chrome'
-            ? chrome.runtime.sendMessage(msg)
+            ? chrome.runtime.sendMessage(chrome.runtime.id, msg)
             : new Promise((resolve) => {
-                browser.runtime.sendMessage(msg, resolve)
+                chrome.runtime.sendMessage(chrome.runtime.id, msg, resolve)
             });
     }
 
@@ -99,10 +99,7 @@ export class PopupManager {
         this.newConnection.onDisconnect.addListener(this.onDisconnect);
         this.newConnection.onMessage.addListener(this.queueMessage);
 
-        console.log(
-            chrome.i18n.getMessage('popup_connected')
-                .replaceAll('{0}', tabId.toString())
-        );
+        console.log(getMessage('popup_connected', [tabId.toString()]));
     }
 
     /**
@@ -190,10 +187,7 @@ export class PopupManager {
         }
 
         if (!prevSiblingFound) {
-            console.warn(
-                chrome.i18n.getMessage('popup_sibling_missing')
-                    .replaceAll('{0}', prevSiblingId)
-            );
+            console.warn(getMessage('popup_sibling_missing', [prevSiblingId]));
         }
 
         return [...prevSiblingIds, id, ...nextSiblingIds];
@@ -202,17 +196,14 @@ export class PopupManager {
     /**
      * Places the given message into a queue for processing.
      * Input should be treated as untrusted.
-     * @param msg
+     * @param msg The message to enqueue
      * @implNote Thread safety: acquires the {@link queueLock}
      */
     private async _queueMessage(msg: Readonly<unknown>): Promise<void> {
         try {
             validatePopupMsg(msg);
         } catch {
-            console.error(
-                chrome.i18n.getMessage('popup_validation_failed'),
-                msg
-            );
+            console.error(getMessage('popup_validation_failed', []), msg);
             return;
         }
 
@@ -240,7 +231,7 @@ export class PopupManager {
     /**
      * Processes the given message, resulting in a
      * virtual DOM tree modification if successful
-     * @param msg
+     * @param msg The message to process
      * @implNote Thread safety: acquires the {@link nodeLock}
      */
     private async processMessage(msg: Readonly<PopupMsg>): Promise<void> {
@@ -257,10 +248,7 @@ export class PopupManager {
                     break;
                 }
                 default: {
-                    console.error(
-                        chrome.i18n.getMessage('popup_invalid_msg'),
-                        msg
-                    );
+                    console.error(getMessage('popup_invalid_msg', []), msg);
                 }
             }
         } finally {
@@ -285,13 +273,14 @@ export class PopupManager {
         // Handling root node
         if (parentId == null) {
             if (this._rootId != null) {
-                const rootMsg = chrome.i18n.getMessage('popup_root_missing')
-                    .replaceAll('{0}', id);
+                const rootMsg = getMessage('popup_root_missing', [id]);
                 const siblingMsg =
                     prevSiblingId == null
                         ? ''
-                        : '\n' + chrome.i18n.getMessage('popup_root_sibling_missing')
-                            .replaceAll('{0}', prevSiblingId);
+                        : '\n' + getMessage(
+                            'popup_root_sibling_missing',
+                            [prevSiblingId]
+                        );
 
                 console.error(rootMsg, siblingMsg);
                 return;
@@ -346,10 +335,7 @@ export class PopupManager {
      */
     private removeNode(id: Readonly<string>): void {
         if (id == null || !(id in this._nodes)) {
-            console.error(
-                chrome.i18n.getMessage('popup_missing_node')
-                    .replaceAll('{0}', id)
-            );
+            console.error(getMessage('popup_missing_node', [id]));
             return;
         }
 
@@ -361,7 +347,7 @@ export class PopupManager {
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             // Attribute should always have a parent, but just in case
             if (parentId == null) {
-                console.warn(chrome.i18n.getMessage('popup_hanging_attr'), node);
+                console.warn(getMessage('popup_hanging_attr', []), node);
             } else {
                 const parent = nextNodes[parentId] as StoredVirtualElementProps;
 
@@ -390,8 +376,7 @@ export class PopupManager {
 
             if (currentNode == null) {
                 console.warn(
-                    chrome.i18n.getMessage('popup_node_removed')
-                        .replaceAll('{0}', currentId),
+                    getMessage('popup_node_removed', [currentId]),
                     node
                 );
                 continue;
@@ -415,8 +400,8 @@ export class PopupManager {
     }
 
     /**
-     * Updates any type of node based on the given message
-     * @param msg
+     * Updates a node's state
+     * @param msg The node update message
      * @implNote Not thread safe: must only be called under the {@link nodeLock}
      */
     private updateNodeHandler(msg: Readonly<UpdateMsg>): void {
@@ -425,7 +410,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
+                    console.error(getMessage('popup_invalid_update', []), msg);
                     return;
                 }
 
@@ -442,7 +427,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
+                    console.error(getMessage('popup_invalid_update', []), msg);
                     return;
                 }
 
@@ -467,7 +452,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
+                    console.error(getMessage('popup_invalid_update', []), msg);
                     return;
                 }
 
@@ -495,7 +480,7 @@ export class PopupManager {
                 const parentId = msg.parentId;
 
                 if (parentId == null || !(parentId in this._nodes)) {
-                    console.error(chrome.i18n.getMessage('popup_invalid_update'), msg);
+                    console.error(getMessage('popup_invalid_update', []), msg);
                     return;
                 }
 
@@ -517,8 +502,10 @@ export class PopupManager {
             case Node.NOTATION_NODE:
             default: {
                 console.error(
-                    chrome.i18n.getMessage('popup_unsupported_node')
-                        .replaceAll('{0}', msg.nodeType.toString()),
+                    getMessage(
+                        'popup_unsupported_node',
+                        [msg.nodeType.toString()]
+                    ),
                     msg
                 );
                 break;
@@ -537,7 +524,7 @@ export class PopupManager {
      * Callback function for when we lose connection with the inspected tab
      */
     private _onDisconnect(): void {
-        console.log(chrome.i18n.getMessage('script_disconnected'));
+        console.log(getMessage('script_disconnected', []));
     }
 
     /**
