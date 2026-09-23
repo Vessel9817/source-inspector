@@ -88,10 +88,13 @@ switch (BROWSER) {
             manifest_version: 2,
             browser_specific_settings: {
                 gecko: {
-                    strict_min_version: '102',
+                    strict_min_version: '142.0',
+                    data_collection_permissions: {
+                        required: ['none']
+                    }
                 },
                 gecko_android: {
-                    strict_min_version: '102'
+                    strict_min_version: '142.0'
                 }
             },
             background: {

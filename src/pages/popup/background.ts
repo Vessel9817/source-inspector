@@ -7,27 +7,27 @@ import { type ConnectMsg } from './msgs';
 export const TIMEOUT_MS = 5_000;
 
 class Popup {
-    #popupId: number | undefined;
-    #tabId: number | undefined;
+    private popupId: number | undefined;
+    private tabId: number | undefined;
     /**
-     * Used to ensure `#tryConnecting` fires a message only once.
+     * Used to ensure `tryConnecting` fires a message only once.
      * @implNote Once acquired, this mutex is never released: should never be treated as blocking.
      */
-    readonly #readyMutex: Mutex;
+    private readonly readyMutex: Mutex;
 
     constructor() {
-        this.#readyMutex = new Mutex();
+        this.readyMutex = new Mutex();
     }
 
     /**
      * If the popup has been created and the content script injected,
      * tells the popup how to listen to the content script.
      */
-    async #tryConnecting(): Promise<void> {
-        if (this.#popupId != null && this.#tabId != null) {
+    async tryConnecting(): Promise<void> {
+        if (this.popupId != null && this.tabId != null) {
             try {
                 // If acquired, never release to run this function only once
-                tryAcquire(this.#readyMutex);
+                tryAcquire(this.readyMutex);
             }
             catch (e) {
                 if (e === E_ALREADY_LOCKED) {
@@ -41,10 +41,10 @@ class Popup {
 
             const msg: ConnectMsg = {
                 type: 'connection',
-                tabId: this.#tabId
+                tabId: this.tabId
             };
 
-            chrome.tabs.sendMessage(this.#popupId, msg);
+            chrome.tabs.sendMessage(this.popupId, msg);
         }
     }
 
@@ -54,7 +54,7 @@ class Popup {
      * @param tabId The tab ID of the injected tab
      * @param popupId The tab ID of the popup
      */
-    #initializeTabBroker(tabId: number): void {
+    initializeTabBroker(tabId: number): void {
         const self = this;
 
         // Waiting for document listener to initialize
@@ -70,9 +70,9 @@ class Popup {
                     getMessage('bg_script_initialized', [tabId.toString()])
                 );
 
-                self.#tabId = tabId;
+                self.tabId = tabId;
 
-                await self.#tryConnecting();
+                await self.tryConnecting();
             }
         }
 
@@ -93,7 +93,7 @@ class Popup {
         // Injecting document listener into tab
         chrome.scripting.executeScript({
             target: {
-                tabId
+                tabId,
                 // allFrames: true
             },
             injectImmediately: true,
@@ -107,7 +107,7 @@ class Popup {
      * allowing document changes to be
      * communicated to the content script
      */
-    async #initializePopupBroker(): Promise<void> {
+    async initializePopupBroker(): Promise<void> {
         const self = this;
 
         function onWindowCreated(popupId: number): void {
@@ -127,9 +127,9 @@ class Popup {
                         getMessage('bg_popup_initialized', [popupId.toString()])
                     );
 
-                    self.#popupId = popupId;
+                    self.popupId = popupId;
 
-                    await self.#tryConnecting();
+                    await self.tryConnecting();
                 }
             }
 
@@ -149,18 +149,33 @@ class Popup {
         }
 
         // Opening popup
-        // Firefox for Android doesn't support `browser.windows`
-        (chrome.windows ?? chrome.tabs).create(
-            {
-                url: chrome.runtime.getURL('popup.html'),
-                type: 'popup'
-            },
-            (popup) => {
-                if (popup) {
-                    onWindowCreated(popup.tabs![0].id!);
+        if (chrome.windows) {
+            // Chrome and Firefox
+            chrome.windows.create(
+                {
+                    url: chrome.runtime.getURL('popup.html'),
+                    type: 'popup'
+                },
+                (popup) => {
+                    if (popup) {
+                        onWindowCreated(popup.tabs![0].id!);
+                    }
                 }
-            }
-        );
+            );
+        }
+        else {
+            // Firefox for Android
+            chrome.tabs.create(
+                {
+                    url: chrome.runtime.getURL('popup.html')
+                },
+                (tab) => {
+                    if (tab) {
+                        onWindowCreated(tab.id!);
+                    }
+                }
+            );
+        }
     }
 
     /**
@@ -175,8 +190,8 @@ class Popup {
         ) {
             const popup = new Popup();
 
-            popup.#initializePopupBroker();
-            popup.#initializeTabBroker(tab.id);
+            popup.initializePopupBroker();
+            popup.initializeTabBroker(tab.id);
         }
     }
 
