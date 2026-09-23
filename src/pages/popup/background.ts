@@ -1,3 +1,4 @@
+import { E_ALREADY_LOCKED, Mutex, tryAcquire } from 'async-mutex';
 import { BROWSER, getMessage } from '../shared';
 import { testInjectionUri } from '../shared/background';
 import { type ConnectMsg } from './msgs';
@@ -8,9 +9,34 @@ export const TIMEOUT_MS = 5_000;
 class Popup {
     #popupId: number | undefined;
     #tabId: number | undefined;
+    /**
+     * Used to ensure `#tryConnecting` fires a message only once.
+     * @implNote Once acquired, this mutex is never released: should never be treated as blocking.
+     */
+    readonly #readyMutex: Mutex;
 
-    #tryConnecting(): void {
+    constructor() {
+        this.#readyMutex = new Mutex();
+    }
+
+    /**
+     * If the popup has been created and the content script injected,
+     * tells the popup how to listen to the content script.
+     */
+    async #tryConnecting(): Promise<void> {
         if (this.#popupId != null && this.#tabId != null) {
+            try {
+                // If acquired, never release to run this function only once
+                tryAcquire(this.#readyMutex);
+            }
+            catch (e) {
+                if (e === E_ALREADY_LOCKED) {
+                    // Connection already established
+                    return;
+                }
+            }
+
+            // Tell popup to connect to tab
             console.log(getMessage('bg_connecting', []));
 
             const msg: ConnectMsg = {
@@ -46,7 +72,7 @@ class Popup {
 
                 self.#tabId = tabId;
 
-                self.#tryConnecting();
+                await self.#tryConnecting();
             }
         }
 
@@ -102,7 +128,7 @@ class Popup {
 
                     self.#popupId = popupId;
 
-                    self.#tryConnecting();
+                    await self.#tryConnecting();
                 }
             }
 
