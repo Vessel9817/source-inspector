@@ -42,10 +42,10 @@ const webpackConfig: webpack.Configuration = {
                     'src',
                     'pages',
                     'content',
-                    'docListener.ts'
+                    'index.ts'
                 )
             ],
-            filename: path.join('content', 'docListener.js'),
+            filename: path.join('content', 'index.js'),
             html: false
         },
         popup: {

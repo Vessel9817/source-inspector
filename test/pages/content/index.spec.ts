@@ -43,7 +43,7 @@ describe('content script', () => {
                 mockEnv({ BROWSER: BROWSER }, t);
                 
                 // Test
-                await load<typeof import('../../../src/pages/content/docListener')>('../../../src/pages/content/docListener');
+                await load<typeof import('../../../src/pages/content')>('../../../src/pages/content');
                 t.mock.timers.runAll();
 
                 assert.equal(cleanup.mock.callCount(), 1);
