@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { afterEach, beforeEach, describe, it } from 'node:test';
 import { updateAttributeCache } from '../../../src/pages/content/attributeCache';
-import { ALLOWED_BROWSERS } from '../../../webpack/validators';
 import { load, mockBrowser, mockDOM, mockEnv, unmockBrowser, unmockDOM } from '../shared';
+
+// Be VERY intentional about importing from outside src/ and test/
+import { ALLOWED_BROWSERS } from '../../../webpack/validators';
 
 describe('content script', () => {
     beforeEach(() => {

@@ -2,6 +2,8 @@ import assert from 'node:assert';
 import { afterEach, beforeEach, describe, it } from 'node:test';
 import { mockBrowser, unmockBrowser } from '.';
 import * as background from '../../../src/pages/shared/background';
+
+// Be VERY intentional about importing from outside src/ and test/
 import { ALLOWED_BROWSERS } from '../../../webpack/validators';
 
 describe('background commons', () => {
