@@ -4,8 +4,12 @@ export interface AttributeCacheEntry {
 }
 
 /**
- * Keeps one inspector id per attribute name, even when the browser replaces
- * the underlying Attr node while editing HTML in DevTools.
+ * Updates the attribute cache, mapping `id` to `attributeName` in storage,
+ * even when the browser replaces the underlying Attr node while editing HTML
+ * in DevTools.
+ * @param cache The attribute cache
+ * @param id The node id
+ * @param attributeName The attribute name
  */
 export function updateAttributeCache(
     cache: AttributeCacheEntry[],
@@ -17,6 +21,7 @@ export function updateAttributeCache(
 
     if (byName != null) {
         byName.id = id;
+
         return byName;
     }
 
@@ -24,10 +29,13 @@ export function updateAttributeCache(
 
     if (byId != null) {
         byId.attrName = attrName;
+
         return byId;
     }
 
     const entry = { id, attrName };
+
     cache.push(entry);
+
     return entry;
 }
