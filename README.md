@@ -9,8 +9,20 @@ If you're a developer who ever needs to debug something within their browser,
 DevTools is probably the most popular debugger, as it's shipped with Chrome.
 It's a great resource, as are the many open-source alternatives. However, these
 debuggers all rely on the browser's native debugger. Some very smart people have
-figured out ways to detect when a debugger has been attached to their site,
-whether through [DevTools][devtools] or through [browser.debugger][debugger].
+figured out ways to detect when a debugger has been attached to their site.
+Some examples:
+
+- [`devtools-detect`][old-devtools-detector]
+- [`devtools-detector`][devtools-detector]
+- [`detect-devtools-via-debugger-heartstop`][heartstop]
+- [`disable-devtool`][disable-devtool]
+
+The Chromium development team has mentioned any method of
+[detection can be circumvented][circumvention] by navigating to
+`chrome://inspect` > `Pages` > `pause`, but pausing the page's execution state
+doesn't allow for live, interactive inspection and can be detected after
+unpaused. It also may require pausing individual embedded frames, so if frames
+trade heartbeats, there's a window where this desync could also be detected.
 
 Enter `source-inspector`. We attempt to circumvent detection, so that you can
 safely view the live HTML source of even the sketchiest websites. This tool is
@@ -19,7 +31,7 @@ written in pure HTML or XHTML.
 
 ## Support
 
-This extension currently only supports desktop devices using Chromium
+This extension currently only supports **desktop** devices using Chromium
 or Firefox and derivatives, such as Edge or Tor. We aim to support all the
 currently stable [node types][node-types]. The remaining node types are a
 secondary priority, as their obsoletion from modern browsers impedes testing.
@@ -33,11 +45,10 @@ manifest files show the following:
 
 - We do not have any web accessible resources. If we did, we'd incorporate
   [`use_dynamic_url`][use_dynamic_url] to prevent extension detection.
-- Running the extension in normal or incognito mode uses separate processes and
-  separate memory. This means the extension in one mode cannot communicate
-  with- or access any data from- the other. In other words, our extension
-  respects incognito mode. However, as MV2 doesn't support this feature,
-  this only applies to Chromium builds.
+- Running the extension in normal or incognito mode shares the same extension
+  memory. This is to maintain parity with Firefox, as MV2 doesn't support the
+  split config. As per our [privacy policy](PRIVACY.md), we don't store any
+  sensitive data.
 - This extension uses minimal permissions for security purposes.
 - DevTools or any external debugger is not used. We wrote ours from scratch
   using plain JavaScript inspection and messaging.
@@ -56,7 +67,7 @@ There are also some additional security features we have implemented:
   [limited scope][compromised-renderers-more].
 - We make zero network requests, superseding an [origin header][origin-bug]
   bug in Firefox that could allow for detection.
-- We use MV3, superseding a [timing attack][timing-attack] with Chromium
+- We use MV3, superseding an MV2 [timing attack][timing-attack] with Chromium
   (excluding Brave) that would allow extension detection
 
 ## Building
@@ -148,7 +159,7 @@ Below are some caveats this extension has that don't have immediate fixes:
 - We can't currently catch every attribute event. Because `MutationObserver`s
   run at the microtask level, and because attribute `MutationRecord`s don't
   include the new attribute value, we don't yet have a way to get the values
-  of attributes every time they're updated, only most times.
+  of attributes every time they're updated, mostly just the latest time.
 - This extension is subject to the same restrictions as any extension. That
   means that protected URLs, such as `chrome://`, `edge://`,
   `chrome-extension://` and `about://`, cannot be inspected. Ironically, this
@@ -162,7 +173,7 @@ Below are some caveats this extension has that don't have immediate fixes:
 
 For a list of planned features and fixes, see the [TODOs](TODO.md).
 If your planned contribution isn't included there, feel free to open
-an issue or pull request. If anything doesn't follow W3 standards,
+an issue or pull request. If anything doesn't follow W3C standards,
 WHATWG standards or the HTML Living Standard, please let us know how we can
 better adhere to code.
 
@@ -184,8 +195,11 @@ and its dependencies.
 [ci-badge]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml/badge.svg
 [ci-workflow]: https://github.com/Vessel9817/source-inspector/actions/workflows/ci.yml
 [node-types]: https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-[devtools]: https://developer.chrome.com/docs/devtools
-[debugger]: https://developer.chrome.com/docs/extensions/reference/api/debugger
+[old-devtools-detector]: https://www.npmjs.com/package/devtools-detect
+[devtools-detector]: https://www.npmjs.com/package/devtools-detector
+[heartstop]: https://www.npmjs.com/package/detect-devtools-via-debugger-heartstop
+[disable-devtool]: https://www.npmjs.com/package/disable-devtool
+[circumvention]: https://issues.chromium.org/issues/41290322#comment17
 [timing-attack]: https://browserleaks.com/chrome#timing-attack-for-web-accessible-resources
 [use_dynamic_url]: https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
 [origin-bug]: https://bugzilla.mozilla.org/show_bug.cgi?id=1405971
