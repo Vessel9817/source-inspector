@@ -15,6 +15,7 @@
 
 # Build outputs
 /dist
+/web-ext-artifacts
 
 # Secrets
 /.git

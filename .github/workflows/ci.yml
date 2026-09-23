@@ -80,3 +80,25 @@ jobs:
         run: npm ci --no-fund
       - name: Run tests
         run: npm test
+  # Checks Firefox extension API compatibility
+  web-ext:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.x]
+        mode: ['dev', 'prod']
+    steps:
+      - uses: actions/checkout@v7
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install node modules
+        run: npm ci --no-fund
+      - name: Build extension
+        run: node --run=build -- firefox ${{ matrix.mode }}
+      - name: Lint extension
+        # Since we're linting bundled code, most warnings should be ignored
+        run: npm run web-ext:${{ matrix.mode }}
