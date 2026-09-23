@@ -154,7 +154,9 @@ class Popup {
                 type: 'popup'
             },
             (popup) => {
-                onWindowCreated(popup!.tabs![0].id!);
+                if (popup) {
+                    onWindowCreated(popup.tabs![0].id!);
+                }
             }
         );
     }
