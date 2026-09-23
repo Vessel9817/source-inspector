@@ -65,16 +65,19 @@ export function mockBrowser(browserName: BrowserName): void {
         /**
          * Minimum Chrome version: 4
          * Minimum Firefox version: 45
+         * Minimum Firefox for Android version: 45
          */
         extension: {
             /**
              * Minimum Chrome version: 12
              * Minimum Firefox version: *48
+             * Minimum Firefox for Android version: *48
              */
             isAllowedFileSchemeAccess: (...args) => Promise.resolve(false),
             /**
              * Minimum Chrome version: 12
              * Minimum Firefox version: 48
+             * Minimum Firefox for Android version: 48
              */
             isAllowedIncognitoAccess: (...args) => Promise.resolve(false)
         }
@@ -83,33 +86,39 @@ export function mockBrowser(browserName: BrowserName): void {
         /**
          * Minimum Chrome version: 4
          * Minimum Firefox version: 45
+         * Minimum Firefox for Android version: *45
          */
         extension: {
             /**
              * Minimum Chrome version: 7
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 48
              */
             inIncognitoContext: false
         },
         /**
          * Minimum Chrome version: 17
          * Minimum Firefox version: 45
+         * Minimum Firefox for Android version: 48
          */
         i18n: {
             /**
              * Minimum Chrome version: 17
              * Minimum Firefox version: *45
+             * Minimum Firefox for Android version: 48
              */
             getMessage
         },
         /**
          * Minimum Chrome version: 22
          * Minimum Firefox version: 45
+         * Minimum Firefox for Android version: 48
          */
         runtime: {
             /**
              * Minimum Chrome version: 22
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 48
              */
             getURL: (path) => {
                 return browserName === 'chrome'
@@ -119,11 +128,13 @@ export function mockBrowser(browserName: BrowserName): void {
             /**
              * Minimum Chrome version: 22
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 48
              */
             id,
             /**
              * Minimum Chrome version: 26
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 48
              */
             onConnect: {
                 addListener: (...args) => {},
@@ -132,6 +143,7 @@ export function mockBrowser(browserName: BrowserName): void {
             /**
              * Minimum Chrome version: 26
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 48
              */
             onMessage: {
                 addListener: (...args) => {},
@@ -140,54 +152,77 @@ export function mockBrowser(browserName: BrowserName): void {
             /**
              * Minimum Chrome version: 26
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 48
              */
             sendMessage: (...args) => {}
         },
         /**
          * Minimum Chrome version: *88
          * Minimum Firefox version: 45
+         * Minimum Firefox for Android version: 102
          */
         scripting: {
             /**
              * Minimum Chrome version: 102
              * Minimum Firefox version: 102
+             * Minimum Firefox for Android version: 102
              */
             ExecutionWorld: {
                 /**
                  * Minimum Chrome version: 102
                  * Minimum Firefox version: 102
+                 * Minimum Firefox for Android version: 102
                  */
                 ISOLATED: 'isolated' as const,
-            } as any,
+            } as unknown,
             /**
              * Minimum Chrome version: *102
              * Minimum Firefox version: *102
+             * Minimum Firefox for Android version: *102
              */
             executeScript: (...args) => {},
         },
         /**
          * Minimum Chrome version: 4
          * Minimum Firefox version: 45
+         * Minimum Firefox for Android version: 54
          */
         tabs: {
             /**
              * Minimum Chrome version: *5
              * Minimum Firefox version: *45
+             * Minimum Firefox for Android version: *54
              */
             connect: (...args) => {
                 return {
+                    /**
+                     * Minimum Chrome version: 26
+                     * Minimum Firefox version: 45
+                     * Minimum Firefox for Android version: 48
+                     */
                     disconnect: () => {},
+                    /**
+                     * Minimum Chrome version: 26
+                     * Minimum Firefox version: 45
+                     * Minimum Firefox for Android version: 48
+                     */
                     onDisconnect: {
                         addListener: () => {}
                     },
+                    /**
+                     * Minimum Chrome version: 26
+                     * Minimum Firefox version: 45
+                     * Minimum Firefox for Android version: 48
+                     */
                     onMessage: {
                         addListener: () => {}
                     }
                 } as unknown;
             },
             /**
-             * Minimum Chrome version: 20
-             * Minimum Firefox version: 45
+             * Minimum Chrome version: *20
+             * Minimum Firefox version: *45
+             * Minimum Firefox for Android version: *54
              */
             sendMessage: (...args) => {}
         },
@@ -228,10 +263,12 @@ export function mockBrowser(browserName: BrowserName): void {
             ...globalThis.browser,
             /**
              * Minimum Firefox version: 45
+             * Minimum Firefox for Android version: 55
              */
             browserAction: {
                 /**
-                 * Minimum Firefox version: 45
+                 * Minimum Firefox version: *45
+                 * Minimum Firefox for Android version: *55
                  */
                 onClicked: {
                     addListener: (...args) => {}
@@ -259,16 +296,19 @@ export function mockDOM(): void {
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     globalThis.window = {
         /**
-         * Minimum Chrome version: 1
-         * Minimum Firefox version: 1
+         * Minimum Chrome version: *1
+         * Minimum Firefox version: *1
+         * Minimum Firefox for Android version: *6
          */
         addEventListener: (...args: Parameters<Window['addEventListener']>) => {},
         /**
-         * Minimum Chrome version: 1
-         * Minimum Firefox version: 1
+         * Minimum Chrome version: *1
+         * Minimum Firefox version: *1
+         * Minimum Firefox for Android version: *6
          */
         removeEventListener: (...args: Parameters<Window['removeEventListener']>) => {}
     } as Window & typeof globalThis;
@@ -276,23 +316,27 @@ export function mockDOM(): void {
     /**
      * Minimum Chrome version: 26
      * Minimum Firefox version: 14
+     * Minimum Firefox for Android version: 14
      */
     const MutationObserver = Object.create({});
 
     /**
      * Minimum Chrome version: 26*
      * Minimum Firefox version: 14*
+     * Minimum Firefox for Android version: 14
      */
     MutationObserver.constructor = (callback: MutationCallback) => {
         return {
             /**
              * Minimum Chrome version: 18
              * Minimum Firefox version: 14
+             * Minimum Firefox for Android version: 14
              */
             disconnect: () => {},
             /**
              * Minimum Chrome version: 18*
              * Minimum Firefox version: 14*
+             * Minimum Firefox for Android version: *14
              */
             observe: (...args: Parameters<MutationObserver['observe']>) => {}
         };
@@ -303,67 +347,80 @@ export function mockDOM(): void {
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     const Node = Object.create({});
 
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.ELEMENT_NODE = 1;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.ATTRIBUTE_NODE = 2;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.TEXT_NODE = 3;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.CDATA_SECTION_NODE = 4;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.ENTITY_REFERENCE_NODE = 5;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.ENTITY_NODE = 6;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.PROCESSING_INSTRUCTION_NODE = 7;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.COMMENT_NODE = 8;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.DOCUMENT_NODE = 9;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.DOCUMENT_TYPE_NODE = 10;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.DOCUMENT_FRAGMENT_NODE = 11;
     /**
      * Minimum Chrome version: 1
      * Minimum Firefox version: 1
+     * Minimum Firefox for Android version: 4
      */
     Node.NOTATION_NODE = 12;
     globalThis.Node = Node;

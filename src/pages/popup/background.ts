@@ -149,7 +149,8 @@ class Popup {
         }
 
         // Opening popup
-        chrome.windows.create(
+        // Firefox for Android doesn't support `browser.windows`
+        (chrome.windows ?? chrome.tabs).create(
             {
                 url: chrome.runtime.getURL('popup.html'),
                 type: 'popup'
