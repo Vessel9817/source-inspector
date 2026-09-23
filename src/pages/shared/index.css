@@ -25,4 +25,5 @@
 
 body {
     background-color: var(--light-mode, var(--bg-light)) var(--dark-mode, var(--bg-dark));
+    display: inline-block;
 }
