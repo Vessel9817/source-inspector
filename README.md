@@ -36,6 +36,11 @@ or Firefox and derivatives, such as Edge or Tor. We aim to support all the
 currently stable [node types][node-types]. The remaining node types are a
 secondary priority, as their obsoletion from modern browsers impedes testing.
 
+Tor Browser currently doesn't support Firefox 142. However, this extension has
+been tested on it. Until this is the case, remove the `strict_min_version`
+property in the built `manifest.json` file or set it to a lower value, such as
+`140.0`.
+
 ## Privacy and Security
 
 See our [privacy policy](PRIVACY.md)
