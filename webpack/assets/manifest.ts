@@ -68,6 +68,7 @@ switch (BROWSER) {
             ...manifestBase,
             ...shared,
             manifest_version: 3,
+            minimum_chrome_version: '102',
             offline_enabled: true,
             background: {
                 service_worker: path.join('background', 'index.js')
@@ -85,6 +86,11 @@ switch (BROWSER) {
             ...manifestBase,
             ...shared,
             manifest_version: 2,
+            browser_specific_settings: {
+                gecko: {
+                    strict_min_version: '102'
+                }
+            },
             background: {
                 scripts: [path.join('background', 'index.js')],
                 persistent: false

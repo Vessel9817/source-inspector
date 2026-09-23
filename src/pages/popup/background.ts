@@ -96,8 +96,9 @@ class Popup {
                 tabId
                 // allFrames: true
             },
+            injectImmediately: true,
             files: ['content/docListener.js'],
-            world: 'ISOLATED'
+            world: chrome.scripting.ExecutionWorld.ISOLATED
         });
     }
 
