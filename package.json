@@ -1,4 +1,5 @@
 {
+    "$schema": "https://www.schemastore.org/package.json",
     "name": "source-inspector",
     "version": "1.0.0",
     "description": "A from-scratch open-source document source inspector that aims to be invisible to websites",

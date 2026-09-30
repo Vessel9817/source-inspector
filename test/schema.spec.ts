@@ -12,9 +12,9 @@ const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const ignoredDirectories = new Set(['.git', 'dist', 'node_modules']);
 const supportedExtensions = new Set(['.json', '.jsonc', '.yaml', '.yml']);
 
-// Matches SchemaStore defaults
-// https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L512-L531
 const unknownKeywords = [
+    // SchemaStore defaults
+    // https://github.com/SchemaStore/schemastore/blob/060c6eedbfcebcace35336d273099f90d1e6d3c5/cli.js#L512-L531
     'allowTrailingCommas',
     'defaultSnippets',
     'markdownDescription',
@@ -31,6 +31,8 @@ const unknownKeywords = [
     'x-intellij-language-injection',
     'x-intellij-html-description',
     'x-intellij-enum-metadata',
+    // package.json
+    'tsType'
 ];
 
 async function sourceFiles(directory: string): Promise<string[]> {
