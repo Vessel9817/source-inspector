@@ -15,7 +15,7 @@ class Popup {
      */
     private readonly readyMutex: Mutex;
 
-    constructor() {
+    private constructor() {
         this.readyMutex = new Mutex();
     }
 
@@ -23,7 +23,7 @@ class Popup {
      * If the popup has been created and the content script injected,
      * tells the popup how to listen to the content script.
      */
-    tryConnecting(): void {
+    private tryConnecting(): void {
         if (this.popupId != null && this.tabId != null) {
             try {
                 // If acquired, never release to run this function only once
@@ -51,19 +51,17 @@ class Popup {
     /**
      * Allows the inspected tab to connect,
      * allowing document changes to be communicated
+     * @param popup The popup to save `tabId` to
      * @param tabId The tab ID of the injected tab
-     * @param popupId The tab ID of the popup
      */
-    initializeTabBroker(tabId: number): void {
-        const self = this;
-
+    private static initializeTabBroker(self: Popup, tabId: number): void {
         // Waiting for document listener to initialize
-        function MSG_BROKER(
+        function tabBroker(
             _msg: Readonly<any>,
             sender: Readonly<browser.runtime.MessageSender>
         ): void {
             if (sender.id === chrome.runtime.id && sender.tab?.id === tabId) {
-                chrome.runtime.onMessage.removeListener(MSG_BROKER);
+                chrome.runtime.onMessage.removeListener(tabBroker);
                 clearTimeout(TIMEOUT);
 
                 console.log(
@@ -78,7 +76,7 @@ class Popup {
 
         // Ensuring garbage collection after fixed timeout
         const TIMEOUT = setTimeout(() => {
-            chrome.runtime.onMessage.removeListener(MSG_BROKER);
+            chrome.runtime.onMessage.removeListener(tabBroker);
 
             console.error(
                 getMessage(
@@ -88,7 +86,7 @@ class Popup {
             );
         }, TIMEOUT_MS);
 
-        chrome.runtime.onMessage.addListener(MSG_BROKER);
+        chrome.runtime.onMessage.addListener(tabBroker);
 
         // Injecting document listener into tab
         void chrome.scripting.executeScript({
@@ -103,51 +101,55 @@ class Popup {
     }
 
     /**
+     * Allows the popup to connect,
+     * allowing document changes to be communicated
+     * @param popup The popup to save `popupId` to
+     * @param popupId The tab ID of the popup
+     */
+    private static onWindowCreated(self: Popup, popupId: number): void {
+        function windowBroker(
+            _msg: Readonly<any>,
+            sender: Readonly<browser.runtime.MessageSender>
+        ): void {
+            if (
+                sender.id === chrome.runtime.id &&
+                sender.tab?.id === popupId
+            ) {
+                chrome.runtime.onMessage.removeListener(windowBroker);
+                clearTimeout(TIMEOUT);
+
+                console.log(
+                    getMessage('bg_popup_initialized', [popupId.toString()])
+                );
+
+                self.popupId = popupId;
+
+                self.tryConnecting();
+            }
+        }
+
+        // Waiting for popup to initialize
+        chrome.runtime.onMessage.addListener(windowBroker);
+
+        // Ensuring garbage collection after fixed timeout
+        const TIMEOUT = setTimeout(() => {
+            chrome.runtime.onMessage.removeListener(windowBroker);
+
+            console.error(
+                getMessage(
+                    'bg_popup_timeout',
+                    [popupId.toString(), TIMEOUT_MS.toString()]
+                )
+            );
+        }, TIMEOUT_MS);
+    }
+
+    /**
      * Allows the inspector popup to connect,
      * allowing document changes to be
      * communicated to the content script
      */
-    initializePopupBroker(): void {
-        const self = this;
-
-        function onWindowCreated(popupId: number): void {
-            // Waiting for popup to initialize
-            function MSG_BROKER(
-                _msg: Readonly<any>,
-                sender: Readonly<browser.runtime.MessageSender>
-            ): void {
-                if (
-                    sender.id === chrome.runtime.id &&
-                    sender.tab?.id === popupId
-                ) {
-                    chrome.runtime.onMessage.removeListener(MSG_BROKER);
-                    clearTimeout(TIMEOUT);
-
-                    console.log(
-                        getMessage('bg_popup_initialized', [popupId.toString()])
-                    );
-
-                    self.popupId = popupId;
-
-                    self.tryConnecting();
-                }
-            }
-
-            chrome.runtime.onMessage.addListener(MSG_BROKER);
-
-            // Ensuring garbage collection after fixed timeout
-            const TIMEOUT = setTimeout(() => {
-                chrome.runtime.onMessage.removeListener(MSG_BROKER);
-
-                console.error(
-                    getMessage(
-                        'bg_popup_timeout',
-                        [popupId.toString(), TIMEOUT_MS.toString()]
-                    )
-                );
-            }, TIMEOUT_MS);
-        }
-
+    private initializePopupBroker(): void {
         // Opening popup
         if (chrome.windows) {
             // Chrome and Firefox
@@ -157,8 +159,8 @@ class Popup {
                     type: 'popup'
                 },
                 (popup) => {
-                    if (popup) {
-                        onWindowCreated(popup.tabs![0].id!);
+                    if (popup?.tabs?.[0]?.id !== undefined) {
+                        Popup.onWindowCreated(this, popup.tabs[0].id);
                     }
                 }
             );
@@ -170,8 +172,8 @@ class Popup {
                     url: chrome.runtime.getURL('popup.html')
                 },
                 (tab) => {
-                    if (tab) {
-                        onWindowCreated(tab.id!);
+                    if (tab.id !== undefined) {
+                        Popup.onWindowCreated(this, tab.id);
                     }
                 }
             );
@@ -182,7 +184,7 @@ class Popup {
      * Initializes the popup to inspect the given tab's document source
      * @param tab The tab to inspect
      */
-    static async tryCreatingPopup(tab: browser.tabs.Tab): Promise<void> {
+    private static async tryCreatingPopup(tab: browser.tabs.Tab): Promise<void> {
         if (
             tab.id != null &&
             tab.url != null &&
@@ -191,7 +193,7 @@ class Popup {
             const popup = new Popup();
 
             popup.initializePopupBroker();
-            popup.initializeTabBroker(tab.id);
+            Popup.initializeTabBroker(popup, tab.id);
         }
     }
 
@@ -199,7 +201,7 @@ class Popup {
      * Creates a document source inspector popup
      * in a new tab when the extension icon is clicked
      */
-    static registerPopup(): void {
+    public static registerPopup(): void {
         const action = BROWSER === 'chrome'
             ? chrome.action
             : browser.browserAction;
