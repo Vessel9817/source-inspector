@@ -61,7 +61,7 @@ export class PopupManager {
      */
     private _nodes: NodeState;
 
-    constructor() {
+    public constructor() {
         this.connectTab = this._connectTab.bind(this);
         this.generateDocument = this._generateDocument.bind(this);
         this.queueMessage = this._queueMessage.bind(this);
@@ -93,6 +93,10 @@ export class PopupManager {
             });
     }
 
+    /**
+     * Connects the popup to the inspected tab
+     * @param tabId The tab ID of the inspected tab
+     */
     private _connectTab(tabId: number): void {
         this.newConnection = chrome.tabs.connect(tabId);
 
@@ -125,6 +129,13 @@ export class PopupManager {
         }
     }
 
+    /**
+     * Performs a binary search
+     * @param arr The array to search
+     * @param e The element to search for
+     * @param comparator The comparion function
+     * @returns The index of `e` in `arr`
+     */
     private binarySearch<T>(
         arr: Readonly<T[]>,
         e: Readonly<T>,
@@ -150,6 +161,12 @@ export class PopupManager {
         return m;
     }
 
+    /**
+     * Inserts the message into the queue. Doesn't mutate `queue`.
+     * @param queue The message queue
+     * @param msg The message to insert
+     * @returns A copy of `queue` with `msg` inserted
+     */
     private insertMsg(
         queue: Readonly<PopupMsg[]>,
         msg: Readonly<PopupMsg>
@@ -161,6 +178,14 @@ export class PopupManager {
         );
     }
 
+    /**
+     * Inserts `id` after `prevSiblingId` in `childNodeIds`.
+     * Doesn't mutate `childNodeIds`.
+     * @param childNodeIds The list of node IDs
+     * @param prevSiblingId The node ID which `id` should be inserted after
+     * @param id The node ID to insert
+     * @returns A copy of `childNodeIds` with `id` inserted
+     */
     private insertAfterSibling(
         childNodeIds: Readonly<string[]>,
         prevSiblingId: Readonly<string | undefined>,

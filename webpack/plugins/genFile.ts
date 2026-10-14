@@ -130,7 +130,7 @@ export default class GenerateFilePlugin implements WebpackPluginInstance {
     private readonly plugin: Tap = { name: 'GenerateFilePlugin' };
     private readonly options: InternalGenerateFilePluginArgs;
 
-    constructor(options: GenerateFilePluginArgs) {
+    public constructor(options: GenerateFilePluginArgs) {
         this.options = {
             ...options,
             source: options.sourceMap === true
