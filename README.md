@@ -177,11 +177,7 @@ Below are some caveats this extension has that don't have immediate fixes:
 
 ## Contribution
 
-For a list of planned features and fixes, see the [TODOs](TODO.md).
-If your planned contribution isn't included there, feel free to open
-an issue or pull request. If anything doesn't follow W3C standards,
-WHATWG standards or the HTML Living Standard, please let us know how we can
-better adhere to code.
+See our [contributing guidelines](CONTRIBUTING.md).
 
 Similar to the `build` script, we offer a web server for iterative development
 via hot-reloading. It can be started by running
