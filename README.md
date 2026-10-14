@@ -64,7 +64,8 @@ manifest files show the following:
 
 There are also some additional security features we have implemented:
 
-- The content script is injected in an isolated world and never modifies the DOM.
+- The content script is injected in an isolated world and never modifies
+  the DOM or, more generally, the [global scope][global-scope].
   This prevents detection while still allowing access to the DOM.
 - Code is wrapped in an IIFE to restrict external access of internal members.
 - All messages are validated to ensure that
@@ -208,6 +209,7 @@ and its dependencies.
 [timing-attack]: https://browserleaks.com/chrome#timing-attack-for-web-accessible-resources
 [use_dynamic_url]: https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources
 [origin-bug]: https://bugzilla.mozilla.org/show_bug.cgi?id=1405971
+[global-scope]: https://developer.mozilla.org/en-US/docs/Glossary/Global_scope
 [compromised-renderers]: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/compromised-renderers.md#Messaging
 [compromised-renderers-more]: https://issuetracker.google.com/issues/311491887
 [xml-declarations]: https://www.w3.org/TR/2006/REC-xml11-20060816/#NT-XMLDecl
