@@ -23,7 +23,7 @@ class Popup {
      * If the popup has been created and the content script injected,
      * tells the popup how to listen to the content script.
      */
-    async tryConnecting(): Promise<void> {
+    tryConnecting(): void {
         if (this.popupId != null && this.tabId != null) {
             try {
                 // If acquired, never release to run this function only once
@@ -44,7 +44,7 @@ class Popup {
                 tabId: this.tabId
             };
 
-            chrome.tabs.sendMessage(this.popupId, msg);
+            void chrome.tabs.sendMessage(this.popupId, msg);
         }
     }
 
@@ -58,10 +58,10 @@ class Popup {
         const self = this;
 
         // Waiting for document listener to initialize
-        async function MSG_BROKER(
+        function MSG_BROKER(
             _msg: Readonly<any>,
             sender: Readonly<browser.runtime.MessageSender>
-        ): Promise<void> {
+        ): void {
             if (sender.id === chrome.runtime.id && sender.tab?.id === tabId) {
                 chrome.runtime.onMessage.removeListener(MSG_BROKER);
                 clearTimeout(TIMEOUT);
@@ -72,7 +72,7 @@ class Popup {
 
                 self.tabId = tabId;
 
-                await self.tryConnecting();
+                self.tryConnecting();
             }
         }
 
@@ -91,7 +91,7 @@ class Popup {
         chrome.runtime.onMessage.addListener(MSG_BROKER);
 
         // Injecting document listener into tab
-        chrome.scripting.executeScript({
+        void chrome.scripting.executeScript({
             target: {
                 tabId,
                 // allFrames: true
@@ -107,15 +107,15 @@ class Popup {
      * allowing document changes to be
      * communicated to the content script
      */
-    async initializePopupBroker(): Promise<void> {
+    initializePopupBroker(): void {
         const self = this;
 
         function onWindowCreated(popupId: number): void {
             // Waiting for popup to initialize
-            async function MSG_BROKER(
+            function MSG_BROKER(
                 _msg: Readonly<any>,
                 sender: Readonly<browser.runtime.MessageSender>
-            ): Promise<void> {
+            ): void {
                 if (
                     sender.id === chrome.runtime.id &&
                     sender.tab?.id === popupId
@@ -129,7 +129,7 @@ class Popup {
 
                     self.popupId = popupId;
 
-                    await self.tryConnecting();
+                    self.tryConnecting();
                 }
             }
 
