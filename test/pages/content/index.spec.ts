@@ -41,7 +41,7 @@ describe('content script', () => {
 
                 t.mock.timers.enable({ apis: ['setTimeout'], now: Date.now() });
                 mockEnv({ BROWSER: BROWSER }, t);
-                
+
                 // Test
                 await load<typeof import('../../../src/pages/content')>('../../../src/pages/content');
                 t.mock.timers.runAll();
