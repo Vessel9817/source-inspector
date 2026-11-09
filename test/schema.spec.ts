@@ -58,11 +58,9 @@ async function readDocument(file: string): Promise<unknown> {
     const contents = await fs.readFile(file, 'utf8');
     const ext = path.extname(file);
 
-    return ext === '.json'
-        ? JSON.parse(contents)
-        : ext === '.jsonc'
-            ? parseJsonc(contents)
-            : parseYaml(contents);
+    return ext === '.json' || ext === '.jsonc'
+        ? parseJsonc(contents)
+        : parseYaml(contents);
 }
 
 /**
