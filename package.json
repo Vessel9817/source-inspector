@@ -41,7 +41,7 @@
         "@typescript/native": "npm:typescript@^7.0.2",
         "ajv": "^8.20.0",
         "ajv-formats": "^3.0.1",
-        "commander": "^15.0.0",
+        "commander": "^15.1.0",
         "copy-webpack-plugin": "^14.0.0",
         "fork-ts-checker-webpack-plugin": "^9.1.0",
         "jsonc-parser": "^3.3.1",
